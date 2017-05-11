@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Documents.Client;
 
 namespace TheCollection_Web
 {
@@ -28,6 +26,11 @@ namespace TheCollection_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<DocumentClient>(x => new DocumentClient(
+                Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
+                Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey")
+            ));
+
             // Add framework services.
             services.AddMvc();
         }
