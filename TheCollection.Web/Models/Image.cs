@@ -11,8 +11,5 @@ namespace testspa.Models
 
         [JsonProperty(PropertyName = "filename")]
         public string Filename { get; set; }
-
-        [JsonProperty(PropertyName = "filepath")]
-        public string Filepath { get; set; }
     }
 }

@@ -1,0 +1,10 @@
+.glyphicon.glyphicon-refresh.glyphicon-refresh-animate.form-control-feedback.has-new {
+  right: 35px;
+  z-index: 4;
+}
+
+.glyphicon.glyphicon-search.form-control-feedback.has-new {
+  right: 35px;
+  z-index: 4;
+  opacity: 0.5;
+}
