@@ -38,8 +38,8 @@ namespace TheCollection.Web.Models
         [JsonProperty(PropertyName = "insertdate")]
         public string InsertDate { get; set; }
 
-        [JsonProperty(PropertyName = "image")]
-        public string Image { get; set; }
+        [JsonProperty(PropertyName = "imageid")]
+        public string ImageId { get; set; }
 
         [JsonProperty(PropertyName = "tags")]
         public IEnumerable<string> Tags

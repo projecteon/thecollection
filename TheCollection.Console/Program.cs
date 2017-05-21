@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TheCollection.Web.Models;
 using TheCollection.Web.Services;
 using TheCollection.Console.Models;
+using testspa.Models;
 
 namespace TheCollection.Console
 {
@@ -97,7 +98,7 @@ namespace TheCollection.Console
                             Country = countries.FirstOrDefault(country => country.Name == thee.TheeLandvanherkomst.Trim()),
                             SerialNumber = thee.TheeSerienummer.Trim(),
                             InsertDate = thee.Theeinvoerdatum.Trim(),
-                            Image = $"{thee.MainID}.jpg"
+                            ImageId = ImportImages(client, thee)
                         };
                     });
 
@@ -137,6 +138,13 @@ namespace TheCollection.Console
 
 
             return bagTypes;
+        }
+
+        private static string ImportImages(DocumentClient client, Thee thee)
+        {
+            var imagesRepostitory = new DocumentDBRepository<Image>(client, "AspNetCoreIdentitySample", "Images");
+            var image = new Image { Filename = $"{thee.MainID}.jpg", Filepath = @"C:\development\core_testing\testspa\wwwroot\images\" };
+            return imagesRepostitory.CreateItemAsync(image).Result;
         }
 
         public static string ReadFile(string FileName)
