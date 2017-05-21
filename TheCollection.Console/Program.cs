@@ -106,6 +106,7 @@ namespace TheCollection.Console
             bags.ToList().ForEach(bag =>
             {
                 var bagid = bagsRepository.CreateItemAsync(bag).Result;
+                insertCounter++;
                 if (insertCounter > 0 && insertCounter % 1000 == 0)
                 {
 
