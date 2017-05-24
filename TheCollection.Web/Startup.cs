@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Documents.Client;
+using TheCollection.Web.Services;
 
 namespace TheCollection_Web
 {
@@ -30,6 +31,9 @@ namespace TheCollection_Web
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
                 Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey")
             ));
+
+            //services.AddSingleton<IImageService, ImageFilesystemService>();
+            services.AddSingleton<IImageService>(x => new ImageAzureBlobService($"DefaultEndpointsProtocol={Configuration.GetValue<string>("StorageAccount:Scheme")};AccountName={Configuration.GetValue<string>("StorageAccount:Name")};AccountKey={Configuration.GetValue<string>("StorageAccount:Key")};"));
 
             // Add framework services.
             services.AddMvc();

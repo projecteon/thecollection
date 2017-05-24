@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using TheCollection.Web.Models;
 using TheCollection.Web.Services;
 using TheCollection.Console.Models;
-using testspa.Models;
 
 namespace TheCollection.Console
 {
@@ -18,7 +17,7 @@ namespace TheCollection.Console
     {
         private static IConfigurationRoot Configuration { get; set; }
 
-        // dotnet run /PDocumentDbClient:EndpointUri=uri /DocumentDbClient:AuthorizationKey=key
+        // dotnet run /DocumentDbClient:EndpointUri=uri /DocumentDbClient:AuthorizationKey=key
         static void Main(string[] args)
         {
             System.Console.WriteLine("Conversions start");
@@ -144,7 +143,7 @@ namespace TheCollection.Console
         private static string ImportImages(DocumentClient client, Thee thee)
         {
             var imagesRepostitory = new DocumentDBRepository<Image>(client, "AspNetCoreIdentitySample", "Images");
-            var image = new Image { Filename = $"{thee.MainID}.jpg", Filepath = @"C:\development\core_testing\testspa\wwwroot\images\" };
+            var image = new Image { Filename = $"{thee.MainID}.jpg" };
             return imagesRepostitory.CreateItemAsync(image).Result;
         }
 

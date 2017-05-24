@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace testspa.Models
+namespace TheCollection.Web.Models
 {
     public class Image
     {
@@ -11,5 +11,8 @@ namespace testspa.Models
 
         [JsonProperty(PropertyName = "filename")]
         public string Filename { get; set; }
+
+        [JsonProperty(PropertyName = "uri")]
+        public string Uri { get; set; }
     }
 }
