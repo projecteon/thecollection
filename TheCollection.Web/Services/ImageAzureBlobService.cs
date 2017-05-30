@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace TheCollection.Web.Services
 {
@@ -17,11 +18,14 @@ namespace TheCollection.Web.Services
 
     public class ImageAzureBlobService : IImageService
     {
-        string connectionString { get; }
+        public CloudBlobContainer Container { get; }
 
         public ImageAzureBlobService(string connectionString)
         {
-            this.connectionString = connectionString;
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            Container = blobClient.GetContainerReference("images");
+            CreateContainerIfNotExistsAsync().Wait();
         }
 
         public Task Delete(string path)
@@ -31,22 +35,20 @@ namespace TheCollection.Web.Services
 
         public Task<Bitmap> Get(string filename)
         {
-            var storageAccount = CloudStorageAccount.Parse(connectionString);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("images");
-            var blockBlob = container.GetBlockBlobReference(filename);
-            
+            var blockBlob = Container.GetBlockBlobReference(filename);
             return Task.Run(() => { return new Bitmap(blockBlob.Uri.AbsoluteUri); });
         }
 
         public async Task<string> Upload(Stream stream, string filename)
         {
-            var storageAccount = CloudStorageAccount.Parse(connectionString);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("images");
-            var blockBlob = container.GetBlockBlobReference(filename);
+            var blockBlob = Container.GetBlockBlobReference(filename);
             await blockBlob.UploadFromStreamAsync(stream);
             return blockBlob?.Uri.ToString();
+        }
+
+        private async Task CreateContainerIfNotExistsAsync()
+        {
+            await Container.CreateIfNotExistsAsync();
         }
     }
 }
