@@ -106,7 +106,7 @@ export class TeabagForm extends React.Component<ITeabagFormProps, ITeabagFormSta
     return  <form className="form-horizontal" style={{marginTop: 10}}>
               <div className="form-group">
                 <div className="col-sm-offset-2 col-sm-10">
-                  <img src={`/images/${this.state.teabag.image}`}  style={{maxWidth: 'calc(100vw - 30px)', maxHeight: '95vh', cursor: 'ponter'}} />
+                  {/*<img src={`/images/${this.state.teabag.image}`}  style={{maxWidth: 'calc(100vw - 30px)', maxHeight: '95vh', cursor: 'ponter'}} />*/}
                 </div>
               </div>
               <div className="form-group">

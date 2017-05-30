@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { ApplicationState }  from '../store';
+import * as TeabagsState from '../store/Teabags';
 import { ImageZoom } from "./ImageZoom";
-import {ITeabag} from '../interfaces/ITeaBag';
+import { ITeabag } from '../interfaces/ITeaBag';
 
 import './Teabags.css';
-import { ISearchResult } from "ClientApp/interfaces/ISearchResult";
 
-export interface ITeabagsState {
-  teabags: ITeabag[];
-  resultCount?: number;
-  isLoading: boolean;
-  zoomUri?: string;
-  searchTerms?: string;
-  searchError?: string;
-}
+// At runtime, Redux will merge together...
+type TeabagsProps =
+    TeabagsState.TeabagsState     // ... state we've requested from the Redux store
+    & typeof TeabagsState.actionCreators   // ... plus action creators we've requested
 
-export class Teabags extends React.Component<void, ITeabagsState> {
+export class Teabags extends React.Component<TeabagsProps, void> {
   controls: {
       searchInput?: HTMLInputElement;
     } = {};
@@ -24,80 +22,32 @@ export class Teabags extends React.Component<void, ITeabagsState> {
     super();
 
     this.onSearch = this.onSearch.bind(this);
-    this.onSearchTermChanged = this.onSearchTermChanged.bind(this);
-
-    this.state = {isLoading: false, teabags: [], searchTerms: ''};
-  }
-
-  private validateSearch(): boolean {
-    if (this.state.searchTerms === undefined || this.state.searchTerms.trim().length < 3) {
-      this.setState({...this.state, ...{searchError: 'Requires at least 3 characters to search'}});
-      this.controls.searchInput.focus();
-      return false;
-    }
-
-    if (this.state.searchError !== undefined) {
-      this.setState({...this.state, ...{searchError: undefined}});
-    }
-
-    return true;
-  }
-
-  onZoomClicked(teabag?: ITeabag) {
-    if(teabag != undefined) {
-      this.setState({...this.state, ...{zoomUri: teabag.image}});
-    }
-    else {
-      this.setState({...this.state, ...{zoomUri: undefined}});
-    }
-  }
-
-  onSearchTermChanged(event: React.FormEvent<HTMLInputElement>) {
-    let searchError = {};
-    if (this.state.searchError !== undefined && (event.target as any).value.trim().length > 2) {
-      searchError = {searchError: undefined};
-    }
-
-    this.setState({...this.state, ...searchError, ...{searchTerms: (event.target as any).value}});
+    console.log(this.props);
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    if(this.validateSearch() === false) {
-      return;
-    }
-
-    this.setState({ teabags: [], isLoading: true });
-    let uri = this.state.searchTerms !== undefined && this.state.searchTerms.length > 0
-      ? `/api/Bags/?searchterm=${encodeURIComponent(this.state.searchTerms)}`
-      : `/api/Bags/`;
-
-    fetch(uri)
-      .then(response => response.json() as Promise<ISearchResult<ITeabag>>)
-      .then(searchResult => {
-        console.log(`loaded ${searchResult.count} rows`);
-        this.setState({ teabags: searchResult.data, resultCount: searchResult.count, isLoading: false });
-      });
+    this.props.requestTeabags();
   }
 
   renderSearchSuccess() {
-    let brands = this.state.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index)
-    let tags = brands.map((brand, index) => { return <span key={index} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>{brand} <span className="badge pull-right">{this.state.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span></span>;});
-    return <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5, marginTop: 35}}><p style={{width: '100%'}}><span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>Total <span className="badge pull-right">{this.state.resultCount}</span></span>{tags}</p></div>;
+    let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index)
+    let tags = brands.map((brand, index) => { return <span key={index} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>{brand} <span className="badge pull-right">{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span></span>;});
+    return <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5, marginTop: 35}}><p style={{width: '100%'}}><span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>Total <span className="badge pull-right">{this.props.resultCount}</span></span>{tags}</p></div>;
   }
 
   renderSearchBar() {
-    let iconClassName = this.state.isLoading === true ? 'glyphicon glyphicon-refresh glyphicon-refresh-animate' : 'glyphicon glyphicon-search';
-    let groupClassName = this.state.searchError !== undefined ? 'input-group has-error' : 'input-group';
-    let btnClassName = this.state.searchError !== undefined ? 'btn btn-danger' : 'btn btn-default';
-    let alert = this.state.searchError !== undefined ? <div className="alert alert-danger" role="alert">{this.state.searchError}</div> : undefined;
+    let iconClassName = this.props.isLoading === true ? 'glyphicon glyphicon-refresh glyphicon-refresh-animate' : 'glyphicon glyphicon-search';
+    let groupClassName = this.props.searchError !== undefined ? 'input-group has-error' : 'input-group';
+    let btnClassName = this.props.searchError !== undefined ? 'btn btn-danger' : 'btn btn-default';
+    let alert = this.props.searchError !== undefined ? <div className="alert alert-danger" role="alert">{this.props.searchError}</div> : undefined;
     return  <div style={{position: 'fixed', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff'}}>
               {alert}
               <div className={groupClassName}>
-                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" onChange={this.onSearchTermChanged} disabled={this.state.isLoading}/>
+                {/*<input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" onChange={this.onSearchTermChanged} disabled={this.props.isLoading}/>*/}
                 <span className="input-group-btn">
-                  <button type="button" className={btnClassName} onClick={this.onSearch} disabled={this.state.isLoading}>
+                  <button type="button" className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden="true" />
                   </button>
                 </span>
@@ -109,7 +59,7 @@ export class Teabags extends React.Component<void, ITeabagsState> {
     return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-2'>
               <div>
               {/*<div style={{boxShadow: '0px 13px 5px -10px rgba(0,0,0,0.75)'}}>*/}
-                <img src={`/images/thumbnail/${teabag.image}`} style={{width: '100%', cursor: 'ponter'}} onClick={this.onZoomClicked.bind(this, teabag)}/>
+                {/*<img src={`/images/thumbnail/${teabag.image}`} style={{width: '100%', cursor: 'ponter'}} onClick={this.onZoomClicked.bind(this, teabag)}/>*/}
                 <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}}>
                   <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595'}}>{teabag.brand.name} - {teabag.flavour}</strong>
                   <div style={{color: '#959595'}}><small>{teabag.serie}</small></div>
@@ -137,16 +87,15 @@ export class Teabags extends React.Component<void, ITeabagsState> {
   }
 
   render() {
-    let contents = this.state.isLoading
+    let contents = this.props.isLoading || this.props.teabags === undefined
       ? undefined
-      : this.renderTeabags(this.state.teabags);
+      : this.renderTeabags(this.props.teabags);
 
     return  <div>
-              {this.state.zoomUri !== undefined ? <ImageZoom uri={this.state.zoomUri} onClick={this.onZoomClicked.bind(this)} /> : undefined}
               <div style={{marginBottom: 20, paddingBottom: 20}}>{this.renderSearchBar()}</div>
 
-              {this.state.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
-              <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.state.teabags.length === 0 || this.state.searchError !== undefined ? 10 : 10}}>
+              {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
+              <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}
               </div>
             </div>;
