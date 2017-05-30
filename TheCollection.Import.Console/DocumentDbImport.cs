@@ -57,7 +57,7 @@ namespace TheCollection.Import.Console
                     Country = countries.FirstOrDefault(country => country.Name == thee.TheeLandvanherkomst.Trim()),
                     SerialNumber = thee.TheeSerienummer.Trim(),
                     InsertDate = thee.Theeinvoerdatum.Trim(),
-                    ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg").Id
+                    ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
                 };
             });
 
@@ -106,19 +106,20 @@ namespace TheCollection.Import.Console
             return bagTypes;
         }
 
+        const string Path = @"D:\Source\projecteon\core_testing\testspa\wwwroot\images\";
         private static List<Web.Models.Image> ImportImages(DocumentClient client, string collection, List<Thee> thees, IImageService imageservice)
         {
-            var images = thees.Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var images = thees.Where(thee => File.Exists($"{Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
             var insertCounter = 0;
-            images.ForEach(async image =>
+            images.ForEach(image =>
             {
                 var fileImageService = new ImageFilesystemService();
-                var bitmap = await fileImageService.Get(image.Filename);
+                var bitmap = fileImageService.Get(image.Filename).Result;
                 using (var imageStream = new MemoryStream())
                 {
                     bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    image.Uri = await imageservice.Upload(imageStream, image.Filename);
+                    image.Uri = imageservice.Upload(imageStream, image.Filename).Result;
                 }
 
                 image.Id = imageRepository.CreateItemAsync(image).Result;
