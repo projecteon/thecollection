@@ -43,7 +43,7 @@ type KnownAction = RequestTeabagsAction | ReceiveTeabagsAction;
 export const actionCreators = {
     requestTeabags: (searchTerms?: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        if (searchTerms !== getState().teabags.searchTerms) {
+        if (searchTerms !== getState().teabags.searchTerms || true) {
             let uri = searchTerms !== undefined && searchTerms.length > 0
               ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}`
               : `/api/Bags/`;

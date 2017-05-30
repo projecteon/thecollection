@@ -44,7 +44,7 @@ namespace TheCollection.Console
 
         private static void UpdateBags(DocumentClient client)
         {
-            var bagsRepository = new DocumentDBRepository<Bag>(client, "AspNetCoreIdentitySample", "Bags");
+            var bagsRepository = new DocumentDBRepository<Bag>(client, "TheCollection", "Bags");
             var bags = bagsRepository.GetItemsAsync(bag => bag.Brand.Name == "Meßmer").Result;
             foreach (var bag in bags)
             {
@@ -57,7 +57,7 @@ namespace TheCollection.Console
             string jsonContent = ReadFile("teabrands.js");
             var jsonObj = JsonConvert.DeserializeObject<Merkens>(jsonContent);
 
-            var brandsRepository = new DocumentDBRepository<Brand>(client, "AspNetCoreIdentitySample", "Brands");
+            var brandsRepository = new DocumentDBRepository<Brand>(client, "TheCollection", "Brands");
             var brands = jsonObj.tblTheeMerken.Select(merk =>
             {
                 return new Brand
@@ -82,7 +82,7 @@ namespace TheCollection.Console
             var countries = ImportCountries(client, jsonObj2.TheeTotaallijst);
             var bagTypes = ImportBagTypes(client, jsonObj2.TheeTotaallijst);
 
-            var bagsRepository = new DocumentDBRepository<Bag>(client, "AspNetCoreIdentitySample", "Bags");
+            var bagsRepository = new DocumentDBRepository<Bag>(client, "TheCollection", "Bags");
             var bags = jsonObj2.TheeTotaallijst
                     .Select(thee =>
                     {
@@ -116,7 +116,7 @@ namespace TheCollection.Console
 
         private static IEnumerable<Country> ImportCountries(DocumentClient client, List<Thee> thees)
         {
-            var countryRepository = new DocumentDBRepository<Country>(client, "AspNetCoreIdentitySample", "Countries");
+            var countryRepository = new DocumentDBRepository<Country>(client, "TheCollection", "Countries");
             var countries = thees.Select(thee => thee.TheeLandvanherkomst.Trim()).Distinct().Select(country => { return new Country { Name = country }; }).ToList();
             countries.ForEach(country =>
             {
@@ -129,7 +129,7 @@ namespace TheCollection.Console
 
         private static IEnumerable<BagType> ImportBagTypes(DocumentClient client, List<Thee> thees)
         {
-            var bagTypeRepository = new DocumentDBRepository<BagType>(client, "AspNetCoreIdentitySample", "BagTypes");
+            var bagTypeRepository = new DocumentDBRepository<BagType>(client, "TheCollection", "BagTypes");
             var bagTypes = thees.Select(thee => thee.TheeSoortzakje.Trim()).Distinct().Where(bagType => bagType.Length > 0).Select(type => { return new BagType { Name = type }; }).ToList();
             bagTypes.ForEach(bagType =>
             {
@@ -142,7 +142,7 @@ namespace TheCollection.Console
 
         private static string ImportImages(DocumentClient client, Thee thee)
         {
-            var imagesRepostitory = new DocumentDBRepository<Image>(client, "AspNetCoreIdentitySample", "Images");
+            var imagesRepostitory = new DocumentDBRepository<Image>(client, "TheCollection", "Images");
             var image = new Image { Filename = $"{thee.MainID}.jpg" };
             return imagesRepostitory.CreateItemAsync(image).Result;
         }
@@ -178,7 +178,7 @@ namespace TheCollection.Console
                 Body = udfBody
             };
 
-            var result = await client.CreateUserDefinedFunctionAsync(UriFactory.CreateDocumentCollectionUri("AspNetCoreIdentitySample", "Bags"), udfDefinition);
+            var result = await client.CreateUserDefinedFunctionAsync(UriFactory.CreateDocumentCollectionUri("TheCollection", "Bags"), udfDefinition);
             var udf = result.Resource;
 
             System.Console.WriteLine("Created user defined function {0}; RID: {1}", udf.Id, udf.ResourceId);

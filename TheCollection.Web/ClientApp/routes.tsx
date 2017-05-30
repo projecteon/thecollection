@@ -3,7 +3,7 @@ import { Router, Route, HistoryBase } from 'react-router';
 import { Layout } from './components/Layout';
 import Home from './components/Home';
 import FetchData from './components/FetchData';
-import { Teabags } from './components/Teabags';
+import Teabags from './components/Teabags';
 import Counter from './components/Counter';
 
 // http://stackoverflow.com/questions/32128978/react-router-no-not-found-route

@@ -1,4 +1,4 @@
-import * as TeaBags from './TeaBags';
+import * as TeaBags from './TeabagsStore';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Counter from './Counter';
 

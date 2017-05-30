@@ -21,7 +21,7 @@ namespace TheCollection.Web.Controllers
         [HttpGet()]
         public async Task<IEnumerable<BagType>> Brands([FromQuery] string searchterm = "")
         {
-            var bagtypesRepository = new DocumentDBRepository<BagType>(documentDbClient, "AspNetCoreIdentitySample", "Brands");
+            var bagtypesRepository = new DocumentDBRepository<BagType>(documentDbClient, "TheCollection", "Brands");
             IEnumerable<BagType> bagtypes;
             if (searchterm != "")
             {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { ApplicationState }  from '../store';
-import * as TeabagsState from '../store/Teabags';
+import * as TeabagsState from '../store/TeabagsStore';
 import { ImageZoom } from "./ImageZoom";
 import { ITeabag } from '../interfaces/ITeaBag';
 
@@ -13,7 +13,7 @@ type TeabagsProps =
     TeabagsState.TeabagsState     // ... state we've requested from the Redux store
     & typeof TeabagsState.actionCreators   // ... plus action creators we've requested
 
-export class Teabags extends React.Component<TeabagsProps, void> {
+class Teabags extends React.Component<TeabagsProps, void> {
   controls: {
       searchInput?: HTMLInputElement;
     } = {};
@@ -22,13 +22,16 @@ export class Teabags extends React.Component<TeabagsProps, void> {
     super();
 
     this.onSearch = this.onSearch.bind(this);
-    console.log(this.props);
+    this.onSearchTermChanged = this.onSearchTermChanged.bind(this);
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags();
+    this.props.requestTeabags('Mil');
+  }
+
+  onSearchTermChanged(event: React.FormEvent<HTMLInputElement>) {
   }
 
   renderSearchSuccess() {
@@ -45,7 +48,7 @@ export class Teabags extends React.Component<TeabagsProps, void> {
     return  <div style={{position: 'fixed', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff'}}>
               {alert}
               <div className={groupClassName}>
-                {/*<input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" onChange={this.onSearchTermChanged} disabled={this.props.isLoading}/>*/}
+                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" onChange={this.onSearchTermChanged} disabled={this.props.isLoading}/>
                 <span className="input-group-btn">
                   <button type="button" className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden="true" />
@@ -87,7 +90,8 @@ export class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   render() {
-    let contents = this.props.isLoading || this.props.teabags === undefined
+
+    let contents = this.props.isLoading
       ? undefined
       : this.renderTeabags(this.props.teabags);
 
@@ -101,3 +105,9 @@ export class Teabags extends React.Component<TeabagsProps, void> {
             </div>;
   }
 }
+
+
+export default connect(
+    (state: ApplicationState) => state.teabags, // Selects which state properties are merged into the component's props
+    TeabagsState.actionCreators                 // Selects which action creators are merged into the component's props
+)(Teabags);

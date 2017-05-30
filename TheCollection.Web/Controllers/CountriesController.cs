@@ -21,7 +21,7 @@ namespace TheCollection.Web.Controllers
         [HttpGet()]
         public async Task<IEnumerable<Country>> Countries([FromQuery] string searchterm = "")
         {
-            var brandsRepository = new DocumentDBRepository<Country>(documentDbClient, "AspNetCoreIdentitySample", "Countries");
+            var brandsRepository = new DocumentDBRepository<Country>(documentDbClient, "TheCollection", "Countries");
             IEnumerable<Country> countries;
             if (searchterm != "")
             {

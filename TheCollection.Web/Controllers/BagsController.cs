@@ -24,7 +24,7 @@ namespace TheCollection.Web.Controllers
         [HttpGet()]
         public async Task<SearchResult<Bag>> Bags([FromQuery] string searchterm = "")
         {
-            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "AspNetCoreIdentitySample", "Bags");
+            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
             IEnumerable<Bag> bags;
             if (searchterm != "")
             {
@@ -53,7 +53,7 @@ namespace TheCollection.Web.Controllers
         [HttpGet("{id}")]
         public async Task<Bag> Bag(string id)
         {
-            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "AspNetCoreIdentitySample", "Bags");
+            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
             return await bagsRepository.GetItemAsync(id);
         }
     }
