@@ -51,11 +51,11 @@ namespace TheCollection.Web.Services
             }
         }
 
-        public async Task<long> GetRowCountAsync<T>(string searchterm) where T : ISearchable
+        public async Task<long> GetRowCountAsync<Q>(string searchterm) where Q : T, ISearchable
         {
             var query = client.CreateDocumentQuery(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                SearchableQuery<T>.Count(CollectionId, searchterm.ToLower().Split(' ')),
+                SearchableQuery<Q>.Count(CollectionId, searchterm.ToLower().Split(' ')),
                 new FeedOptions { MaxItemCount = -1 }).AsDocumentQuery();
 
             long results = 0;
@@ -68,17 +68,17 @@ namespace TheCollection.Web.Services
             return results;
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync<T>(string searchterm, int top = 100) where T : ISearchable
+        public async Task<IEnumerable<Q>> GetItemsAsync<Q>(string searchterm, int top = 100) where Q : T, ISearchable
         {
-            var query = client.CreateDocumentQuery<T>(
+            var query = client.CreateDocumentQuery<Q>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                SearchableQuery<T>.Create(CollectionId, searchterm.ToLower().Split(' '), top),
+                SearchableQuery<Q>.Create(CollectionId, searchterm.ToLower().Split(' '), top),
                 new FeedOptions { MaxItemCount = -1 }).AsDocumentQuery();
 
-            var results = new List<T>();
+            var results = new List<Q>();
             while (query.HasMoreResults)
             {
-                results.AddRange(await query.ExecuteNextAsync<T>());
+                results.AddRange(await query.ExecuteNextAsync<Q>());
             }
 
             return results;
