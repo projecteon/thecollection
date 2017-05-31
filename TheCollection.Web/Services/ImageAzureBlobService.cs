@@ -28,15 +28,28 @@ namespace TheCollection.Web.Services
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        public Task Delete(string path)
+        public async Task Delete(string path)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Bitmap> Get(string filename)
+        public async Task<Bitmap> Get(string filename)
         {
             var blockBlob = Container.GetBlockBlobReference(filename);
-            return Task.Run(() => { return new Bitmap(blockBlob.Uri.AbsoluteUri); });
+            return await GetBitmap(blockBlob);
+        }
+
+        private async Task<Bitmap> GetBitmap(CloudBlockBlob blockBlob)
+        {
+            Bitmap image;
+            using (var memoryStream = new MemoryStream())
+            {
+                await blockBlob.DownloadToFileAsync(@"c:\deleteme\temp.jpg", FileMode.Create);
+                await blockBlob.DownloadToStreamAsync(memoryStream);
+                image = new Bitmap(memoryStream);
+            }
+
+            return image;
         }
 
         public async Task<string> Upload(Stream stream, string filename)

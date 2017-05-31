@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Documents.Client;
 using TheCollection.Web.Services;
+using System.Text.RegularExpressions;
+using TheCollection.Web.Handlers;
 
 namespace TheCollection_Web
 {
@@ -33,7 +35,7 @@ namespace TheCollection_Web
             ));
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageService>(x => new ImageAzureBlobService($"DefaultEndpointsProtocol={Configuration.GetValue<string>("StorageAccount:Scheme")};AccountName={Configuration.GetValue<string>("StorageAccount:Name")};AccountKey={Configuration.GetValue<string>("StorageAccount:Key")};"));
+            services.AddSingleton<IImageService>(x => new ImageAzureBlobService($"DefaultEndpointsProtocol={Configuration.GetValue<string>("StorageAccount:Scheme")};AccountName={Configuration.GetValue<string>("StorageAccount:Name")};AccountKey={Configuration.GetValue<string>("StorageAccount:Key")};{Configuration.GetValue<string>("StorageAccount:Endpoints")}"));
 
             // Add framework services.
             services.AddMvc();
@@ -57,6 +59,13 @@ namespace TheCollection_Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            // Create branch to the MyHandlerMiddleware. 
+            // All requests ending in .report will follow this branch.
+            app.MapWhen(
+                context => Regex.IsMatch(context.Request.Path.ToString(), ThumbnailHandler.RegEx),
+                appBranch => { appBranch.UseThumbnailHandler(); }
+            );
 
             app.UseStaticFiles();
 
