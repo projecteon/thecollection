@@ -22,16 +22,28 @@ class Teabags extends React.Component<TeabagsProps, void> {
     super();
 
     this.onSearch = this.onSearch.bind(this);
-    this.onSearchTermChanged = this.onSearchTermChanged.bind(this);
+  }
+
+  private validateSearch(searchTerms: string): boolean {
+    if (searchTerms.trim().length < 3) {
+      this.props.searchError('Requires at least 3 characters to search');
+      this.controls.searchInput.focus();
+      return false;
+    }
+
+    if (this.props.searchError.length > 0) {
+      this.props.searchError(undefined);
+    }
+
+    return true;
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags('Mil');
-  }
-
-  onSearchTermChanged(event: React.FormEvent<HTMLInputElement>) {
+    if(this.validateSearch(this.controls.searchInput.value.trim())) {
+      this.props.requestTeabags(this.controls.searchInput.value.trim());
+    }
   }
 
   renderSearchSuccess() {
@@ -42,13 +54,13 @@ class Teabags extends React.Component<TeabagsProps, void> {
 
   renderSearchBar() {
     let iconClassName = this.props.isLoading === true ? 'glyphicon glyphicon-refresh glyphicon-refresh-animate' : 'glyphicon glyphicon-search';
-    let groupClassName = this.props.searchError !== undefined ? 'input-group has-error' : 'input-group';
-    let btnClassName = this.props.searchError !== undefined ? 'btn btn-danger' : 'btn btn-default';
-    let alert = this.props.searchError !== undefined ? <div className="alert alert-danger" role="alert">{this.props.searchError}</div> : undefined;
+    let groupClassName = this.props.searchError.length > 0 ? 'input-group has-error' : 'input-group';
+    let btnClassName = this.props.searchError.length > 0 ? 'btn btn-danger' : 'btn btn-default';
+    let alert = this.props.searchError.length > 0 ? <div className="alert alert-danger" role="alert">{this.props.searchError}</div> : undefined;
     return  <div style={{position: 'fixed', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff'}}>
               {alert}
               <div className={groupClassName}>
-                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" onChange={this.onSearchTermChanged} disabled={this.props.isLoading}/>
+                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" disabled={this.props.isLoading}/>
                 <span className="input-group-btn">
                   <button type="button" className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden="true" />
@@ -90,14 +102,13 @@ class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   render() {
-
+    console.log(this.props);
     let contents = this.props.isLoading
       ? undefined
       : this.renderTeabags(this.props.teabags);
 
     return  <div>
               <div style={{marginBottom: 20, paddingBottom: 20}}>{this.renderSearchBar()}</div>
-
               {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
               <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}
