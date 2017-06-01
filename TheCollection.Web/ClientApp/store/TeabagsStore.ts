@@ -66,7 +66,7 @@ export const actionCreators = {
       dispatch({ type: 'REQUEST_TEABAGS', searchTerms: searchTerms });
     }
   },
-  searchError: (searchError: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+  setSearchError: (searchError: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
     dispatch({ type: 'SEARCH_ERROR', searchError: searchError });
   }
 };
@@ -74,26 +74,26 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: TeabagsState = { isLoading: false, teabags: [] };
+const unloadedState: TeabagsState = { isLoading: false, teabags: [], searchError: '' };
 
 export const reducer: Reducer<TeabagsState> = (state: TeabagsState, action: KnownAction) => {
   switch (action.type) {
     case 'REQUEST_TEABAGS':
-      return {
+      return  {...state, ...{
         searchTerms: action.searchTerms,
         teabags: [],
         isLoading: true
-      };
+      }};
     case 'RECEIVE_TEABAGS':
       // Only accept the incoming data if it matches the most recent request. This ensures we correctly
       // handle out-of-order responses.
       if (action.searchTerms === state.searchTerms) {
-        return {
+        return  {...state, ...{
           searchTerms: action.searchTerms,
           teabags: action.teabags,
           resultCount: action.resultCount,
           isLoading: false
-        };
+        }};
       }
       break;
     case 'SEARCH_ERROR':

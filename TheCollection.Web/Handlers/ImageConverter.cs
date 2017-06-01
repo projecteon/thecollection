@@ -8,6 +8,9 @@ namespace TheCollection.Web.Handlers
 {
     public class ImageConverter
     {
+        // https://stackoverflow.com/questions/38816932/net-core-image-manipulation-crop-resize-file-handling
+        // https://andrewlock.net/using-imagesharp-to-resize-images-in-asp-net-core-a-comparison-with-corecompat-system-drawing/
+
         public const int THUMB_DEFAULT_WIDTH_PARAM = 200;
         public const int THUMB_DEFAULT_HEIGHT_PARAM = 0;
 
@@ -20,12 +23,14 @@ namespace TheCollection.Web.Handlers
 
         public static byte[] GetBytesScaledJPEG(Image imgSrc, int iWidth, int iHeight)
         {
-            return GetBytes(GetBytesScaledBitmap(imgSrc, iWidth, iHeight), GetJpegEncoder(), GetJPegEncoderParams());
+            var scaledBitmap = GetBytesScaledBitmap(imgSrc, iWidth, iHeight);
+            return GetBytes(scaledBitmap, GetJpegEncoder(), GetJPegEncoderParams());
         }
 
         public static byte[] GetBytesScaledPNG(Image imgSrc, int iWidth, int iHeight, bool bTransparent = false, bool bCenterAlign = false)
         {
-            return GetBytes(GetBytesScaledBitmap(imgSrc, iWidth, iHeight, bTransparent, bCenterAlign), GetPngEncoder(), GetPngEncoderParams());
+            var scaledBitmap = GetBytesScaledBitmap(imgSrc, iWidth, iHeight, bTransparent, bCenterAlign);
+            return GetBytes(scaledBitmap, GetPngEncoder(), GetPngEncoderParams());
         }
 
         public static Bitmap GetBytesScaledBitmap(Image imgSrc, int iWidth, int iHeight, bool bTransparent = false, bool bCenterAlign = false)
@@ -111,10 +116,11 @@ namespace TheCollection.Web.Handlers
                         g.Clear(Color.Transparent);
                     else
                         g.Clear(Color.White);
+
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.CompositingQuality = CompositingQuality.HighSpeed;
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-                    g.DrawImage(imgSrc, recTarget);
+                    g.DrawImage(imgSrc, recTarget.X, recTarget.Y, recTarget.Width, recTarget.Height);
                 }
             }
             catch (Exception ex)

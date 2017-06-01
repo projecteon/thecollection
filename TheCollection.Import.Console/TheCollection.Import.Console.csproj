@@ -115,6 +115,7 @@
     <Compile Include="AccessExport.cs" />
     <Compile Include="DataTableExtensions.cs" />
     <Compile Include="DocumentDbImport.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="JsonFileExport.cs" />
     <Compile Include="Models\Merkens.cs" />
     <Compile Include="Models\Thees.cs" />

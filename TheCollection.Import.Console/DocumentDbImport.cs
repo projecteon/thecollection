@@ -10,7 +10,7 @@ namespace TheCollection.Import.Console
 {
     public class DocumentDbImport
     {
-        public static IList<Brand> ImportBrands(DocumentClient client, string collection, List<Merk> meerken)
+        public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, string collection, List<Merk> meerken)
         {
             var brands = meerken.Select(merk =>
             {
@@ -22,9 +22,9 @@ namespace TheCollection.Import.Console
 
             var brandsRepository = new DocumentDBRepository<Brand>(client, collection, "Brands");
             var insertCounter = 0;
-            brands.ForEach(brand =>
+            await brands.ForEachAsync(async brand =>
             {
-                brand.Id = brandsRepository.CreateItemAsync(brand).Result;
+                brand.Id = await brandsRepository.CreateItemAsync(brand);
                 insertCounter++;
                 if (insertCounter > 0 && insertCounter % 100 == 0)
                 {
@@ -36,15 +36,14 @@ namespace TheCollection.Import.Console
             return brands;
         }
 
-        public static IEnumerable<Bag> ImportBags(DocumentClient client, string collection, List<Thee> thees, IList<Brand> brands, IImageService imageservice)
+        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> ImportBagsAsync(DocumentClient client, string collection, List<Thee> thees, IList<Brand> brands, IImageService imageservice)
         {
-            var importThees = thees.Take(1000).ToList();
-            var countries = ImportCountries(client, collection, importThees);
-            var bagTypes = ImportBagTypes(client, collection, importThees);
-            var images = ImportImages(client, collection, importThees, imageservice);
+            var countries = await ImportCountriesAsync(client, collection, thees);
+            var bagTypes = await ImportBagTypesAsync(client, collection, thees);
+            var images = await ImportImagesAsync(client, collection, thees, imageservice);
 
             var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
-            var bags = importThees.Select(thee =>
+            var bags = thees.Select(thee =>
             {
                 return new Bag
                 {
@@ -62,9 +61,9 @@ namespace TheCollection.Import.Console
             });
 
             var insertCounter = 0;
-            bags.ToList().ForEach(bag =>
+            await bags.ToList().ForEachAsync(async bag =>
             {
-                var bagid = bagsRepository.CreateItemAsync(bag).Result;
+                var bagid = await bagsRepository.CreateItemAsync(bag);
                 insertCounter++;
                 if (insertCounter > 0 && insertCounter % 100 == 0)
                 {
@@ -76,14 +75,14 @@ namespace TheCollection.Import.Console
             return bags;
         }
 
-        private static List<Country> ImportCountries(DocumentClient client, string collection, List<Thee> thees)
+        private static async System.Threading.Tasks.Task<List<Country>> ImportCountriesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var countries = thees.Select(thee => thee.TheeLandvanherkomst.Trim()).Distinct().Select(country => { return new Country { Name = country }; }).ToList();
             var countryRepository = new DocumentDBRepository<Country>(client, collection, "Countries");
             var insertCounter = 0;
-            countries.ForEach(country =>
+            await countries.ForEachAsync(async country =>
             {
-                country.Id = countryRepository.CreateItemAsync(country).Result;
+                country.Id = await countryRepository.CreateItemAsync(country);
                 insertCounter++;
             });
 
@@ -91,14 +90,14 @@ namespace TheCollection.Import.Console
             return countries;
         }
 
-        private static List<BagType> ImportBagTypes(DocumentClient client, string collection, List<Thee> thees)
+        private static async System.Threading.Tasks.Task<List<BagType>> ImportBagTypesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var bagTypes = thees.Select(thee => thee.TheeSoortzakje.Trim()).Distinct().Where(bagType => bagType.Length > 0).Select(type => { return new BagType { Name = type }; }).ToList();
             var bagTypeRepository = new DocumentDBRepository<BagType>(client, collection, "BagTypes");
             var insertCounter = 0;
-            bagTypes.ForEach(bagType =>
+            await bagTypes.ForEachAsync(async bagType =>
             {
-                bagType.Id = bagTypeRepository.CreateItemAsync(bagType).Result;
+                bagType.Id = await bagTypeRepository.CreateItemAsync(bagType);
                 insertCounter++;
             });
 
@@ -107,19 +106,20 @@ namespace TheCollection.Import.Console
         }
 
         const string Path = @"D:\Source\projecteon\core_testing\testspa\wwwroot\images\";
-        private static List<Web.Models.Image> ImportImages(DocumentClient client, string collection, List<Thee> thees, IImageService imageservice)
+        private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees, IImageService imageservice)
         {
             var images = thees.Where(thee => File.Exists($"{Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
             var insertCounter = 0;
-            images.ForEach(image =>
+            await images.ForEachAsync(async image =>
             {
                 var fileImageService = new ImageFilesystemService();
-                var bitmap = fileImageService.Get(image.Filename).Result;
+                var bitmap = await fileImageService.Get(image.Filename);
                 using (var imageStream = new MemoryStream())
                 {
                     bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    image.Uri = imageservice.Upload(imageStream, image.Filename).Result;
+                    imageStream.Seek(0, SeekOrigin.Begin);
+                    image.Uri = await imageservice.Upload(imageStream, image.Filename);
                 }
 
                 image.Id = imageRepository.CreateItemAsync(image).Result;

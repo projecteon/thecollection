@@ -46,7 +46,7 @@ namespace TheCollection.Web.Services
             {
                 await blockBlob.DownloadToFileAsync(@"c:\deleteme\temp.jpg", FileMode.Create);
                 await blockBlob.DownloadToStreamAsync(memoryStream);
-                image = new Bitmap(memoryStream);
+                image = new Bitmap(Image.FromStream(memoryStream));
             }
 
             return image;

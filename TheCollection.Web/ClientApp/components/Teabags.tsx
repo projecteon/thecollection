@@ -26,13 +26,13 @@ class Teabags extends React.Component<TeabagsProps, void> {
 
   private validateSearch(searchTerms: string): boolean {
     if (searchTerms.trim().length < 3) {
-      this.props.searchError('Requires at least 3 characters to search');
+      this.props.setSearchError('Requires at least 3 characters to search');
       this.controls.searchInput.focus();
       return false;
     }
 
     if (this.props.searchError.length > 0) {
-      this.props.searchError(undefined);
+      this.props.setSearchError('');
     }
 
     return true;
@@ -74,7 +74,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
     return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-2'>
               <div>
               {/*<div style={{boxShadow: '0px 13px 5px -10px rgba(0,0,0,0.75)'}}>*/}
-                <img src={`/thumbnails/${teabag.imageid}/`} style={{width: '100%', cursor: 'ponter'}} />
+                <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'ponter'}} />
                 <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}}>
                   <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595'}}>{teabag.brand.name} - {teabag.flavour}</strong>
                   <div style={{color: '#959595'}}><small>{teabag.serie}</small></div>

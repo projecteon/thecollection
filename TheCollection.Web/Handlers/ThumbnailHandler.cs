@@ -15,7 +15,7 @@ namespace TheCollection.Web.Handlers
         // https://blogs.msdn.microsoft.com/premier_developer/2017/03/14/building-a-simple-photo-album-using-azure-blob-storage-with-net-core/
         // http://stackoverflow.com/questions/41421280/serving-images-from-azure-blob-storage-in-dot-net-core
 
-        public const string RegEx = @"[/]thumbnails[/]([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})[/]$";
+        public const string RegEx = @"[/]thumbnails[/]([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})[/](\S+.(jpg|png))$";
 
         public ThumbnailHandler(RequestDelegate next)
         {
@@ -44,7 +44,7 @@ namespace TheCollection.Web.Handlers
 
         private string GetContentType(Bitmap image)
         {
-            return image.GetMimeType();
+            return image.GetMimeType() ?? "image/png";
         }
     }
 

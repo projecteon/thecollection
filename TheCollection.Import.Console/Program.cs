@@ -62,8 +62,8 @@ namespace TheCollection.Import.Console
             var meerkensToImport = meerkens.Where(meerk => theesToImport.Any(thee => thee.TheeMerk.Trim() == meerk.TheeMerk.Trim())).ToList();
 
             var collectionName = "TheCollection";
-            var brands = DocumentDbImport.ImportBrands(documentDbClient, collectionName, meerkensToImport);
-            var bags = DocumentDbImport.ImportBags(documentDbClient, collectionName, theesToImport, brands, imageUploadService);
+            var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, collectionName, meerkensToImport).Result;
+            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, collectionName, theesToImport, brands, imageUploadService).Result;
 
             System.Console.WriteLine("Conversions end");
             System.Console.ReadLine();
