@@ -102,8 +102,8 @@ namespace TheCollection.Web.Services
 
             }
 
-            var documentQuery = query.Take(100).AsDocumentQuery();
-            //var documentQuery = query.AsDocumentQuery();
+            //var documentQuery = query.Take(100).AsDocumentQuery();
+            var documentQuery = query.AsDocumentQuery();
             var results = new List<T>();
             while (documentQuery.HasMoreResults)
             {
