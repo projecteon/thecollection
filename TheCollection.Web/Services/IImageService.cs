@@ -8,6 +8,6 @@ namespace TheCollection.Web.Services
     {
         Task<Bitmap> Get(string filename);
         Task<string> Upload(Stream stream, string filename);
-        Task Delete(string path);
+        Task<bool> Delete(string filename);
     }
 }

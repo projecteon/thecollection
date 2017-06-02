@@ -28,9 +28,10 @@ namespace TheCollection.Web.Services
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        public async Task Delete(string path)
+        public async Task<bool> Delete(string filename)
         {
-            throw new NotImplementedException();
+            var blockBlob = Container.GetBlockBlobReference(filename);            
+            return await blockBlob.DeleteIfExistsAsync();
         }
 
         public async Task<Bitmap> Get(string filename)

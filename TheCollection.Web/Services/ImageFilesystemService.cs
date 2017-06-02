@@ -9,7 +9,7 @@ namespace TheCollection.Web.Services
     {
         const string Path = @"D:\Source\projecteon\core_testing\testspa\wwwroot\images\";
 
-        public Task Delete(string path)
+        public Task<bool> Delete(string filename)
         {
             throw new NotImplementedException();
         }
