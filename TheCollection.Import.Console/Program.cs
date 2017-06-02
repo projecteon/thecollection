@@ -45,7 +45,7 @@ namespace TheCollection.Import.Console
             );
 
             var imageUploadConnectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endPoints}";
-            var imageUploadConnectionString2 = "UseDevelopmentStorage=true";
+            //var imageUploadConnectionString2 = "UseDevelopmentStorage=true";
 
             var imageUploadService = new ImageAzureBlobService(imageUploadConnectionString);
 
@@ -58,7 +58,7 @@ namespace TheCollection.Import.Console
             var meerkens = JsonFileExport.GetMeerken(brandsFile);
             var thees = JsonFileExport.GetThees(teabagsFile);
 
-            var theesToImport = thees.Take(1).ToList();
+            var theesToImport = thees.Take(300).ToList();
             var meerkensToImport = meerkens.Where(meerk => theesToImport.Any(thee => thee.TheeMerk.Trim() == meerk.TheeMerk.Trim())).ToList();
 
             var collectionName = "TheCollection";

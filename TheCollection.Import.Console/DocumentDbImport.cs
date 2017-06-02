@@ -32,7 +32,7 @@ namespace TheCollection.Import.Console
                 }
             });
 
-            System.Console.WriteLine($"Inserted {insertCounter} brands");
+            System.Console.WriteLine($"Completed inserting {insertCounter} brands");
             return brands;
         }
 
@@ -60,7 +60,9 @@ namespace TheCollection.Import.Console
                 };
             });
 
+            System.Console.WriteLine($"Attempting to insert {bags.Count()} bags out of {thees.Count()} thees");
             var insertCounter = 0;
+            var insertedList = new List<Bag>();
             await bags.ToList().ForEachAsync(async bag =>
             {
                 var bagid = await bagsRepository.CreateItemAsync(bag);
@@ -69,9 +71,12 @@ namespace TheCollection.Import.Console
                 {
                     System.Console.WriteLine($"Inserted bag#: {insertCounter}");
                 }
-            });
 
-            System.Console.WriteLine($"Inserted {insertCounter} bags");
+                insertedList.Add(bag);
+            });
+            
+            System.Console.WriteLine($"Completed inserting {insertCounter} bags");
+            System.Console.WriteLine($"Missing on insert {bags.Where(bag => !insertedList.Contains(bag)).Select(bag => bag.MainID)}");
             return bags;
         }
 
@@ -86,7 +91,7 @@ namespace TheCollection.Import.Console
                 insertCounter++;
             });
 
-            System.Console.WriteLine($"Inserted {insertCounter} countries");
+            System.Console.WriteLine($"Completed inserting {insertCounter} countries");
             return countries;
         }
 
@@ -101,7 +106,7 @@ namespace TheCollection.Import.Console
                 insertCounter++;
             });
 
-            System.Console.WriteLine($"Inserted {insertCounter} bagtypes");
+            System.Console.WriteLine($"Completed inserting {insertCounter} bagtypes");
             return bagTypes;
         }
 
@@ -124,9 +129,13 @@ namespace TheCollection.Import.Console
 
                 image.Id = imageRepository.CreateItemAsync(image).Result;
                 insertCounter++;
+                if (insertCounter > 0 && insertCounter % 25 == 0)
+                {
+                    System.Console.WriteLine($"Inserted image#: {insertCounter}");
+                }
             });
 
-            System.Console.WriteLine($"Inserted {insertCounter} images");
+            System.Console.WriteLine($"Completed inserting {insertCounter} images");
             return images;
         }
     }
