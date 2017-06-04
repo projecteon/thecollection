@@ -7,7 +7,7 @@ namespace TheCollection.Web.Services
 {
     public class ImageFilesystemService : IImageService
     {
-        const string Path = @"D:\Source\projecteon\core_testing\testspa\wwwroot\images\";
+        public const string Path = @"C:\development\core_testing\testspa\wwwroot\images\";
 
         public Task<bool> Delete(string filename)
         {

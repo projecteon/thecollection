@@ -74,7 +74,7 @@ namespace TheCollection.Import.Console
 
                 insertedList.Add(bag);
             });
-            
+
             System.Console.WriteLine($"Completed inserting {insertCounter} bags");
             System.Console.WriteLine($"Missing on insert {bags.Where(bag => !insertedList.Contains(bag)).Select(bag => bag.MainID)}");
             return bags;
@@ -110,10 +110,9 @@ namespace TheCollection.Import.Console
             return bagTypes;
         }
 
-        const string Path = @"D:\Source\projecteon\core_testing\testspa\wwwroot\images\";
         private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees, IImageService imageservice)
         {
-            var images = thees.Where(thee => File.Exists($"{Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var images = thees.Where(thee => File.Exists($"{ImageFilesystemService.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
             var insertCounter = 0;
             await images.ForEachAsync(async image =>
