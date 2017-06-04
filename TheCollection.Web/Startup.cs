@@ -67,6 +67,11 @@ namespace TheCollection_Web
                 appBranch => { appBranch.UseThumbnailHandler(); }
             );
 
+            app.MapWhen(
+                context => Regex.IsMatch(context.Request.Path.ToString(), ImageHandler.RegEx),
+                appBranch => { appBranch.UseImageHandler(); }
+            );
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

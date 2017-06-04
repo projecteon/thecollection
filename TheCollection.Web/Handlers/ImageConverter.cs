@@ -21,6 +21,11 @@ namespace TheCollection.Web.Handlers
             return memoryStream;
         }
 
+        public static byte[] GetBytesPNG(Image imgSrc)
+        {
+            return GetBytes(imgSrc, GetPngEncoder(), GetPngEncoderParams());
+        }
+
         public static byte[] GetBytesScaledJPEG(Image imgSrc, int iWidth, int iHeight)
         {
             var scaledBitmap = GetBytesScaledBitmap(imgSrc, iWidth, iHeight);
