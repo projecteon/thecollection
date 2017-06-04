@@ -44,7 +44,7 @@ namespace TheCollection.Web.Models
         [JsonProperty(PropertyName = "tags")]
         public IEnumerable<string> Tags
         {
-            get { return Services.Tags.Generate(this.Flavour + " " + this.Brand?.Name + " " + this.Country?.Name + " " + this.SerialNumber + " " + this.Hallmark + " " + this.Serie); }
+            get { return Services.Tags.Generate(this.Flavour + " " + this.Brand?.Name + " " + this.Country?.Name + " " + this.SerialNumber + " " + this.Hallmark + " " + this.Serie + " " + this.Type?.Name); }
         }
 
         [JsonProperty(PropertyName = "searchstring")]
