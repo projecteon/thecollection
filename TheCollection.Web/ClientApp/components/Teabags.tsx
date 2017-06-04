@@ -22,28 +22,24 @@ class Teabags extends React.Component<TeabagsProps, void> {
     super();
 
     this.onSearch = this.onSearch.bind(this);
+    this.onSearchTermsChanged = this.onSearchTermsChanged.bind(this);
   }
 
-  private validateSearch(searchTerms: string): boolean {
-    if (searchTerms.trim().length < 3) {
-      this.props.setSearchError('Requires at least 3 characters to search');
-      this.controls.searchInput.focus();
-      return false;
-    }
-
-    if (this.props.searchError.length > 0) {
-      this.props.setSearchError('');
-    }
-
-    return true;
+  onSearchTermsChanged() {
+    event.preventDefault();
+    event.stopPropagation();
+    this.props.validateSearchTerms(this.controls.searchInput.value.trim());
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    if(this.validateSearch(this.controls.searchInput.value.trim())) {
-      this.props.requestTeabags(this.controls.searchInput.value.trim());
-    }
+    this.props.requestTeabags(this.controls.searchInput.value.trim());
+  }
+
+  onZoomClicked(imageId?: string) {
+    console.log(imageId);
+    this.props.zoomImage(imageId);
   }
 
   renderSearchSuccess() {
@@ -60,7 +56,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
     return  <div style={{position: 'fixed', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff'}}>
               {alert}
               <div className={groupClassName}>
-                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" disabled={this.props.isLoading}/>
+                <input ref={input => this.controls.searchInput = input} type="text" className="form-control" placeholder="search terms" disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
                 <span className="input-group-btn">
                   <button type="button" className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden="true" />
@@ -73,8 +69,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
   private renderTeabag(teabag: ITeabag, key: number) {
     return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-2'>
               <div>
-              {/*<div style={{boxShadow: '0px 13px 5px -10px rgba(0,0,0,0.75)'}}>*/}
-                <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'ponter'}} />
+                <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'pointer'}} onClick={this.onZoomClicked.bind(this, teabag.imageid)}/>
                 <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}}>
                   <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595'}}>{teabag.brand.name} - {teabag.flavour}</strong>
                   <div style={{color: '#959595'}}><small>{teabag.serie}</small></div>
@@ -83,11 +78,8 @@ class Teabags extends React.Component<TeabagsProps, void> {
                   <div style={{color: '#959595'}}><small>{teabag.type.name}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.country.name}</small></div>
                   <p style={{position: 'absolute', bottom: -5, right: 15}}>
-                    {/*<button type="button" className='btn btn-default'>
-                      <span className='glyphicon glyphicon-pencil' aria-hidden="true" />
-                    </button>*/}
-                  <Link to={ `/teabagform/${teabag.id}` } activeClassName='active'>
-                        <span className='glyphicon glyphicon-pencil'></span>
+                    <Link to={ `/teabagform/${teabag.id}` } activeClassName='active'>
+                      <span className='glyphicon glyphicon-pencil'></span>
                     </Link>
                   </p>
                 </div>
@@ -108,6 +100,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
       : this.renderTeabags(this.props.teabags);
 
     return  <div>
+              {this.props.zoomImageId !== undefined ? <ImageZoom imageid={this.props.zoomImageId} onClick={this.onZoomClicked.bind(this, undefined)} /> : undefined}
               <div style={{marginBottom: 20, paddingBottom: 20}}>{this.renderSearchBar()}</div>
               {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
               <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
