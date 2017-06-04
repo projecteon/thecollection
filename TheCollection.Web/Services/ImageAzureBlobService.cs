@@ -45,7 +45,7 @@ namespace TheCollection.Web.Services
             Bitmap image;
             using (var memoryStream = new MemoryStream())
             {
-                await blockBlob.DownloadToFileAsync(@"c:\deleteme\temp.jpg", FileMode.Create);
+                //await blockBlob.DownloadToFileAsync(@"c:\deleteme\temp.jpg", FileMode.Create);
                 await blockBlob.DownloadToStreamAsync(memoryStream);
                 image = new Bitmap(Image.FromStream(memoryStream));
             }
