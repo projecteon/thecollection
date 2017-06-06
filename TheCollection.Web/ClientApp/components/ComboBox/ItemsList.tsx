@@ -24,7 +24,7 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
       this.onMouseLeave = this.onMouseLeave.bind(this);
       this.onClick = this.onClick.bind(this);
 
-      this.state = {itemHoverIndex: props.items.length > 0 ? 0 : -1}
+      this.state = {itemHoverIndex: props.items.length > 0 ? 0 : -1};
     }
 
     componentDidMount() {
@@ -39,27 +39,29 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
     onKeyDown(event) {
       switch (event.key) {
         case 'ArrowDown': {
-          if(this.state.itemHoverIndex < this.props.items.length -1) {
-            this.setState({itemHoverIndex: this.state.itemHoverIndex + 1});
+            if (this.state.itemHoverIndex < this.props.items.length - 1) {
+              this.setState({itemHoverIndex: this.state.itemHoverIndex + 1});
+            }
+            event.stopPropagation();
+            event.preventDefault();
           }
-          event.stopPropagation();
-          event.preventDefault();
           break;
-        }
         case 'ArrowUp': {
-          if(this.state.itemHoverIndex > 0) {
-            this.setState({itemHoverIndex: this.state.itemHoverIndex - 1});
+            if (this.state.itemHoverIndex > 0) {
+              this.setState({itemHoverIndex: this.state.itemHoverIndex - 1});
+            }
+            event.stopPropagation();
+            event.preventDefault();
           }
-          event.stopPropagation();
-          event.preventDefault();
-          break;
-        }
+        break;
         case 'Enter': {
-          this.props.onItemSelected(this.props.items[this.state.itemHoverIndex]);
-          event.stopPropagation();
-          event.preventDefault();
+            this.props.onItemSelected(this.props.items[this.state.itemHoverIndex]);
+            event.stopPropagation();
+            event.preventDefault();
+          }
           break;
-        }
+        default:
+          break;
       }
     }
 
@@ -77,12 +79,12 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
 
     renderItem(item: T, index: number) {
       let itemProps = {
-         key:index,
-         style:{padding: 6, cursor: 'pointer', zIndex: 3},
+         key: index,
+         style: {padding: 6, cursor: 'pointer', zIndex: 3},
          className: `list-group-item ${this.state.itemHoverIndex === index ? 'list-group-item-info' : ''}`,
          onMouseEnter: this.onMouseEnter.bind(this, index),
          onMouseLeave: this.onMouseLeave,
-         onClick: this.onClick
+         onClick: this.onClick,
       };
       return <li {...itemProps} >{this.props.renderItem(item)}</li>;
     }
@@ -92,5 +94,5 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
                 {this.props.items.map((item, index) => { return this.renderItem(item, index); })}
               </ul>;
     }
-  }
+  };
 }

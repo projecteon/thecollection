@@ -22,19 +22,14 @@ export class NavMenu extends React.Component<any, void> {
                                 <span className='glyphicon glyphicon-home'></span> Home
                             </Link>
                         </li>
-                        <li>
-                            <Link to={ '/counter' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-education'></span> Counter
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={ '/fetchdata' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-th-list'></span> Fetch data
-                            </Link>
-                        </li>
                          <li>
                             <Link to={ '/teabags' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-th-list'></span> Teabags
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={ '/teabagform' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-plus'></span> New teabag
                             </Link>
                         </li>
                     </ul>

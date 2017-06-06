@@ -1,11 +1,8 @@
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
-import {ITeabag} from '../interfaces/ITeaBag';
-import { ISearchResult } from "../interfaces/ISearchResult";
-
-// -----------------
-// STATE - This defines the type of data maintained in the Redux store.
+import { ITeabag } from '../interfaces/ITeaBag';
+import { ISearchResult } from '../interfaces/ISearchResult';
 
 export interface TeabagsState {
   teabags: ITeabag[];
@@ -15,10 +12,6 @@ export interface TeabagsState {
   searchedTerms?: string;
   searchError?: string;
 }
-
-// -----------------
-// ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
-// They do not themselves have any side-effects; they just describe something that is going to happen.
 
 interface RequestTeabagsAction {
   type: 'REQUEST_TEABAGS';
@@ -42,22 +35,16 @@ interface ZoomImage {
   imageid: string;
 }
 
-// Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
-// declared type strings (and not any other arbitrary string).
 type KnownAction = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | ZoomImage;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
-// They don't directly mutate state, but they can have external side-effects (such as loading data).
-
 export const actionCreators = {
-  requestTeabags: (searchTerms?: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+  requestTeabags: (searchTerms?: string): AppThunkAction<RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError> => (dispatch, getState) => {
      if (searchTerms.trim().length < 3) {
       dispatch({ type: 'SEARCH_TERMS_ERROR', searchError: 'Requires at least 3 characters to search' });
       return;
     }
 
-    // Only load data if it's something we don't already have (and are not already loading)
+    // only load data if it's something we don't already have (and are not already loading)
     if (searchTerms !== getState().teabags.searchedTerms || true) {
       let uri = searchTerms !== undefined && searchTerms.length > 0
         ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}`
@@ -84,14 +71,11 @@ export const actionCreators = {
   },
   zoomImage: (imageid: string): AppThunkAction<ZoomImage> => (dispatch, getState) => {
     dispatch({ type: 'ZOOM_IMAGE_TOGGLE', imageid: imageid });
-  }
+  },
 };
 
-// ----------------
-// REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
 const unloadedState: TeabagsState = { isLoading: false, teabags: [], searchError: '' };
-
 export const reducer: Reducer<TeabagsState> = (state: TeabagsState, action: KnownAction) => {
   switch (action.type) {
     case 'REQUEST_TEABAGS':
@@ -124,7 +108,6 @@ export const reducer: Reducer<TeabagsState> = (state: TeabagsState, action: Know
     case 'ZOOM_IMAGE_TOGGLE':
       return {...state, ...{zoomImageId: action.imageid}};
     default:
-      // The following line guarantees that every action in the KnownAction union has been covered by a case above
       const exhaustiveCheck: never = action;
   }
 

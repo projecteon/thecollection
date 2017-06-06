@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {Component, ComponentClass} from 'react';
-import debounce from 'lodash/debounce'
+import { Component, ComponentClass } from 'react';
+import debounce from 'lodash/debounce';
 
-import {ItemsList} from './ItemsList';
+import { ItemsList } from './ItemsList';
 
 import './ComboBox.css';
 
@@ -11,9 +11,9 @@ export interface IComboBoxProps<T> {
   displayProperty: keyof T;
   renderItem(item: T): JSX.Element;
   onAddNew?(): void;
-  onClear?(): void;
-  onItemSelected?(item: T): void;
-  onSearch?(searchTerm: string): Promise<T[]>;
+  onClear(): void;
+  onItemSelected(item: T): void;
+  onSearch(searchTerm: string): Promise<T[]>;
 }
 
 export interface IComboBoxState<T> {
@@ -26,7 +26,7 @@ export interface IComboBoxState<T> {
 }
 
 export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
-  let Items = ItemsList<T>();
+  let Items = ItemsList<T>(); // tslint:disable-line:variable-name
 
   return class extends Component<IComboBoxProps<T>, IComboBoxState<T>> {
     delayedSearch: ((searchedTerm: string) => void) & _.Cancelable;
@@ -49,9 +49,9 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       this.state = {selectedItem: props.selectedItem, searchTerm: props.selectedItem === undefined ? '' : props.selectedItem[props.displayProperty], displayResults: false, searchedTerm: '', results: [], isLoading: false};
     }
 
-    componentWillReceiveProps(props: IComboBoxProps<T>){
-      if(props.selectedItem !== this.props.selectedItem) {
-        this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem,}});
+    componentWillReceiveProps(props: IComboBoxProps<T>) {
+      if (props.selectedItem !== this.props.selectedItem) {
+        this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem }});
       }
     }
 
@@ -60,7 +60,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return  [this.state.selectedItem];
       }
 
-      return this.state.results.filter(item => { return item[this.props.displayProperty].toString().indexOf(this.state.searchTerm.toString()) > -1})
+      return this.state.results.filter(item => { return item[this.props.displayProperty].toString().indexOf(this.state.searchTerm.toString()) > -1; });
     };
 
     onFocus() {
@@ -68,17 +68,16 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     onBlur() {
-      if (this.state.selectedItem != undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty]) {
+      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty]) {
         this.setState({...this.state, ...{displayResults: false, selectedItem: this.props.selectedItem, searchTerm: this.props.selectedItem === undefined ? this.state.searchTerm : this.props.selectedItem[this.props.displayProperty]}});
         return;
       }
-
     }
 
     onClear() {
       this.setState({...this.state, ...{displayResults: false, selectedItem: undefined, searchTerm: '', searchedTerm: ''}});
 
-      if(this.props.onClear) {
+      if (this.props.onClear) {
         this.props.onClear();
       }
     }
@@ -87,7 +86,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       if (this.state.searchedTerm !== searchedTerm || searchedTerm.length === 0) {
         this.props.onSearch(searchedTerm)
             .then(data => {this.setState({...this.state, ...{ isLoading: false, results: data, displayResults: true, searchedTerm: searchedTerm }});
-        })
+        });
       }
     }
 
@@ -101,13 +100,13 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     renderClearButton() {
-      if(this.props.selectedItem === undefined) {
+      if (this.props.selectedItem === undefined) {
         return undefined;
       }
 
-      return  <span className="input-group-btn">
-                <button type="button" className='btn btn-danger' onClick={this.onClear}>
-                  <span className='glyphicon glyphicon-remove' aria-hidden="true" />
+      return  <span className='input-group-btn'>
+                <button type='button' className='btn btn-danger' onClick={this.onClear}>
+                  <span className='glyphicon glyphicon-remove' aria-hidden='true' />
                 </button>
               </span>;
     }
@@ -118,7 +117,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       }
 
       let className = `glyphicon glyphicon-refresh glyphicon-refresh-animate form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
-      return <span className={className} aria-hidden="true"></span>;
+      return <span className={className} aria-hidden='true'></span>;
     }
 
     renderSearchIcon() {
@@ -127,7 +126,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       }
 
       let className = `glyphicon glyphicon-search form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
-      return <span className={className} aria-hidden="true"></span>;
+      return <span className={className} aria-hidden='true'></span>;
     }
 
     renderAddButton() {
@@ -135,9 +134,9 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return undefined;
       }
 
-      return  <span className="input-group-btn">
-                <button type="button" className='btn btn-success' onClick={this.props.onAddNew}>
-                  <span className='glyphicon glyphicon-plus' aria-hidden="true" />
+      return  <span className='input-group-btn'>
+                <button type='button' className='btn btn-success' onClick={this.props.onAddNew}>
+                  <span className='glyphicon glyphicon-plus' aria-hidden='true' />
                 </button>
               </span>;
     }
@@ -156,7 +155,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       return  <div style={{position: 'relative'}}>
                 <div className={className}>
                   {this.renderClearButton()}
-                  <input ref={input => this.controls.input = input} type="text" className="form-control" id="inputType" placeholder="Search for..." autoComplete='off' role='combobox' onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
+                  <input ref={input => this.controls.input = input} type='text' className='form-control' id='inputType' placeholder='Search for...' autoComplete='off' role='combobox' onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
                   {this.renderSearchIcon()}
                   {this.renderLoadingIcon()}
                   {this.renderAddButton()}
@@ -164,5 +163,5 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
                 {this.renderResult()}
               </div>;
     }
-  }
+  };
 }
