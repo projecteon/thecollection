@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCollection.Lib", "TheCol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCollection.Import.Console", "TheCollection.Import.Console\TheCollection.Import.Console.csproj", "{CBD3DB73-E068-4725-BCAF-509122B29E29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCollection.Business", "TheCollection.Business\TheCollection.Business.csproj", "{3AB18D92-85DF-46AE-8618-57FDA17AFA81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCollection.Business.Tests.Unit", "TheCollection.Business.Tests.Unit\TheCollection.Business.Tests.Unit.csproj", "{1467D4E1-92DE-4910-9851-5EBC8468B5D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +36,14 @@ Global
 		{CBD3DB73-E068-4725-BCAF-509122B29E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBD3DB73-E068-4725-BCAF-509122B29E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBD3DB73-E068-4725-BCAF-509122B29E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB18D92-85DF-46AE-8618-57FDA17AFA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB18D92-85DF-46AE-8618-57FDA17AFA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB18D92-85DF-46AE-8618-57FDA17AFA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB18D92-85DF-46AE-8618-57FDA17AFA81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1467D4E1-92DE-4910-9851-5EBC8468B5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1467D4E1-92DE-4910-9851-5EBC8468B5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1467D4E1-92DE-4910-9851-5EBC8468B5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1467D4E1-92DE-4910-9851-5EBC8468B5D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
