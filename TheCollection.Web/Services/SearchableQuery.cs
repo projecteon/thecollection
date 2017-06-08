@@ -1,11 +1,11 @@
 ﻿using Microsoft.Azure.Documents;
 using System.Collections.Generic;
 using System.Linq;
-using TheCollection.Web.Models;
+using TheCollection.Business;
 
 namespace TheCollection.Web.Services
 {
-    public class SearchableQuery<T> where T : ISearchable
+    public class SearchableQuery<T> 
     {
         public static SqlQuerySpec Create(string collectionId, IEnumerable<string> searchTerms, int top = 0)
         {

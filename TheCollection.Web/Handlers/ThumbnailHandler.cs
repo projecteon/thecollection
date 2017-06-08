@@ -24,7 +24,7 @@ namespace TheCollection.Web.Handlers
 
         public async Task Invoke(HttpContext context, DocumentClient documentDbClient, IImageService imageService)
         {
-            var imagesRepository = new DocumentDBRepository<Models.Image>(documentDbClient, "TheCollection", "Images");
+            var imagesRepository = new DocumentDBRepository<Business.Tea.Image>(documentDbClient, "TheCollection", "Images");
             var matches = Regex.Matches(context.Request.Path, RegEx);
             if (matches.Count > 0 && matches[0].Groups.Count > 1)
             {

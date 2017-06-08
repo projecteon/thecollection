@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TheCollection.Web.Models;
+using TheCollection.Business.Tea;
 using TheCollection.Web.Services;
 
 namespace TheCollection.Web.Controllers
@@ -28,12 +25,7 @@ namespace TheCollection.Web.Controllers
             IEnumerable<Bag> bags;
             if (searchterm != "")
             {
-                //var searchterms = searchterm.ToLower().Split(' ').Select(term => $"ARRAY_CONTAINS(bag.tags, '{term}')").ToArray();
-                //bags = await bagsRepository.GetItemsAsync(BagFilters.TagContainsAll(searchterms));
-                //bags = await bagsRepository.GetItemsAsync(null, bag => bag.Tags.Where(tag => tag.Contains(searchterm)).Select(tag => bag));
-                //var sql = $"SELECT TOP 100 VALUE bag FROM Bags bag WHERE {searchterms.Aggregate((current, next) => current + " AND " + next)}";
                 bags = await bagsRepository.GetItemsAsync<Bag>(searchterm);
-                //bags = await bagsRepository.GetItemsAsync(BagFilters.TagContains2(searchterms));
             }
             else
             {
@@ -62,31 +54,5 @@ namespace TheCollection.Web.Controllers
     {
         public long count { get; set; }
         public IEnumerable<T> data { get; set; }
-    }
-
-    public static class BagFilters
-    {
-        public static Expression<Func<Bag, bool>> TagContainsAll(string[] searchterms)
-        {
-            return (bag => (bool)UserDefinedFunctionProvider.Invoke("containsLikeAll", bag.Tags, searchterms));
-        }
-
-        public static Expression<Func<Bag, IEnumerable<Bag>>> TagContains(string[] searchterms)
-        {
-            //return (bag => bag.Tags.Where(tag => tag.Contains(searchterms[0])).Select(tag => bag));
-            return (bag => bag.Tags.Where(tag => searchterms.Contains(tag)).Select(tag => bag));
-        }
-
-        public static IEnumerable<Expression<Func<Bag, IEnumerable<Bag>>>> TagContains3(string[] searchterms)
-        {
-            //return (bag => bag.Tags.Where(tag => tag.Contains(searchterms[0])).Select(tag => bag));
-            for (int i = 0; i < searchterms.Length; i++)
-                yield return (bag => bag.Tags.Where(tag => tag == searchterms[i]).Select(tag => bag));
-        }
-
-        public static Expression<Func<Bag, bool>> TagContains2(string[] searchterms)
-        {
-            return (bag => searchterms.All(searchterm => bag.Tags.Contains(searchterm)));
-        }
     }
 }

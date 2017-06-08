@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TheCollection.Business.Tea;
 using TheCollection.Import.Console.Models;
-using TheCollection.Web.Models;
 using TheCollection.Web.Services;
 
 namespace TheCollection.Import.Console
@@ -45,15 +45,18 @@ namespace TheCollection.Import.Console
             var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
             var bags = thees.Select(thee =>
             {
+                var teabrand = brands.FirstOrDefault(brand => brand.Name == thee.TheeMerk.Trim());
+                var teabagType = bagTypes.FirstOrDefault(bagType => bagType.Name == thee.TheeSoortzakje.Trim());
+                var teacountry = countries.FirstOrDefault(country => country.Name == thee.TheeLandvanherkomst.Trim());
                 return new Bag
                 {
                     MainID = thee.MainID,
-                    Brand = brands.FirstOrDefault(brand => brand.Name == thee.TheeMerk.Trim()),
+                    Brand = new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name },
                     Serie = thee.TheeSerie.Trim(),
                     Flavour = thee.TheeSmaak.Trim(),
                     Hallmark = thee.TheeKenmerken.Trim(),
-                    Type = bagTypes.FirstOrDefault(bagType => bagType.Name == thee.TheeSoortzakje.Trim()),
-                    Country = countries.FirstOrDefault(country => country.Name == thee.TheeLandvanherkomst.Trim()),
+                    BagType = new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name },
+                    Country = new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name },
                     SerialNumber = thee.TheeSerienummer.Trim(),
                     InsertDate = thee.Theeinvoerdatum.Trim(),
                     ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id

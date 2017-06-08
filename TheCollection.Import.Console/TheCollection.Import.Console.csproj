@@ -76,23 +76,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TheCollection.Web\Models\Bag.cs">
+    <Compile Include="..\TheCollection.Business\ISearchable.cs">
+      <Link>Models\ISearchable.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\RefValue.cs">
+      <Link>Models\RefValue.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\Searchable.cs">
+      <Link>Models\Searchable.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\SearchableAttribute.cs">
+      <Link>Models\SearchableAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\SearchableConverter.cs">
+      <Link>Models\SearchableConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\Tags.cs">
+      <Link>Models\Tags.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\Tea\Bag.cs">
       <Link>Models\Bag.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Models\BagType.cs">
+    <Compile Include="..\TheCollection.Business\Tea\BagType.cs">
       <Link>Models\BagType.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Models\Brand.cs">
+    <Compile Include="..\TheCollection.Business\Tea\Brand.cs">
       <Link>Models\Brand.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Models\Country.cs">
+    <Compile Include="..\TheCollection.Business\Tea\Country.cs">
       <Link>Models\Country.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Models\Image.cs">
+    <Compile Include="..\TheCollection.Business\Tea\Image.cs">
       <Link>Models\Image.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Models\ISearchable.cs">
-      <Link>Models\ISearchable.cs</Link>
+    <Compile Include="..\TheCollection.Lib\Extensions\TypeExtensions.cs">
+      <Link>Models\TypeExtensions.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Web\Services\DocumentDBRepository.cs">
       <Link>Services\DocumentDBRepository.cs</Link>
