@@ -41,6 +41,7 @@ namespace TheCollection.Import.Console
             var countries = await ImportCountriesAsync(client, collection, thees);
             var bagTypes = await ImportBagTypesAsync(client, collection, thees);
             var images = await ImportImagesAsync(client, collection, thees, imageservice);
+            //var images = new List<Image>();
 
             var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
             var bags = thees.Select(thee =>
@@ -51,12 +52,12 @@ namespace TheCollection.Import.Console
                 return new Bag
                 {
                     MainID = thee.MainID,
-                    Brand = new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name },
+                    Brand = teabrand != null ? new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name } : null,
                     Serie = thee.TheeSerie.Trim(),
                     Flavour = thee.TheeSmaak.Trim(),
                     Hallmark = thee.TheeKenmerken.Trim(),
-                    BagType = new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name },
-                    Country = new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name },
+                    BagType = teabagType != null ? new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null,
+                    Country = teacountry != null ? new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null,
                     SerialNumber = thee.TheeSerienummer.Trim(),
                     InsertDate = thee.Theeinvoerdatum.Trim(),
                     ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
@@ -65,7 +66,6 @@ namespace TheCollection.Import.Console
 
             System.Console.WriteLine($"Attempting to insert {bags.Count()} bags out of {thees.Count()} thees");
             var insertCounter = 0;
-            var insertedList = new List<Bag>();
             await bags.ToList().ForEachAsync(async bag =>
             {
                 var bagid = await bagsRepository.CreateItemAsync(bag);
@@ -73,19 +73,17 @@ namespace TheCollection.Import.Console
                 if (insertCounter > 0 && insertCounter % 100 == 0)
                 {
                     System.Console.WriteLine($"Inserted bag#: {insertCounter}");
+                    await System.Threading.Tasks.Task.Delay(3000);
                 }
-
-                insertedList.Add(bag);
             });
 
             System.Console.WriteLine($"Completed inserting {insertCounter} bags");
-            System.Console.WriteLine($"Missing on insert {bags.Where(bag => !insertedList.Contains(bag)).Select(bag => bag.MainID)}");
             return bags;
         }
 
         private static async System.Threading.Tasks.Task<List<Country>> ImportCountriesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
-            var countries = thees.Select(thee => thee.TheeLandvanherkomst.Trim()).Distinct().Select(country => { return new Country { Name = country }; }).ToList();
+            var countries = thees.Select(thee => thee.TheeLandvanherkomst.Trim()).Distinct().Where(country => country.Length > 0).Select(country => { return new Country { Name = country }; }).ToList();
             var countryRepository = new DocumentDBRepository<Country>(client, collection, "Countries");
             var insertCounter = 0;
             await countries.ForEachAsync(async country =>
@@ -134,6 +132,7 @@ namespace TheCollection.Import.Console
                 if (insertCounter > 0 && insertCounter % 25 == 0)
                 {
                     System.Console.WriteLine($"Inserted image#: {insertCounter}");
+                    await System.Threading.Tasks.Task.Delay(3000);
                 }
             });
 
