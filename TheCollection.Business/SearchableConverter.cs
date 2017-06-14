@@ -34,6 +34,10 @@ namespace TheCollection.Business
                     {
                         jo.Add(prop.Name.ToLower(), JToken.FromObject(propVal, serializer));
                     }
+                    else
+                    {
+                        jo.Add(prop.Name.ToLower(), null);
+                    }
                 }
             }
 
