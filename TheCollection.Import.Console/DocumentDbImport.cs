@@ -73,7 +73,6 @@ namespace TheCollection.Import.Console
                 if (insertCounter > 0 && insertCounter % 100 == 0)
                 {
                     System.Console.WriteLine($"Inserted bag#: {insertCounter}");
-                    await System.Threading.Tasks.Task.Delay(3000);
                 }
             });
 
@@ -118,26 +117,80 @@ namespace TheCollection.Import.Console
             var insertCounter = 0;
             await images.ForEachAsync(async image =>
             {
-                var fileImageService = new ImageFilesystemService();
-                var bitmap = await fileImageService.Get(image.Filename);
-                using (var imageStream = new MemoryStream())
-                {
-                    bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    imageStream.Seek(0, SeekOrigin.Begin);
-                    image.Uri = await imageservice.Upload(imageStream, image.Filename);
-                }
+                //var fileImageService = new ImageFilesystemService();
+                //using (var bitmap = await fileImageService.Get(image.Filename))
+                //{
+                //    using (var imageStream = new MemoryStream())
+                //    {
+                //        bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //        imageStream.Seek(0, SeekOrigin.Begin);
+                //        image.Uri = await imageservice.Upload(imageStream, image.Filename);
+                //    }
+                //}
 
-                image.Id = imageRepository.CreateItemAsync(image).Result;
+                image.Id = await imageRepository.CreateItemAsync(image);
                 insertCounter++;
                 if (insertCounter > 0 && insertCounter % 25 == 0)
                 {
                     System.Console.WriteLine($"Inserted image#: {insertCounter}");
-                    await System.Threading.Tasks.Task.Delay(3000);
                 }
             });
 
             System.Console.WriteLine($"Completed inserting {insertCounter} images");
             return images;
+        }
+
+        private static async System.Threading.Tasks.Task<List<Image>> ImportImages2Async(DocumentClient client, string collection, IEnumerable<Bag> bags, IImageService imageservice)
+        {
+            var images = bags.Where(bag => File.Exists($"{ImageFilesystemService.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
+            var insertCounter = 0;
+            await images.ForEachAsync(async image =>
+            {
+                var fileImageService = new ImageFilesystemService();
+                using (var bitmap = await fileImageService.Get(image.Filename))
+                {
+                    using (var imageStream = new MemoryStream())
+                    {
+                        bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        imageStream.Seek(0, SeekOrigin.Begin);
+                        image.Uri = await imageservice.Upload(imageStream, image.Filename);
+                    }
+                }
+
+                image.Id = imageRepository.CreateItemAsync(image).Result;
+                insertCounter++;
+                System.Console.WriteLine($"Inserted image#: {insertCounter}");
+            });
+
+            System.Console.WriteLine($"Completed inserting {insertCounter} images");
+            return images;
+        }
+
+        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> UpdateBagsAsync(DocumentClient client, string collection, IImageService imageservice)
+        {
+
+            var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
+            var bags = await bagsRepository.GetItemsAsync(bag => bag.ImageId == null && bag.MainID != 165 && bag.MainID != 1193, 50);
+            System.Console.WriteLine($"Fetched {bags.Count()} bags");
+            var images = await ImportImages2Async(client, collection, bags, imageservice);
+            bags.ToList().ForEach(bag =>
+            {
+                bag.ImageId = images.FirstOrDefault(image => image.Filename == $"{bag.MainID}.jpg")?.Id;
+            });
+
+            System.Console.WriteLine($"Attempting to update {bags.Count()} bags");
+            var insertCounter = 0;
+            await bags.ToList().ForEachAsync(async bag =>
+            {
+                var bagid = await bagsRepository.UpdateItemAsync(bag.Id, bag);
+                insertCounter++;
+                System.Console.WriteLine($"Update bag: {insertCounter} - {bag.MainID}");
+            });
+
+            System.Console.WriteLine($"Completed updateing {insertCounter} bags");
+
+            return bags;
         }
     }
 }
