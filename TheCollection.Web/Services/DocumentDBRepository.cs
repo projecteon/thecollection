@@ -82,7 +82,7 @@ namespace TheCollection.Web.Services
             return results;
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate = null, IEnumerable<Expression<Func<T, IEnumerable<T>>>> predicate2 = null)
+        public async Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate = null, int pageSize = 0, int page = 0)
         {
             var query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
@@ -93,14 +93,16 @@ namespace TheCollection.Web.Services
                 query = query.Where(predicate);
             }
 
-            if (predicate2 != null)
+            if (pageSize > 0)
             {
-                query = query.SelectMany(predicate2.ElementAt(0));
-                query = query.SelectMany(predicate2.ElementAt(1));
+                if (page > 0)
+                {
+                    query = query.Skip(pageSize * page);
+                }
 
+                query = query.Take(pageSize);
             }
 
-            //var documentQuery = query.Take(100).AsDocumentQuery();
             var documentQuery = query.AsDocumentQuery();
             var results = new List<T>();
             while (documentQuery.HasMoreResults)
@@ -160,7 +162,7 @@ namespace TheCollection.Web.Services
                     await client.CreateDocumentCollectionAsync(
                         UriFactory.CreateDatabaseUri(DatabaseId),
                         new DocumentCollection { Id = CollectionId },
-                        new RequestOptions { OfferThroughput = 1000 });
+                        new RequestOptions { OfferThroughput = 5000 });
                 }
                 else
                 {
