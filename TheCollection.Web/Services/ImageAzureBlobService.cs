@@ -4,6 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace TheCollection.Web.Services
 {
@@ -45,7 +47,6 @@ namespace TheCollection.Web.Services
             Bitmap image;
             using (var memoryStream = new MemoryStream())
             {
-                //await blockBlob.DownloadToFileAsync(@"c:\deleteme\temp.jpg", FileMode.Create);
                 await blockBlob.DownloadToStreamAsync(memoryStream);
                 image = new Bitmap(Image.FromStream(memoryStream));
             }
