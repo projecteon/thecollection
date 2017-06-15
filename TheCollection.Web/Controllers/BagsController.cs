@@ -25,7 +25,7 @@ namespace TheCollection.Web.Controllers
             IEnumerable<Bag> bags;
             if (searchterm != "")
             {
-                bags = await bagsRepository.GetItemsAsync<Bag>(searchterm, 300);
+                bags = await bagsRepository.GetItemsAsync(searchterm, 300);
             }
             else
             {
@@ -34,7 +34,7 @@ namespace TheCollection.Web.Controllers
 
             return new SearchResult<Bag>
             {
-                count = await bagsRepository.GetRowCountAsync<Bag>(searchterm),
+                count = await bagsRepository.GetRowCountAsync(searchterm),
                 data = bags.OrderBy(bag => bag.Brand.Name)
                         .ThenBy(bag => bag.Hallmark)
                         .ThenBy(bag => bag.Serie)

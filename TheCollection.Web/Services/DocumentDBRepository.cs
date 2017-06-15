@@ -50,7 +50,7 @@ namespace TheCollection.Web.Services
             }
         }
 
-        public async Task<long> GetRowCountAsync<T>(string searchterm)
+        public async Task<long> GetRowCountAsync(string searchterm)
         {
             var query = client.CreateDocumentQuery(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
@@ -67,7 +67,8 @@ namespace TheCollection.Web.Services
             return results;
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync<T>(string searchterm, int top = 100)         {
+        public async Task<IEnumerable<T>> GetItemsAsync(string searchterm, int top = 100)
+        {
             var query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
                 SearchableQuery<T>.Create(CollectionId, searchterm.ToLower().Split(' '), top),
