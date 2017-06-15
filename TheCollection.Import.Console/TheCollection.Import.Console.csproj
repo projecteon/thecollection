@@ -131,9 +131,6 @@
     <Compile Include="..\TheCollection.Web\Services\SearchableQuery.cs">
       <Link>Services\SearchableQuery.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\Tags.cs">
-      <Link>Services\Tags.cs</Link>
-    </Compile>
     <Compile Include="AccessExport.cs" />
     <Compile Include="AzureStorageClient.cs" />
     <Compile Include="DataTableExtensions.cs" />
