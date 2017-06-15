@@ -6,7 +6,7 @@ namespace TheCollection.Lib
     {
         public static byte[] CreateThumbnail(Bitmap src)
         {
-            return Converters.ImageConverter.GetBytesScaledPNG(src, Converters.ImageConverter.THUMB_DEFAULT_WIDTH_PARAM, 0);
+            return Converters.PngImageConverter.GetBytesScaledPNG(src, Converters.ImageConverter.THUMB_DEFAULT_WIDTH_PARAM, 0);
         }
     }
 }
