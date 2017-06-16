@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
 import * as TeaBagsReducer from '../reducers/teabags';
-import { ImageZoom } from './ImageZoom';
+import { ImageZoom } from '../components/ImageZoom';
 import { ITeabag } from '../interfaces/ITeaBag';
 
 import './Teabags.css';

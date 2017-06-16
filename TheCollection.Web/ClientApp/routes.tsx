@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Router, Route, HistoryBase } from 'react-router';
 import { Layout } from './components/Layout';
-import Home from './components/Home';
-import Teabags from './components/Teabags';
-import TeabagForm from './components/TeabagForm';
+import Home from './views/Home';
+import Teabags from './views/Teabags';
+import TeabagForm from './views/TeabagForm';
 
 // http://stackoverflow.com/questions/32128978/react-router-no-not-found-route
 // https://github.com/ReactTraining/react-router/issues/142

@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
 import * as TeabagState from '../store/Teabag';
 
-import {ComboBox} from './ComboBox/ComboBox';
-import {Loader} from './Loader';
+import {ComboBox} from '../components/ComboBox/ComboBox';
+import {Loader} from '../components/Loader';
 
 import {IBrand} from '../interfaces/IBrand';
 import {ICountry} from '../interfaces/ICountry';
