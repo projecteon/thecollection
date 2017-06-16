@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
-import * as TeabagState from '../store/Teabag';
+import * as TeabagReducer from '../reducers/teabag';
 
 import {ComboBox} from '../components/ComboBox/ComboBox';
 import {Loader} from '../components/Loader';
@@ -16,8 +16,8 @@ const CountryComboBox = ComboBox<ICountry>(); // tslint:disable-line:variable-na
 const TypeComboBox = ComboBox<IBagType>(); // tslint:disable-line:variable-name
 
 type TeabagsProps =
-    TeabagState.ITeabagState     // ... state we've requested from the Redux store
-    & typeof TeabagState.actionCreators   // ... plus action creators we've requested
+    TeabagReducer.ITeabagState     // ... state we've requested from the Redux store
+    & typeof TeabagReducer.actionCreators   // ... plus action creators we've requested
     & { params?: { id?: string } };       // ... plus incoming routing parameters
 
 class TeabagForm extends React.Component<TeabagsProps, void> {
@@ -180,6 +180,6 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
 
 export default connect(
     (state: IApplicationState) => state.teabag, // selects which state properties are merged into the component's props
-    TeabagState.actionCreators                 // selects which action creators are merged into the component's props
+    TeabagReducer.actionCreators                 // selects which action creators are merged into the component's props
 )(TeabagForm);
 

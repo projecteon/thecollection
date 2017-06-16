@@ -1,5 +1,5 @@
 import * as TeaBags from '../reducers/teabags';
-import * as Teabag from './Teabag';
+import * as Teabag from '../reducers/teabag';
 
 export interface IApplicationState {
     teabags: TeaBags.ITeabagsState;
