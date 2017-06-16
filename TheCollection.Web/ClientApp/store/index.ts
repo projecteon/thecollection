@@ -1,8 +1,8 @@
-import * as TeaBags from './TeabagsStore';
+import * as TeaBags from '../reducers/teabags';
 import * as Teabag from './Teabag';
 
 export interface IApplicationState {
-    teabags: TeaBags.TeabagsState;
+    teabags: TeaBags.ITeabagsState;
     teabag: Teabag.ITeabagState;
 }
 

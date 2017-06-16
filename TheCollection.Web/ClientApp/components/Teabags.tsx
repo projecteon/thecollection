@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
-import * as TeabagsState from '../store/TeabagsStore';
+import * as TeaBagsReducer from '../reducers/teabags';
 import { ImageZoom } from './ImageZoom';
 import { ITeabag } from '../interfaces/ITeaBag';
 
 import './Teabags.css';
 
 type TeabagsProps =
-    TeabagsState.TeabagsState     // ... state we've requested from the Redux store
-    & typeof TeabagsState.actionCreators   // ... plus action creators we've requested
+    TeaBagsReducer.ITeabagsState     // ... state we've requested from the Redux store
+    & typeof TeaBagsReducer.actionCreators   // ... plus action creators we've requested
 
 class Teabags extends React.Component<TeabagsProps, void> {
   controls: {
@@ -112,5 +112,5 @@ class Teabags extends React.Component<TeabagsProps, void> {
 
 export default connect(
     (state: IApplicationState) => state.teabags,
-    TeabagsState.actionCreators
+    TeaBagsReducer.actionCreators
 )(Teabags);
