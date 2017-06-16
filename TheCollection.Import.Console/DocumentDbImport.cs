@@ -36,12 +36,11 @@ namespace TheCollection.Import.Console
             return brands;
         }
 
-        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> ImportBagsAsync(DocumentClient client, string collection, List<Thee> thees, IList<Brand> brands, IImageService imageservice)
+        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> ImportBagsAsync(DocumentClient client, string collection, List<Thee> thees, IList<Brand> brands)
         {
             var countries = await ImportCountriesAsync(client, collection, thees);
             var bagTypes = await ImportBagTypesAsync(client, collection, thees);
-            var images = await ImportImagesAsync(client, collection, thees, imageservice);
-            //var images = new List<Image>();
+            var images = await ImportImagesAsync(client, collection, thees);
 
             var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
             var bags = thees.Select(thee =>
@@ -62,7 +61,7 @@ namespace TheCollection.Import.Console
                     InsertDate = thee.Theeinvoerdatum.Trim(),
                     ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
                 };
-            });
+            }).ToList();
 
             System.Console.WriteLine($"Attempting to insert {bags.Count()} bags out of {thees.Count()} thees");
             var insertCounter = 0;
@@ -110,27 +109,16 @@ namespace TheCollection.Import.Console
             return bagTypes;
         }
 
-        private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees, IImageService imageservice)
+        private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var images = thees.Where(thee => File.Exists($"{ImageFilesystemService.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
             var insertCounter = 0;
             await images.ForEachAsync(async image =>
             {
-                //var fileImageService = new ImageFilesystemService();
-                //using (var bitmap = await fileImageService.Get(image.Filename))
-                //{
-                //    using (var imageStream = new MemoryStream())
-                //    {
-                //        bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                //        imageStream.Seek(0, SeekOrigin.Begin);
-                //        image.Uri = await imageservice.Upload(imageStream, image.Filename);
-                //    }
-                //}
-
                 image.Id = await imageRepository.CreateItemAsync(image);
                 insertCounter++;
-                if (insertCounter > 0 && insertCounter % 25 == 0)
+                if (insertCounter > 0 && insertCounter % 250 == 0)
                 {
                     System.Console.WriteLine($"Inserted image#: {insertCounter}");
                 }

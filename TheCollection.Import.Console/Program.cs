@@ -48,10 +48,10 @@ namespace TheCollection.Import.Console
             var imageUploadConnectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endPoints}";
             //var imageUploadConnectionString2 = "UseDevelopmentStorage=true";
 
-            var imageUploadService = new ImageAzureBlobService(imageUploadConnectionString);
-            var azureStorageClient = new AzureStorageClient(imageUploadConnectionString);
+            //var imageUploadService = new ImageAzureBlobService(imageUploadConnectionString);
+            //var azureStorageClient = new AzureStorageClient(imageUploadConnectionString);
 
-            //ImportTeabags(documentDbClient, imageUploadService);
+            ImportTeabags(documentDbClient);
             //ImportImagesAndUpdateTeabags(documentDbClient, imageUploadService);
             //CopyMissingFilesToTempUploadDir(azureStorageClient);
 
@@ -87,21 +87,15 @@ namespace TheCollection.Import.Console
         }
 
 
-        private static void ImportTeabags(DocumentClient documentDbClient, ImageAzureBlobService imageUploadService)
+        private static void ImportTeabags(DocumentClient documentDbClient)
         {
             var import = ImportFromAccess();
-
-            //var brandsFile = "importfiles/teabrands.json";
-            //var teabagsFile = "importfiles/teabags.json";
-            //var meerkens = JsonFileExport.GetMeerken(brandsFile);
-            //var thees = JsonFileExport.GetThees(teabagsFile);
-
             var theesToImport = import.thees.OrderBy(thee => thee.MainID).ToList();
             var meerkensToImport = import.meerkens.Where(meerk => theesToImport.Any(thee => thee.TheeMerk.Trim() == meerk.TheeMerk.Trim())).ToList();
 
             var collectionName = "TheCollection";
             var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, collectionName, meerkensToImport).Result;
-            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, collectionName, theesToImport, brands, imageUploadService).Result;
+            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, collectionName, theesToImport, brands).Result;
         }
 
         private static void ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobService imageUploadService)
