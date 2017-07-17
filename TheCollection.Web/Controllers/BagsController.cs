@@ -19,13 +19,13 @@ namespace TheCollection.Web.Controllers
         }
 
         [HttpGet()]
-        public async Task<SearchResult<Bag>> Bags([FromQuery] string searchterm = "")
+        public async Task<SearchResult<Bag>> Bags([FromQuery] string searchterm = "", [FromQuery] int pagesize = 300, [FromQuery] int page = 0)
         {
             var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
             IEnumerable<Bag> bags;
             if (searchterm != "")
             {
-                bags = await bagsRepository.GetItemsAsync(searchterm, 300);
+                bags = await bagsRepository.GetItemsAsync(searchterm, pagesize);
             }
             else
             {
