@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace TheCollection.Web.Controllers
     [Route("api/[controller]")]
     public class CountriesController : Controller
     {
-        private readonly DocumentClient documentDbClient;
+        private readonly IDocumentClient documentDbClient;
 
-        public CountriesController(DocumentClient documentDbClient)
+        public CountriesController(IDocumentClient documentDbClient)
         {
             this.documentDbClient = documentDbClient;
         }
