@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Router, Route, HistoryBase } from 'react-router';
+import { Redirect, Router, Route, HistoryBase } from 'react-router';
 import { Layout } from './components/Layout';
 import Home from './views/Home';
 import Teabags from './views/Teabags';
@@ -17,6 +17,7 @@ export default <Route component={ Layout }>
     <Route path='/teabagform' components={{ body: TeabagForm }}>
         <Route path='/teabagform/:id' components={{ body: TeabagForm }} />
     </Route>
+    <Route path='Account/LogOff'><Redirect to='/Account/LogOff'/></Route>
 </Route>;
 
 // enable Hot Module Replacement (HMR)

@@ -32,6 +32,11 @@ export class NavMenu extends React.Component<any, void> {
                                 <span className='glyphicon glyphicon-plus'></span> New teabag
                             </Link>
                         </li>
+                        <li>
+                            <a href='/Account/LogOff'>
+                                <span className='glyphicon glyphicon-log-out'></span> Log off
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
