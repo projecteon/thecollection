@@ -10,6 +10,9 @@ namespace TheCollection.Business.Tea
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
+        [JsonProperty(PropertyName = "userid")]
+        public string UserId { get; set; }
+
         [Searchable]
         [JsonProperty(PropertyName = "mainid")]
         public int MainID { get; set; }
