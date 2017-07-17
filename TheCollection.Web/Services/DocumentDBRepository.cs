@@ -19,9 +19,9 @@ namespace TheCollection.Web.Services
     {
         private readonly string DatabaseId;
         private readonly string CollectionId;
-        private DocumentClient client;
+        private IDocumentClient client;
 
-        public DocumentDBRepository(DocumentClient client, string databaseId, string collectionId)
+        public DocumentDBRepository(IDocumentClient client, string databaseId, string collectionId)
         {
             DatabaseId = databaseId;
             CollectionId = collectionId;
@@ -163,7 +163,7 @@ namespace TheCollection.Web.Services
                     await client.CreateDocumentCollectionAsync(
                         UriFactory.CreateDatabaseUri(DatabaseId),
                         new DocumentCollection { Id = CollectionId },
-                        new RequestOptions { OfferThroughput = 5000 });
+                        new RequestOptions { OfferThroughput = 7000 });
                 }
                 else
                 {
