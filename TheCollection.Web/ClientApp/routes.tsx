@@ -17,7 +17,7 @@ export default <Route component={ Layout }>
     <Route path='/teabagform' components={{ body: TeabagForm }}>
         <Route path='/teabagform/:id' components={{ body: TeabagForm }} />
     </Route>
-    <Route path='Account/LogOff'><Redirect to='/Account/LogOff'/></Route>
+    {/* <Route path='Account/LogOff'><Redirect to='/Account/LogOff'/></Route> */}
 </Route>;
 
 // enable Hot Module Replacement (HMR)

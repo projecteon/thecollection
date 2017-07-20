@@ -12,7 +12,7 @@ export class NavMenu extends React.Component<any, void> {
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                     </button>
-                    <Link className='navbar-brand' to={ '/' }>TheCollection_Web</Link>
+                    <Link className='navbar-brand' to={ '/' }>The Collection</Link>
                 </div>
                 <div className='clearfix'></div>
                 <div className='navbar-collapse collapse'>
@@ -33,9 +33,9 @@ export class NavMenu extends React.Component<any, void> {
                             </Link>
                         </li>
                         <li>
-                            <a href='/Account/LogOff'>
+                            <Link to='/Account/LogOff'>
                                 <span className='glyphicon glyphicon-log-out'></span> Log off
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>

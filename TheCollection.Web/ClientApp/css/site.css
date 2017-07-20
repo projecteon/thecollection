@@ -12,15 +12,32 @@
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
+}
+
 .main-nav li .glyphicon {
     margin-right: 10px;
 }
 
+.main-nav .navbar.navbar-inverse {
+  background-color: #4b610b;
+}
+
+.main-nav .navbar-inverse .navbar-nav > li > a {
+  color: #86b404;
+}
+
+.main-nav .navbar-inverse .navbar-nav > li > a:hover {
+  color: #ffffff;
+}
+
 /* Highlighting rules for nav menu items */
-.main-nav li a.active,
-.main-nav li a.active:hover,
-.main-nav li a.active:focus {
-    background-color: #4189C7;
+.main-nav .navbar-inverse .navbar-nav > li > a.active,
+.main-nav .navbar-inverse .navbar-nav > li > a.active:hover,
+.main-nav .navbar-inverse .navbar-nav > li > a.active:focus {
+    background-color: #86b404;
     color: white;
 }
 
@@ -55,7 +72,7 @@
         float: none;
     }
     .main-nav .navbar-collapse {
-        border-top: 1px solid #444;
+        border-top: 1px solid #86b404;
         padding: 0px;
     }
     .main-nav .navbar ul {
