@@ -12,7 +12,7 @@ export class NavMenu extends React.Component<any, void> {
                         <span className='icon-bar'></span>
                         <span className='icon-bar'></span>
                     </button>
-                    <Link className='navbar-brand' to={ '/' }>The Collection</Link>
+                    <Link className='navbar-brand' to={ '/' }><img src='/images/teapot.svg' width='30' height='30' alt='' style={{display: 'inline-block', verticalAlign: 'bottom', marginRight: 5}}/>The Collection</Link>
                 </div>
                 <div className='clearfix'></div>
                 <div className='navbar-collapse collapse'>

@@ -15,9 +15,8 @@
 
 .navbar-inverse .navbar-brand {
   color: #ffffff;
-  background-image: url(/images/teapot.svg);
-  background-position: 99% 100%;
-  background-repeat: no-repeat;
+  line-height: inherit;
+  padding: 10px 15px 15px 15px;
 }
 
 .main-nav li .glyphicon {
@@ -26,6 +25,7 @@
 
 .main-nav .navbar.navbar-inverse {
   background-color: #4b610b;
+  border: none;
 }
 
 .main-nav .navbar-inverse .navbar-nav > li > a {
@@ -34,6 +34,10 @@
 
 .main-nav .navbar-inverse .navbar-nav > li > a:hover {
   color: #ffffff;
+}
+
+.main-nav .navbar-inverse .navbar-toggle {
+  border: none;
 }
 
 /* Highlighting rules for nav menu items */
