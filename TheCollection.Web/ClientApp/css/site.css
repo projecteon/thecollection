@@ -15,6 +15,9 @@
 
 .navbar-inverse .navbar-brand {
   color: #ffffff;
+  background-image: url(/images/teapot.svg);
+  background-position: 99% 100%;
+  background-repeat: no-repeat;
 }
 
 .main-nav li .glyphicon {
