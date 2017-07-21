@@ -53,13 +53,13 @@ export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: Kn
   switch (action.type) {
     case REQUEST_TEABAGS:
       return {...state, ...{
-        searchTerms: action.searchTerms,
+        searchedTerms: action.searchTerms,
         teabags: [],
         isLoading: true
       }};
     case RECEIVE_TEABAGS:
       return {...state, ...{
-          searchTerms: action.searchTerms,
+          searchedTerms: action.searchTerms,
           teabags: action.teabags,
           resultCount: action.resultCount,
           isLoading: false
