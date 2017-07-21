@@ -48,11 +48,11 @@ class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   renderSearchBar() {
-    let iconClassName = this.props.isLoading === true ? 'glyphicon glyphicon-refresh glyphicon-refresh-animate' : 'glyphicon glyphicon-search';
+    let iconClassName = this.props.isLoading === true ? 'fa fa-refresh fa-spin' : 'fa fa-search';
     let groupClassName = this.props.searchError.length > 0 ? 'input-group has-error' : 'input-group';
     let btnClassName = this.props.searchError.length > 0 ? 'btn btn-danger' : 'btn btn-default';
     let alert = this.props.searchError.length > 0 ? <div className='alert alert-danger' role='alert'>{this.props.searchError}</div> : undefined;
-    return  <div style={{position: 'fixed', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff'}}>
+    return  <div style={{position: 'sticky', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff', width: '100%'}}>
               {alert}
               <div className={groupClassName}>
                 <input ref={input => this.controls.searchInput = input} type='text' className='form-control' placeholder='search terms' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
@@ -78,7 +78,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
                   <div style={{color: '#959595'}}><small>{teabag.country ? teabag.country.name : ''}</small></div>
                   <p style={{position: 'absolute', bottom: -5, right: 15}}>
                     <Link to={ `/teabagform/${teabag.id}` } activeClassName='active'>
-                      <span className='glyphicon glyphicon-pencil'></span>
+                      <span className='fa fa-pencil'></span>
                     </Link>
                   </p>
                 </div>
@@ -100,7 +100,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
 
     return  <div>
               {this.props.zoomImageId !== undefined ? <ImageZoom imageid={this.props.zoomImageId} onClick={this.onZoomClicked.bind(this, undefined)} /> : undefined}
-              <div style={{marginBottom: 20, paddingBottom: 20}}>{this.renderSearchBar()}</div>
+              <div style={{marginBottom: 20, paddingBottom: 20, position: 'relative'}}>{this.renderSearchBar()}</div>
               {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
               <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}

@@ -23,7 +23,7 @@ export class ImageZoom extends React.Component<IImageZoomProps, IImageZoomState>
   }
 
   renderIcon() {
-    return <div style={{backgroundColor: '#ffffff', padding: 20}}><i className='glyphicon glyphicon-ban-circle' style={{fontSize: '4em', color: '#000000'}}/></div>;
+    return <div style={{backgroundColor: '#ffffff', padding: 20}}><i className='fa fa-ban' style={{fontSize: '4em', color: '#000000'}}/></div>;
   }
 
   renderImage() {

@@ -106,7 +106,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
 
       return  <span className='input-group-btn'>
                 <button type='button' className='btn btn-danger' onClick={this.onClear}>
-                  <span className='glyphicon glyphicon-remove' aria-hidden='true' />
+                  <span className='fa fa-times' aria-hidden='true' />
                 </button>
               </span>;
     }
@@ -116,7 +116,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return undefined;
       }
 
-      let className = `glyphicon glyphicon-refresh glyphicon-refresh-animate form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
+      let className = `fa fa-refresh fa-spin form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
       return <span className={className} aria-hidden='true'></span>;
     }
 
@@ -125,7 +125,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return undefined;
       }
 
-      let className = `glyphicon glyphicon-search form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
+      let className = `fa fa-search form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
       return <span className={className} aria-hidden='true'></span>;
     }
 
@@ -136,7 +136,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
 
       return  <span className='input-group-btn'>
                 <button type='button' className='btn btn-success' onClick={this.props.onAddNew}>
-                  <span className='glyphicon glyphicon-plus' aria-hidden='true' />
+                  <span className='fa fa-plus' aria-hidden='true' />
                 </button>
               </span>;
     }

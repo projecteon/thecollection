@@ -163,7 +163,7 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
               <div className='form-group'>
                 <div className='col-sm-offset-2 col-sm-10'>
                   <button type='submit' className='btn btn-default'>
-                    <span className='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Save
+                    <span className='fa fa-floppy-o' aria-hidden='true'></span> Save
                   </button>
                 </div>
               </div>
