@@ -7,8 +7,6 @@
     ViewData["Title"] = "The Collection";
 }
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
-@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">*@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css" />
 <style>
@@ -28,26 +26,30 @@
     }
 </style>
 
-<div class="jumbotron vertical-center">
-    <div class="container col-md-4 col-md-offset-4" style="border-radius: 12px;box-shadow: inset 0px 0px 10px 2px rgba(238,238,238,1);background-color: #ffffff; padding-bottom: 20px">
-        <section>
-            <h2 class="text-muted">@ViewData["Title"]</h2>
-            @{
-                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in loginProviders)
-                            {
-                                <button type="submit" class="btn btn-block btn-social btn-@provider.DisplayName.ToLower()" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
-                                    <i class="fa fa-@(provider.DisplayName.ToLower() == "microsoft" ? "windows" : provider.DisplayName.ToLower())"></i> Sign in with @provider.DisplayName
-                                </button>
-                            }
-                        </p>
-                    </div>
-                </form>
-            }            
-        </section>
+<div class="jumbotron  jumbotron-fluid vertical-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-4" style="border-radius: 12px;box-shadow: inset 0px 0px 10px 2px rgba(238,238,238,1);background-color: #ffffff;">
+                <section>
+                    <h2 class="text-muted">@ViewData["Title"]</h2>
+                    @{
+                        var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in loginProviders)
+                                    {
+                                        <button type="submit" class="btn btn-block btn-social btn-@provider.DisplayName.ToLower()" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                            <i class="fa fa-@(provider.DisplayName.ToLower() == "microsoft" ? "windows" : provider.DisplayName.ToLower())"></i> Sign in with @provider.DisplayName
+                                        </button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                </section>
+            </div>
+        </div>
     </div>
     <div style="color: rgba(104, 138, 8, 0.3); font-size: 0.75em; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);">Icon made from <a href="http://www.onlinewebfonts.com/icon"  style="color: rgba(104, 138, 8, 0.5)">Icon Fonts</a> is licensed by CC BY 3.0</div>
 </div>
