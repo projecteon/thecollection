@@ -80,7 +80,7 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
     renderItem(item: T, index: number) {
       let itemProps = {
          key: index,
-         style: {padding: 6, cursor: 'pointer', zIndex: 3},
+         style: {padding: 6, cursor: 'pointer', zIndex: 5},
          className: `list-group-item ${this.state.itemHoverIndex === index ? 'list-group-item-info' : ''}`,
          onMouseEnter: this.onMouseEnter.bind(this, index),
          onMouseLeave: this.onMouseLeave,

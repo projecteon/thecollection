@@ -37,14 +37,13 @@ class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   onZoomClicked(imageId?: string) {
-    console.log(imageId);
     this.props.zoomImage(imageId);
   }
 
   renderSearchSuccess() {
     let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
-    let tags = brands.map((brand, index) => { return <span key={index} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>{brand} <span className='badge pull-right'>{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span></span>; });
-    return <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5, marginTop: 35}}><p style={{width: '100%'}}><span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>Total <span className='badge pull-right'>{this.props.resultCount}</span></span>{tags}</p></div>;
+    let tags = brands.map((brand, index) => { return <span key={index} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>{brand} <span className='badge badge-default justify-content-end'>{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span></span>; });
+    return <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5}}><p style={{width: '100%'}}><span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge' style={{whiteSpace: 'nowrap'}}>Total <span className='badge badge-default justify-content-end'>{this.props.resultCount}</span></span>{tags}</p></div>;
   }
 
   renderSearchBar() {
@@ -93,14 +92,13 @@ class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   render() {
-    console.log(this.props);
     let contents = this.props.isLoading
       ? undefined
       : this.renderTeabags(this.props.teabags);
 
     return  <div>
               {this.props.zoomImageId !== undefined ? <ImageZoom imageid={this.props.zoomImageId} onClick={this.onZoomClicked.bind(this, undefined)} /> : undefined}
-              <div style={{marginBottom: 20, paddingBottom: 20, position: 'relative'}}>{this.renderSearchBar()}</div>
+              <div style={{marginBottom: 20, position: 'relative'}}>{this.renderSearchBar()}</div>
               {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccess()}
               <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}

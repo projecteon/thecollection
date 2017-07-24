@@ -50,7 +50,10 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     componentWillReceiveProps(props: IComboBoxProps<T>) {
-      if (props.selectedItem !== this.props.selectedItem) {
+      if (props.selectedItem === undefined) {
+        this.setState({...this.state, ...{displayResults: false, searchTerm: '', selectedItem: undefined }});
+      }
+      else if (props.selectedItem !== this.props.selectedItem) {
         this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem }});
       }
     }
@@ -60,7 +63,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return  [this.state.selectedItem];
       }
 
-      return this.state.results.filter(item => { return item[this.props.displayProperty].toString().indexOf(this.state.searchTerm.toString()) > -1; });
+      return this.state.results.filter(item => { return item[this.props.displayProperty].toString().toLowerCase().indexOf(this.state.searchTerm.toString().toLowerCase()) > -1; });
     };
 
     onFocus() {
