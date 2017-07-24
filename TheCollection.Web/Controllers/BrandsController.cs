@@ -25,7 +25,8 @@ namespace TheCollection.Web.Controllers
             IEnumerable<Brand> brands;
             if (searchterm != "")
             {
-                brands = await brandsRepository.GetItemsAsync(brand => brand.Name.Contains(searchterm));
+                brands = await brandsRepository.GetItemsAsync(searchterm, 1000);
+                //brands = await brandsRepository.GetItemsAsync(brand => brand.Name.Contains(searchterm));
             }
             else
             {
