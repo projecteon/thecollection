@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Documents.Client;
-using System;
-using System.Collections.Generic;
+using Microsoft.Azure.Documents;
 using System.Drawing;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TheCollection.Web.Extensions;
@@ -21,7 +18,7 @@ namespace TheCollection.Web.Handlers
             // This is an HTTP Handler, so no need to store next
         }
 
-        public async Task Invoke(HttpContext context, DocumentClient documentDbClient, IImageService imageService)
+        public async Task Invoke(HttpContext context, IDocumentClient documentDbClient, IImageService imageService)
         {
             var imagesRepository = new DocumentDBRepository<Business.Tea.Image>(documentDbClient, "TheCollection", "Images");
             var matches = Regex.Matches(context.Request.Path, RegEx);
