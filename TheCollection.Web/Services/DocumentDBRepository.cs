@@ -67,7 +67,7 @@ namespace TheCollection.Web.Services
             return results;
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync(string searchterm, int top = 100)
+        public async Task<IEnumerable<T>> GetItemsAsync(string searchterm, int top = 0)
         {
             var query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
