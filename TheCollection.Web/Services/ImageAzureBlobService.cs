@@ -1,11 +1,8 @@
 ﻿using Microsoft.WindowsAzure.Storage;
-using System;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace TheCollection.Web.Services
 {
