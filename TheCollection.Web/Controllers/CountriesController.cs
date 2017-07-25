@@ -25,7 +25,7 @@ namespace TheCollection.Web.Controllers
             IEnumerable<Country> countries;
             if (searchterm != "")
             {
-                countries = await brandsRepository.GetItemsAsync(brand => brand.Name.Contains(searchterm));
+                countries = await brandsRepository.GetItemsAsync(searchterm);
             }
             else
             {

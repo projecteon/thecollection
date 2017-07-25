@@ -25,7 +25,7 @@ namespace TheCollection.Web.Controllers
             IEnumerable<BagType> bagtypes;
             if (searchterm != "")
             {
-                bagtypes = await bagtypesRepository.GetItemsAsync(brand => brand.Name.Contains(searchterm));
+                bagtypes = await bagtypesRepository.GetItemsAsync(searchterm);
             }
             else
             {
