@@ -27,9 +27,9 @@ export class NavMenu extends React.Component<any, void> {
                           </Link>
                         </li>
                         <li className='nav-item'>
-                          <Link to='/Account/LogOff'>
-                            <span className='fa fa-sign-out'></span> Log off
-                          </Link>
+                          <form action='/Account/LogOff/' method='post'>
+                            <button className='btn btn-link' type='submit'><span className='fa fa-sign-out'></span> Log off</button>
+                          </form>
                         </li>
                       </ul>
                     </div>

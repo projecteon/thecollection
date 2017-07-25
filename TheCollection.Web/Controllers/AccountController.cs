@@ -31,9 +31,8 @@ namespace TheCollection.Web.Controllers
             return View();
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();

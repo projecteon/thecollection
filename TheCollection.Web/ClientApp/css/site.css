@@ -27,11 +27,13 @@
     display: inline-block;
     width: 100%;
 }
-.main-nav .navbar-inverse .navbar-nav > li > a {
+.main-nav .navbar-inverse .navbar-nav > li > a,
+.main-nav .navbar-inverse .navbar-nav > li .btn-link {
   color: #86b404;
 }
 
-.main-nav .navbar-inverse .navbar-nav > li > a:hover {
+.main-nav .navbar-inverse .navbar-nav > li > a:hover,
+.main-nav .navbar-inverse .navbar-nav > li .btn-link:hover {
   color: #ffffff;
   text-decoration: none;
 }
@@ -46,7 +48,10 @@
 /* Highlighting rules for nav menu items */
 .main-nav .navbar-inverse .navbar-nav > li > a.active,
 .main-nav .navbar-inverse .navbar-nav > li > a.active:hover,
-.main-nav .navbar-inverse .navbar-nav > li > a.active:focus {
+.main-nav .navbar-inverse .navbar-nav > li > a.active:focus,
+.main-nav .navbar-inverse .navbar-nav > li .btn-link.active,
+.main-nav .navbar-inverse .navbar-nav > li .btn-link.active:hover,
+.main-nav .navbar-inverse .navbar-nav > li .btn-link.active:focus {
   background-color: #86b404;
   color: white;
   text-decoration: none;
@@ -90,6 +95,11 @@
     .main-nav .navbar li {
         font-size: 15px;
         margin: 0 6px;
+    }
+    .main-nav .navbar-inverse .navbar-nav > li .btn-link {
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
     }
     .main-nav .navbar a {
         /* If a menu item's text is too long, truncate it */
