@@ -1,14 +1,17 @@
 import * as TeaBags from '../reducers/teabags';
 import * as Teabag from '../reducers/teabag';
+import * as Brand from '../reducers/brand';
 
 export interface IApplicationState {
     teabags: TeaBags.ITeabagsState;
     teabag: Teabag.ITeabagState;
+    brand: Brand.IBrandState;
 }
 
 export const reducers = {
     teabags: TeaBags.reducer,
     teabag: Teabag.reducer,
+    brand: Brand.reducer,
 };
 
 // this type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
