@@ -34,9 +34,13 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
     this.onClearBrand = this.onClearBrand.bind(this);
     this.onClearCountry = this.onClearCountry.bind(this);
     this.onCountrySelected = this.onCountrySelected.bind(this);
+    this.onFlavourChanged = this.onFlavourChanged.bind(this);
+    this.onHallmarkChanged = this.onHallmarkChanged.bind(this);
     this.onSearchBrand = this.onSearchBrand.bind(this);
     this.onSearchCountry = this.onSearchCountry.bind(this);
     this.onSearchType = this.onSearchType.bind(this);
+    this.onSerialNumberChanged = this.onSerialNumberChanged.bind(this);
+    this.onSerieChanged = this.onSerieChanged.bind(this);
   }
 
   componentWillMount() {
@@ -50,6 +54,12 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
     if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.teabag.id !== this.props.params.id) {
       this.props.requestTeabag(this.props.params.id);
     }
+  }
+
+  getBindValue(value: string) {
+    if (value === undefined || value === null) { return ''; }
+
+    return value;
   }
 
   onAddNewBrand() {}
@@ -69,6 +79,7 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
   }
 
   onAddNewCountry() {}
+
   onCountrySelected(country: ICountry) {
     this.props.changeCountry(country);
   }
@@ -91,6 +102,22 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
 
   onClearBagType() {
     this.props.clearBagtype();
+  }
+
+  onFlavourChanged(event: React.FormEvent<HTMLInputElement>) {
+    this.props.changeFlavour(event.currentTarget.value);
+  }
+
+  onSerieChanged(event: React.FormEvent<HTMLInputElement>) {
+    this.props.changeSerie(event.currentTarget.value);
+  }
+
+  onSerialNumberChanged(event: React.FormEvent<HTMLInputElement>) {
+    this.props.changeSerialNumber(event.currentTarget.value);
+  }
+
+  onHallmarkChanged(event: React.FormEvent<HTMLTextAreaElement>) {
+    this.props.changeHallmark(event.currentTarget.value);
   }
 
   onSearchType(searchTerm: string) {
@@ -127,25 +154,25 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
               <div className='form-group'>
                 <label htmlFor='inputFlavour' className='col-sm-2 control-label'>Flavour</label>
                 <div className='col-sm-6'>
-                  <input type='text' className='form-control' id='inputFlavour' placeholder='Flavour' value={this.props.teabag.flavour} />
+                  <input type='text' className='form-control' id='inputFlavour' placeholder='Flavour' value={this.getBindValue(this.props.teabag.flavour)} onChange={this.onFlavourChanged}/>
                 </div>
               </div>
               <div className='form-group'>
                 <label htmlFor='inputSeries' className='col-sm-2 control-label'>Series</label>
                 <div className='col-sm-6'>
-                  <input type='text' className='form-control' id='inputSeries' placeholder='Series' value={this.props.teabag.serie} />
+                  <input type='text' className='form-control' id='inputSeries' placeholder='Series' value={this.getBindValue(this.props.teabag.serie)} onChange={this.onSerieChanged}/>
                 </div>
               </div>
               <div className='form-group'>
                 <label htmlFor='inputSerialnumber' className='col-sm-2 control-label'>Serialnumber</label>
                 <div className='col-sm-3'>
-                  <input type='text' className='form-control' id='inputSerialnumber' placeholder='Serialnumber' value={this.props.teabag.serialnumber} />
+                  <input type='text' className='form-control' id='inputSerialnumber' placeholder='Serialnumber' value={this.getBindValue(this.props.teabag.serialnumber)} onChange={this.onSerialNumberChanged}/>
                 </div>
               </div>
               <div className='form-group'>
                 <label htmlFor='inputHallmark' className='col-sm-2 control-label'>Hallmark</label>
                 <div className='col-sm-6  '>
-                  <textarea className='form-control' id='inputHallmark' placeholder='Hallmark' value={this.props.teabag.hallmark} />
+                  <textarea className='form-control' id='inputHallmark' placeholder='Hallmark' value={this.getBindValue(this.props.teabag.hallmark)} onChange={this.onHallmarkChanged}/>
                 </div>
               </div>
               <div className='form-group'>

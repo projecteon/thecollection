@@ -67,6 +67,30 @@ export const clearCountry = {
   },
 };
 
+export const changeSerie = {
+  changeSerie: (serie: string): AppThunkAction<Actions.ChangeSerieAction> => (dispatch, getState) => {
+    dispatch({type: Constants.CHANGE_SERIE, serie: serie});
+  },
+};
+
+export const changeFlavour = {
+  changeFlavour: (flavour: string): AppThunkAction<Actions.ChangeFlavourAction> => (dispatch, getState) => {
+    dispatch({type: Constants.CHANGE_FLAVOUR, flavour: flavour});
+  },
+};
+
+export const changeHallmark = {
+  changeHallmark: (hallmark: string): AppThunkAction<Actions.ChangeHallmarkAction> => (dispatch, getState) => {
+    dispatch({type: Constants.CHANGE_HALLMARK, hallmark: hallmark});
+  },
+};
+
+export const changeSerialNumber = {
+  changeSerialNumber: (serialnumber: string): AppThunkAction<Actions.ChangeSerialNumberAction> => (dispatch, getState) => {
+    dispatch({type: Constants.CHANGE_SERIALNUMBER, serialnumber: serialnumber});
+  },
+};
+
 export const requestTeabags = {
   requestTeabags: (searchTerms?: string): AppThunkAction<Actions.RequestTeabagsAction | Actions.ReceiveTeabagsAction | Actions.SearchTermsError> => (dispatch, getState) => {
     if (searchTerms.trim().length < 3) {

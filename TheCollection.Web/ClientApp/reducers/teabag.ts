@@ -7,7 +7,7 @@ import { ICountry } from '../interfaces/ICountry';
 import { IBagType } from '../interfaces/IBagType';
 import { CHANGE_BAGTYPE, CHANGE_BRAND, CHANGE_COUNTRY, CLEAR_BAGTYPE, CLEAR_BRAND, CLEAR_COUNTRY, RECEIVE_TEABAG, REQUEST_TEABAG } from '../constants/teabags';
 import { ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTypeAction, ClearBrandAction, ClearCountryAction, ReceiveTeabagAction, RequestTeabagAction } from '../actions/teabags';
-import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, requestTeabag } from '../thunks/teabags';
+import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, changeFlavour, changeHallmark, changeSerialNumber, changeSerie, requestTeabag } from '../thunks/teabags';
 
 export interface ITeabagState {
   teabag?: ITeabag;
@@ -16,14 +16,16 @@ export interface ITeabagState {
   searchedCountries: ICountry[];
 }
 
-export const actionCreators = {...changeBagtype, ...changeBrand, ...changeCountry, ...clearBagtype, ...clearBrand, ...clearCountry, ...requestTeabag};
+export const actionCreators = {...changeBagtype, ...changeBrand, ...changeCountry, ...clearBagtype, ...clearBrand, ...clearCountry, ...changeFlavour, ...changeHallmark, ...changeSerialNumber, ...changeSerie, ...requestTeabag};
 
+const emptyRef = {id: '', name: ''};
+const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageid: '', serialnumber: '', serie: '', type: emptyRef};
 const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag, searchedBagTypes: [], searchedCountries: [] };
 type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryAction | ClearBagTypeAction | ClearBrandAction | ClearCountryAction | ReceiveTeabagAction | RequestTeabagAction;
 export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: KnownActions) => {
   switch (action.type) {
     case REQUEST_TEABAG:
-      return  {...state, ...{ teabag: {} as ITeabag, isLoading: true }};
+      return  {...state, ...{ teabag:  {} as ITeabag, isLoading: true }};
     case RECEIVE_TEABAG:
       return  {...state, ...{ teabag: action.teabag, isLoading: false }};
     case CHANGE_BRAND:
@@ -44,5 +46,3 @@ export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: Know
 
   return state || unloadedState;
 };
-
-
