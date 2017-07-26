@@ -46,7 +46,6 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
   }
 
   componentWillReceiveProps(nextProps: TeabagsProps) {
-    (nextProps);
     if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.teabag.id !== this.props.params.id) {
       this.props.requestTeabag(this.props.params.id);
     }
