@@ -120,7 +120,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       }
 
       let className = `fa fa-refresh fa-spin form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
-      return <span className={className} aria-hidden='true' style={{fontSize: '1.2rem', lineHeight: '2.4rem', marginTop: 0}}></span>;
+      return <span className={className} aria-hidden='true' style={{fontSize: '1.1rem', lineHeight: '2.4rem', marginTop: 0}}></span>;
     }
 
     renderSearchIcon() {
@@ -129,7 +129,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       }
 
       let className = `fa fa-search form-control-feedback ${this.props.onAddNew ? 'has-new' : ''}`;
-      return <span className={className} aria-hidden='true' style={{fontSize: '1.2rem', lineHeight: '2.4rem', marginTop: 0}}></span>;
+      return <span className={className} aria-hidden='true' style={{fontSize: '1.1rem', lineHeight: '2.4rem', marginTop: 0}}></span>;
     }
 
     renderAddButton() {
