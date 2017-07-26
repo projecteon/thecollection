@@ -28,3 +28,10 @@ https://azure.microsoft.com/en-us/blog/documentdb-paging-support-with-top-and-mo
 
 HttpHandler/Module/Middlewear
 https://docs.microsoft.com/en-us/aspnet/core/migration/http-modules
+
+Redux
+https://medium.com/javascript-scene/10-tips-for-better-redux-architecture-69250425af44
+https://spin.atomicobject.com/2017/07/24/redux-action-pattern-typescript/
+
+Redux-thunk
+https://github.com/gaearon/redux-thunk
