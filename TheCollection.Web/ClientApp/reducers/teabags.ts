@@ -1,10 +1,11 @@
+import { Action, Reducer, ActionCreator } from 'redux';
+import { fetch, addTask } from 'domain-task';
+import { AppThunkAction } from '../store';
 import { ISearchResult } from '../interfaces/ISearchResult';
 import { ITeabag } from '../interfaces/ITeaBag';
 import { RECEIVE_TEABAGS, REQUEST_TEABAGS, SEARCH_TERMS_ERROR, ZOOM_IMAGE_TOGGLE } from '../constants/teabags';
 import { ReceiveTeabagsAction, RequestTeabagsAction, SearchTermsError, ZoomImage } from '../actions/teabags';
-import { Action, Reducer, ActionCreator } from 'redux';
-import { fetch, addTask } from 'domain-task';
-import { AppThunkAction } from '../store';
+import { requestTeabags, validateSearchTerms, zoomImage } from '../thunks/teabags';
 
 export interface ITeabagsState {
   teabags: ITeabag[];
@@ -15,41 +16,11 @@ export interface ITeabagsState {
   searchError?: string;
 }
 
-type KnownAction = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | ZoomImage;
-
-export const actionCreators = {
-  requestTeabags: (searchTerms?: string): AppThunkAction<RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError> => (dispatch, getState) => {
-    if (searchTerms.trim().length < 3) {
-      dispatch({ type: SEARCH_TERMS_ERROR, searchError: 'Requires at least 3 characters to search' });
-      return;
-    }
-
-    let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
-    try {
-      let fetchTask = fetch(uri)
-        .then(response => response.json() as Promise<ISearchResult<ITeabag>>)
-        .then(data => {
-          dispatch({ type: RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: data.data, resultCount: data.count });
-          addTask(fetchTask); // ensure server-side prerendering waits for this to complete
-      });
-    } catch (err) {
-      dispatch({ type: RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: [], resultCount: 0 });
-    }
-
-    dispatch({ type: REQUEST_TEABAGS, searchTerms: searchTerms });
-  },
-  validateSearchTerms: (searchTerms: string): AppThunkAction<SearchTermsError> => (dispatch, getState) => {
-    if (getState().teabags.searchError !== '' && searchTerms.trim().length > 2) {
-      dispatch({ type: SEARCH_TERMS_ERROR, searchError: '' });
-    }
-  },
-  zoomImage: (imageid: string): AppThunkAction<ZoomImage> => (dispatch, getState) => {
-    dispatch({ type: ZOOM_IMAGE_TOGGLE, imageid: imageid });
-  },
-};
+export const actionCreators = {...requestTeabags, ...validateSearchTerms, ...zoomImage};
 
 const unloadedState: ITeabagsState = { isLoading: false, teabags: [], searchError: '' };
-export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: KnownAction) => {
+type KnownActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | ZoomImage;
+export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: KnownActions) => {
   switch (action.type) {
     case REQUEST_TEABAGS:
       return {...state, ...{
