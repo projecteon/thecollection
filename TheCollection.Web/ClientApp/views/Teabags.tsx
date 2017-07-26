@@ -54,7 +54,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
     return  <div style={{position: 'sticky', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff', width: '100%'}}>
               {alert}
               <div className={groupClassName}>
-                <input ref={input => this.controls.searchInput = input} type='text' className='form-control' placeholder='search terms' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
+                <input ref={input => this.controls.searchInput = input} type='text' className='form-control' placeholder='Search for...' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
                 <span className='input-group-btn'>
                   <button type='button' className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden='true' />

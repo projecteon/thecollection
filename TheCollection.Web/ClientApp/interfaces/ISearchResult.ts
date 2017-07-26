@@ -1,5 +1,4 @@
-export interface ISearchResult<T>
-{
+export interface ISearchResult<T> {
   count: number;
   data: T[];
 }

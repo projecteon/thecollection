@@ -80,7 +80,7 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
     renderItem(item: T, index: number) {
       let itemProps = {
          key: index,
-         style: {padding: 6, cursor: 'pointer', zIndex: 5},
+         style: {padding: 6, cursor: 'pointer'},
          className: `list-group-item ${this.state.itemHoverIndex === index ? 'list-group-item-info' : ''}`,
          onMouseEnter: this.onMouseEnter.bind(this, index),
          onMouseLeave: this.onMouseLeave,
@@ -90,7 +90,7 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
     }
 
     render() {
-      return  <ul style={{position: 'absolute', top: '100%', left: 0, backgroundColor: '#fff', width: '100%'}} className='list-group'>
+      return  <ul style={{position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 5}} className='list-group'>
                 {this.props.items.map((item, index) => { return this.renderItem(item, index); })}
               </ul>;
     }

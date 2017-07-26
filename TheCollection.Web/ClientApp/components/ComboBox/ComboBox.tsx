@@ -46,15 +46,15 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       this.onItemSelected = this.onItemSelected.bind(this);
       this.onSearchTermChanged = this.onSearchTermChanged.bind(this);
 
-      this.state = {selectedItem: props.selectedItem, searchTerm: props.selectedItem === undefined ? '' : props.selectedItem[props.displayProperty], displayResults: false, searchedTerm: '', results: [], isLoading: false};
+      this.state = {selectedItem: props.selectedItem, searchTerm: props.selectedItem === undefined || props.selectedItem === null ? '' : props.selectedItem[props.displayProperty], displayResults: false, searchedTerm: '', results: [], isLoading: false};
     }
 
     componentWillReceiveProps(props: IComboBoxProps<T>) {
-      if (props.selectedItem === undefined) {
-        this.setState({...this.state, ...{displayResults: false, searchTerm: '', selectedItem: undefined }});
+      if (props.selectedItem === undefined || props.selectedItem === null) {
+        this.setState({...this.state, ...{displayResults: false, searchTerm: '', searchedTerm: '', selectedItem: undefined, results: [] }});
       }
       else if (props.selectedItem !== this.props.selectedItem) {
-        this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem }});
+        this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], searchedTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem, results: [props.selectedItem] }});
       }
     }
 
@@ -71,7 +71,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     onBlur() {
-      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty]) {
+      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty] && this.state.selectedItem[this.props.displayProperty] !== this.props.selectedItem[this.props.displayProperty]) {
         this.setState({...this.state, ...{displayResults: false, selectedItem: this.props.selectedItem, searchTerm: this.props.selectedItem === undefined ? this.state.searchTerm : this.props.selectedItem[this.props.displayProperty]}});
         return;
       }
@@ -103,7 +103,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     renderClearButton() {
-      if (this.props.selectedItem === undefined) {
+      if (this.state.selectedItem === undefined) {
         return undefined;
       }
 
