@@ -71,7 +71,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     onBlur() {
-      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty]) {
+      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty] && this.state.selectedItem[this.props.displayProperty] !== this.props.selectedItem[this.props.displayProperty]) {
         this.setState({...this.state, ...{displayResults: false, selectedItem: this.props.selectedItem, searchTerm: this.props.selectedItem === undefined ? this.state.searchTerm : this.props.selectedItem[this.props.displayProperty]}});
         return;
       }
