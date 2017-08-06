@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router';
+import { Link, withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { History } from 'history';
 import { IApplicationState }  from '../store';
 import * as TeabagReducer from '../reducers/teabag';
+import * as BrandReducer from '../reducers/brand';
 
 import {ComboBox} from '../components/ComboBox/ComboBox';
 import {Loader} from '../components/Loader';
@@ -15,16 +17,17 @@ const BrandComboBox = ComboBox<IBrand>(); // tslint:disable-line:variable-name
 const CountryComboBox = ComboBox<ICountry>(); // tslint:disable-line:variable-name
 const TypeComboBox = ComboBox<IBagType>(); // tslint:disable-line:variable-name
 
-type TeabagsProps =
-    TeabagReducer.ITeabagState     // ... state we've requested from the Redux store
-    & typeof TeabagReducer.actionCreators   // ... plus action creators we've requested
-    & { params?: { id?: string } };       // ... plus incoming routing parameters
+type TeabagProps =
+    TeabagReducer.ITeabagState            // ... state we've requested from the Redux store
+    & typeof TeabagReducer.actionCreators // ... plus action creators we've requested
+    & { params?: { id?: string } }        // ... plus incoming routing parameters
+    & { history: History; };              // ... plus naviation through react router
 
-class TeabagForm extends React.Component<TeabagsProps, void> {
+class TeabagForm extends React.Component<TeabagProps, void> {
 
-  constructor() {
+  constructor(props: TeabagProps) {
     super();
-
+    console.log('TeabagForm ctor', props);
     this.onAddNewBagType = this.onAddNewBagType.bind(this);
     this.onAddNewBrand = this.onAddNewBrand.bind(this);
     this.onAddNewCountry = this.onAddNewCountry.bind(this);
@@ -49,7 +52,7 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
     }
   }
 
-  componentWillReceiveProps(nextProps: TeabagsProps) {
+  componentWillReceiveProps(nextProps: TeabagProps) {
     if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.teabag.id !== this.props.params.id) {
       this.props.requestTeabag(this.props.params.id);
     }
@@ -61,7 +64,9 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
     return value;
   }
 
-  onAddNewBrand() {}
+  onAddNewBrand() {
+    this.props.history.push('/brandform');
+  }
 
   onBrandSelected(brand: IBrand) {
     this.props.changeBrand(brand);
@@ -204,8 +209,8 @@ class TeabagForm extends React.Component<TeabagsProps, void> {
   }
 }
 
-export default connect(
+export default withRouter(connect(
     (state: IApplicationState) => state.teabag, // selects which state properties are merged into the component's props
     TeabagReducer.actionCreators                 // selects which action creators are merged into the component's props
-)(TeabagForm);
+)(TeabagForm));
 

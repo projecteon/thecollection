@@ -17,9 +17,9 @@ class Teabags extends React.Component<TeabagsProps, void> {
       searchInput?: HTMLInputElement;
     } = {};
 
-  constructor() {
+  constructor(props: TeabagsProps) {
     super();
-
+    console.log(props);
     this.onSearch = this.onSearch.bind(this);
     this.onSearchTermsChanged = this.onSearchTermsChanged.bind(this);
   }

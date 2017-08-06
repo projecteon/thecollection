@@ -1,5 +1,5 @@
 import { IBrand } from '../interfaces/IBrand';
-import { ADD_BRAND, RECIEVE_BRAND, REQUEST_BRAND } from '../constants/brand';
+import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../constants/brand';
 
 export type ReceiveBrandAction = {
   type: RECIEVE_BRAND;
@@ -14,4 +14,9 @@ export type RequestBrandAction = {
 export type AddBrandAction = {
   type: ADD_BRAND;
   brand: IBrand;
+};
+
+export type ChangeNameAction = {
+  type: CHANGE_NAME;
+  name: string;
 };

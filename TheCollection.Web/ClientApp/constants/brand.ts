@@ -6,3 +6,6 @@ export const RECIEVE_BRAND: RECIEVE_BRAND = 'RECIEVE_BRAND';
 
 export type ADD_BRAND = 'ADD_BRAND';
 export const ADD_BRAND: ADD_BRAND = 'ADD_BRAND';
+
+export type CHANGE_NAME = 'CHANGE_NAME';
+export const CHANGE_NAME: CHANGE_NAME = 'CHANGE_NAME';
