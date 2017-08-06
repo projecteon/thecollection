@@ -19,7 +19,7 @@ namespace TheCollection.Web.Controllers
         }
 
         [HttpGet()]
-        public async Task<IEnumerable<BagType>> Brands([FromQuery] string searchterm = "")
+        public async Task<IEnumerable<BagType>> BagTypes([FromQuery] string searchterm = "")
         {
             var bagtypesRepository = new DocumentDBRepository<BagType>(documentDbClient, "TheCollection", "BagTypes");
             IEnumerable<BagType> bagtypes;
@@ -33,6 +33,19 @@ namespace TheCollection.Web.Controllers
             }
 
             return bagtypes.OrderBy(bagtype => bagtype.Name);
+        }
+
+        [HttpPost()]
+        public BagType Create([FromBody] BagType bagType)
+        {
+            bagType.Id = System.Guid.NewGuid().ToString();
+            return bagType;
+        }
+
+        [HttpPut()]
+        public BagType Update([FromBody] BagType bagType)
+        {
+            return bagType;
         }
     }
 }

@@ -34,5 +34,18 @@ namespace TheCollection.Web.Controllers
 
             return brands.OrderBy(brand => brand.Name);
         }
+
+        [HttpPost()]
+        public Brand Create([FromBody] Brand brand)
+        {
+            brand.Id = System.Guid.NewGuid().ToString();
+            return brand;
+        }
+
+        [HttpPut()]
+        public Brand Update([FromBody] Brand brand)
+        {
+            return brand;
+        }
     }
 }

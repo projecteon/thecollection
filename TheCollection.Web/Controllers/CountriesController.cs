@@ -33,5 +33,18 @@ namespace TheCollection.Web.Controllers
             }
             return countries.OrderBy(country => country.Name);
         }
+
+        [HttpPost()]
+        public Country Create([FromBody] Country country)
+        {
+            country.Id = System.Guid.NewGuid().ToString();
+            return country;
+        }
+
+        [HttpPut()]
+        public Country Update([FromBody] Country country)
+        {
+            return country;
+        }
     }
 }
