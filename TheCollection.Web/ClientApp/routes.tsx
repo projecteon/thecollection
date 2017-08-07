@@ -5,6 +5,8 @@ import Home from './views/Home';
 import Teabags from './views/Teabags';
 import TeabagForm from './views/TeabagForm';
 import BrandForm from './viewComponents/BrandForm';
+import BagtypeForm from './viewComponents/BagtypeForm';
+import CountryForm from './viewComponents/CountryForm';
 
 // http://stackoverflow.com/questions/32128978/react-router-no-not-found-route
 // https://github.com/ReactTraining/react-router/issues/142
@@ -20,6 +22,12 @@ export default <Route component={ Layout }>
     </Route>
     <Route path='/brandform' components={{ body: BrandForm }}>
         <Route path='/brandform/:id' components={{ body: BrandForm }} />
+    </Route>
+    <Route path='/bagtypeform' components={{ body: BagtypeForm }}>
+        <Route path='/bagtypeform/:id' components={{ body: BagtypeForm }} />
+    </Route>
+    <Route path='/countryform' components={{ body: CountryForm }}>
+        <Route path='/countryform/:id' components={{ body: CountryForm }} />
     </Route>
     {/* <Route path='Account/LogOff'><Redirect to='/Account/LogOff'/></Route> */}
 </Route>;

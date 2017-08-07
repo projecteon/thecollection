@@ -82,7 +82,9 @@ class TeabagForm extends React.Component<TeabagProps, void> {
             .then(response => response.json() as Promise<IBrand[]>);
   }
 
-  onAddNewCountry() {}
+  onAddNewCountry() {
+    this.props.history.push('/countryform');
+  }
 
   onCountrySelected(country: ICountry) {
     this.props.changeCountry(country);
@@ -98,7 +100,8 @@ class TeabagForm extends React.Component<TeabagProps, void> {
             .then(response => response.json() as Promise<ICountry[]>);
   }
 
-  onAddNewBagType() {}
+  onAddNewBagType() {
+    this.props.history.push('/bagtypeform');}
 
   onBagTypeSelected(bagtype: IBagType) {
     this.props.changeBagtype(bagtype);

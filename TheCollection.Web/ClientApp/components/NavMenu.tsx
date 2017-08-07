@@ -32,6 +32,16 @@ export class NavMenu extends React.Component<any, void> {
                           </Link>
                         </li>
                         <li className='nav-item'>
+                          <Link to={ '/bagtypeform' } activeClassName='active'>
+                            <span className='fa fa-plus'></span> New bagtype
+                          </Link>
+                        </li>
+                        <li className='nav-item'>
+                          <Link to={ '/countryform' } activeClassName='active'>
+                            <span className='fa fa-plus'></span> New country
+                          </Link>
+                        </li>
+                        <li className='nav-item'>
                           <form action='/Account/LogOff/' method='post'>
                             <button className='btn btn-link' type='submit'><span className='fa fa-sign-out'></span> Log off</button>
                           </form>

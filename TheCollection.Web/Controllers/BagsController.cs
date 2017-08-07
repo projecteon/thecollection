@@ -49,6 +49,19 @@ namespace TheCollection.Web.Controllers
             var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
             return await bagsRepository.GetItemAsync(id);
         }
+
+        [HttpPost()]
+        public Bag Create([FromBody] Bag bag)
+        {
+            bag.Id = System.Guid.NewGuid().ToString();
+            return bag;
+        }
+
+        [HttpPut()]
+        public Bag Update([FromBody] Bag bag)
+        {
+            return bag;
+        }
     }
 
     public class SearchResult<T>
