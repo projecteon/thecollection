@@ -82,3 +82,7 @@ export type ChangeSerialNumberAction = {
   type: Constant.CHANGE_SERIALNUMBER;
   serialnumber: string;
 };
+
+export type SaveTeabag = {
+  type: Constant.SAVE_TEABAG;
+};

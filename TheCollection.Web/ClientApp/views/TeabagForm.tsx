@@ -44,6 +44,7 @@ class TeabagForm extends React.Component<TeabagProps, void> {
     this.onSearchType = this.onSearchType.bind(this);
     this.onSerialNumberChanged = this.onSerialNumberChanged.bind(this);
     this.onSerieChanged = this.onSerieChanged.bind(this);
+    this.onSave = this.onSave.bind(this);
   }
 
   componentWillMount() {
@@ -133,6 +134,12 @@ class TeabagForm extends React.Component<TeabagProps, void> {
             .then(response => response.json() as Promise<IBagType[]>);
   }
 
+  onSave(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.props.saveTeabag();
+  }
+
   renderBrandComboBoxItem(item: IBrand) {
     return <div>{item.name}</div>;
   }
@@ -196,7 +203,7 @@ class TeabagForm extends React.Component<TeabagProps, void> {
               </div>
               <div className='form-group'>
                 <div className='col-sm-offset-2 col-sm-10'>
-                  <button type='submit' className='btn btn-default'>
+                  <button className='btn btn-default' style={{cusor: 'pointer'}} onClick={this.onSave}>
                     <span className='fa fa-floppy-o' aria-hidden='true'></span> Save
                   </button>
                 </div>

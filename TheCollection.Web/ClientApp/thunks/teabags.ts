@@ -127,3 +127,28 @@ export const zoomImage = {
     dispatch({ type: Constants.ZOOM_IMAGE_TOGGLE, imageid: imageid });
   },
 };
+
+export const saveTeabag = {
+  saveTeabag: (): AppThunkAction<Actions.SaveTeabag | Actions.ReceiveTeabagAction> => (dispatch, getState) => {
+    let teabag = getState().teabag.teabag;
+    let method = teabag.id === undefined || teabag.id.length > 0 ? 'put' : 'post';
+    try {
+    let addTeabag = fetch(`/api/Bags/`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: method,
+      body: JSON.stringify(teabag),
+    })
+    .then(response => {
+      dispatch({ type: Constants.RECEIVE_TEABAG, teabag: {} as ITeabag});
+      addTask(addTeabag); // ensure server-side prerendering waits for this to complete
+    });
+    } catch (err) {
+      console.log(err);
+    }
+
+    dispatch({ type: Constants.SAVE_TEABAG});
+  },
+};
