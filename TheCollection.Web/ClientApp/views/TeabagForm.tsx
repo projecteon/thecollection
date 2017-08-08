@@ -8,14 +8,22 @@ import * as BrandReducer from '../reducers/brand';
 
 import {ComboBox} from '../components/ComboBox/ComboBox';
 import {Loader} from '../components/Loader';
+import {FormGroupItem} from '../components/FormGroupItem';
+import {TextInput} from '../components/TextInput';
+import {Textarea} from '../components/Textarea';
 
 import {IBrand} from '../interfaces/IBrand';
 import {ICountry} from '../interfaces/ICountry';
 import {IBagType} from '../interfaces/IBagType';
 
-const BrandComboBox = ComboBox<IBrand>(); // tslint:disable-line:variable-name
 const CountryComboBox = ComboBox<ICountry>(); // tslint:disable-line:variable-name
 const TypeComboBox = ComboBox<IBagType>(); // tslint:disable-line:variable-name
+
+const InputFormGroupItem = FormGroupItem(TextInput); // tslint:disable-line:variable-name
+const TextareaFormGroupItem = FormGroupItem(Textarea); // tslint:disable-line:variable-name
+const BrandInputGroupItem = FormGroupItem(ComboBox<IBrand>()); // tslint:disable-line:variable-name
+const CountryInputGroupItem = FormGroupItem(ComboBox<ICountry>()); // tslint:disable-line:variable-name
+const BagtypeInputGroupItem = FormGroupItem(ComboBox<IBagType>()); // tslint:disable-line:variable-name
 
 type TeabagProps =
     TeabagReducer.ITeabagState            // ... state we've requested from the Redux store
@@ -31,19 +39,8 @@ class TeabagForm extends React.Component<TeabagProps, void> {
     this.onAddNewBagType = this.onAddNewBagType.bind(this);
     this.onAddNewBrand = this.onAddNewBrand.bind(this);
     this.onAddNewCountry = this.onAddNewCountry.bind(this);
-    this.onBagTypeSelected = this.onBagTypeSelected.bind(this);
-    this.onBrandSelected = this.onBrandSelected.bind(this);
-    this.onClearBagType = this.onClearBagType.bind(this);
-    this.onClearBrand = this.onClearBrand.bind(this);
-    this.onClearCountry = this.onClearCountry.bind(this);
-    this.onCountrySelected = this.onCountrySelected.bind(this);
-    this.onFlavourChanged = this.onFlavourChanged.bind(this);
-    this.onHallmarkChanged = this.onHallmarkChanged.bind(this);
-    this.onSearchBrand = this.onSearchBrand.bind(this);
     this.onSearchCountry = this.onSearchCountry.bind(this);
     this.onSearchType = this.onSearchType.bind(this);
-    this.onSerialNumberChanged = this.onSerialNumberChanged.bind(this);
-    this.onSerieChanged = this.onSerieChanged.bind(this);
     this.onSave = this.onSave.bind(this);
   }
 
@@ -59,22 +56,8 @@ class TeabagForm extends React.Component<TeabagProps, void> {
     }
   }
 
-  getBindValue(value: string) {
-    if (value === undefined || value === null) { return ''; }
-
-    return value;
-  }
-
   onAddNewBrand() {
     this.props.history.push('/brandform');
-  }
-
-  onBrandSelected(brand: IBrand) {
-    this.props.changeBrand(brand);
-  }
-
-  onClearBrand() {
-    this.props.clearBrand();
   }
 
   onSearchBrand(searchTerm: string) {
@@ -87,14 +70,6 @@ class TeabagForm extends React.Component<TeabagProps, void> {
     this.props.history.push('/countryform');
   }
 
-  onCountrySelected(country: ICountry) {
-    this.props.changeCountry(country);
-  }
-
-  onClearCountry() {
-    this.props.clearCountry();
-  }
-
   onSearchCountry(searchTerm: string) {
     let uri = `/api/Countries/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri)
@@ -102,30 +77,7 @@ class TeabagForm extends React.Component<TeabagProps, void> {
   }
 
   onAddNewBagType() {
-    this.props.history.push('/bagtypeform');}
-
-  onBagTypeSelected(bagtype: IBagType) {
-    this.props.changeBagtype(bagtype);
-  }
-
-  onClearBagType() {
-    this.props.clearBagtype();
-  }
-
-  onFlavourChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeFlavour(event.currentTarget.value);
-  }
-
-  onSerieChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeSerie(event.currentTarget.value);
-  }
-
-  onSerialNumberChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeSerialNumber(event.currentTarget.value);
-  }
-
-  onHallmarkChanged(event: React.FormEvent<HTMLTextAreaElement>) {
-    this.props.changeHallmark(event.currentTarget.value);
+    this.props.history.push('/bagtypeform');
   }
 
   onSearchType(searchTerm: string) {
@@ -159,48 +111,40 @@ class TeabagForm extends React.Component<TeabagProps, void> {
                   {/*<img src={`/images/${this.state.teabag.image}`}  style={{maxWidth: 'calc(100vw - 30px)', maxHeight: '95vh', cursor: 'ponter'}} />*/}
                 </div>
               </div>
-              <div className='form-group'>
-                <label htmlFor='inputBrand' className='col-sm-2 control-label'>Brand</label>
-                <div className='col-sm-6'>
-                  <BrandComboBox onAddNew={this.onAddNewBrand} onSearch={this.onSearchBrand} onItemSelected={this.onBrandSelected} renderItem={this.renderBrandComboBoxItem} displayProperty={'name'} selectedItem={this.props.teabag.brand} onClear={this.onClearBrand}/>
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputFlavour' className='col-sm-2 control-label'>Flavour</label>
-                <div className='col-sm-6'>
-                  <input type='text' className='form-control' id='inputFlavour' placeholder='Flavour' value={this.getBindValue(this.props.teabag.flavour)} onChange={this.onFlavourChanged}/>
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputSeries' className='col-sm-2 control-label'>Series</label>
-                <div className='col-sm-6'>
-                  <input type='text' className='form-control' id='inputSeries' placeholder='Series' value={this.getBindValue(this.props.teabag.serie)} onChange={this.onSerieChanged}/>
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputSerialnumber' className='col-sm-2 control-label'>Serialnumber</label>
-                <div className='col-sm-3'>
-                  <input type='text' className='form-control' id='inputSerialnumber' placeholder='Serialnumber' value={this.getBindValue(this.props.teabag.serialnumber)} onChange={this.onSerialNumberChanged}/>
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputHallmark' className='col-sm-2 control-label'>Hallmark</label>
-                <div className='col-sm-6  '>
-                  <textarea className='form-control' id='inputHallmark' placeholder='Hallmark' value={this.getBindValue(this.props.teabag.hallmark)} onChange={this.onHallmarkChanged}/>
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputType' className='col-sm-2 control-label'>Type</label>
-                <div className='col-sm-6'>
-                  <TypeComboBox onAddNew={this.onAddNewBagType} onSearch={this.onSearchType} onItemSelected={this.onBagTypeSelected} renderItem={this.renderBagTypeComboBoxItem} displayProperty={'name'} selectedItem={this.props.teabag.type}  onClear={this.onClearBagType} />
-                </div>
-              </div>
-              <div className='form-group'>
-                <label htmlFor='inputCountry' className='col-sm-2 control-label'>Country</label>
-                <div className='col-sm-6'>
-                  <CountryComboBox onAddNew={this.onAddNewCountry} onSearch={this.onSearchCountry} onItemSelected={this.onCountrySelected} renderItem={this.renderCountryComboBoxItem} displayProperty={'name'} selectedItem={this.props.teabag.country}  onClear={this.onClearCountry} />
-                </div>
-              </div>
+              <BrandInputGroupItem  inputid='inputBrand'
+                                    responsiveInputComponentWidth='col-sm-6'
+                                    label='Brand'
+                                    onAddNew={this.onAddNewBrand}
+                                    onSearch={this.onSearchBrand}
+                                    onItemSelected={this.props.changeBrand}
+                                    onClear={this.props.clearBrand}
+                                    renderItem={this.renderBrandComboBoxItem}
+                                    displayProperty={'name'}
+                                    selectedItem={this.props.teabag.brand}/>
+              <InputFormGroupItem inputid='inputFlavour' responsiveInputComponentWidth='col-sm-6' label='Flavour' placeholder='Flavour' value={this.props.teabag.flavour} onChange={this.props.changeFlavour}/>
+              <InputFormGroupItem inputid='inputSeries' responsiveInputComponentWidth='col-sm-6' label='Series' placeholder='Series' value={this.props.teabag.serie} onChange={this.props.changeSerie}/>
+              <InputFormGroupItem inputid='inputSerialnumber' responsiveInputComponentWidth='col-sm-3' label='Serialnumber' placeholder='Serialnumber' value={this.props.teabag.serialnumber} onChange={this.props.changeSerialNumber}/>
+              <TextareaFormGroupItem inputid='inputHallmark' responsiveInputComponentWidth='col-sm-6' label='Hallmark' placeholder='Hallmark' value={this.props.teabag.hallmark} onChange={this.props.changeHallmark}/>
+              <BagtypeInputGroupItem  inputid='inputBagType'
+                                      responsiveInputComponentWidth='col-sm-6'
+                                      label='Type'
+                                      onAddNew={this.onAddNewBagType}
+                                      onSearch={this.onSearchType}
+                                      onItemSelected={this.props.changeBagtype}
+                                      onClear={this.props.clearBagtype}
+                                      renderItem={this.renderBagTypeComboBoxItem}
+                                      displayProperty={'name'}
+                                      selectedItem={this.props.teabag.type} />
+              <CountryInputGroupItem  inputid='inputCountry'
+                                      responsiveInputComponentWidth='col-sm-6'
+                                      label='Country'
+                                      onAddNew={this.onAddNewCountry}
+                                      onSearch={this.onSearchCountry}
+                                      onItemSelected={this.props.changeCountry}
+                                      onClear={this.props.clearCountry}
+                                      renderItem={this.renderCountryComboBoxItem}
+                                      displayProperty={'name'}
+                                      selectedItem={this.props.teabag.country} />
               <div className='form-group'>
                 <div className='col-sm-offset-2 col-sm-10'>
                   <button className='btn btn-default' style={{cusor: 'pointer'}} onClick={this.onSave}>

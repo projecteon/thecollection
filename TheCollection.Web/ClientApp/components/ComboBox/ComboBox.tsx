@@ -7,6 +7,7 @@ import { ItemsList } from './ItemsList';
 import './ComboBox.css';
 
 export interface IComboBoxProps<T> {
+  inputid: string;
   selectedItem?: T;
   displayProperty: keyof T;
   renderItem(item: T): JSX.Element;
@@ -158,7 +159,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       return  <div style={{position: 'relative'}}>
                 <div className={className}>
                   {this.renderClearButton()}
-                  <input ref={input => this.controls.input = input} type='text' className='form-control' id='inputType' placeholder='Search for...' autoComplete='off' role='combobox' onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
+                  <input ref={input => this.controls.input = input} type='text' className='form-control' id={this.props.inputid} placeholder='Search for...' autoComplete='off' role='combobox' onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
                   {this.renderSearchIcon()}
                   {this.renderLoadingIcon()}
                   {this.renderAddButton()}
