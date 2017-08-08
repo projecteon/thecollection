@@ -17,7 +17,7 @@ class CountryForm extends React.Component<CountryProps, void> {
 
   constructor(props: CountryProps) {
     super();
-    console.log(props);
+
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onAdd = this.onAdd.bind(this);
     this.onUpdate = this.onUpdate.bind(this);

@@ -16,6 +16,8 @@ export const requestTeabag = {
       return;
     }
 
+    dispatch({ type: Constants.REQUEST_TEABAG, teabagid: teabagid });
+
     try {
       let fetchTask = fetch(`/api/Bags/${teabagid}`)
         .then(response => response.json() as Promise<ITeabag>)
@@ -26,8 +28,6 @@ export const requestTeabag = {
     } catch (err) {
       dispatch({ type: Constants.RECEIVE_TEABAG, teabag: {} as ITeabag });
     }
-
-    dispatch({ type: Constants.REQUEST_TEABAG, teabagid: teabagid });
   },
 };
 
@@ -98,6 +98,7 @@ export const requestTeabags = {
       return;
     }
 
+    dispatch({ type: Constants.REQUEST_TEABAGS, searchTerms: searchTerms });
     let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
     try {
       let fetchTask = fetch(uri)
@@ -109,8 +110,6 @@ export const requestTeabags = {
     } catch (err) {
       dispatch({ type: Constants.RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: [], resultCount: 0 });
     }
-
-    dispatch({ type: Constants.REQUEST_TEABAGS, searchTerms: searchTerms });
   },
 };
 

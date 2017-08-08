@@ -26,15 +26,13 @@ import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, cl
 export interface ITeabagState {
   teabag?: ITeabag;
   isLoading: boolean;
-  searchedBagTypes: IBagType[];
-  searchedCountries: ICountry[];
 }
 
 export const actionCreators = {...changeBagtype, ...changeBrand, ...changeCountry, ...clearBagtype, ...clearBrand, ...clearCountry, ...changeFlavour, ...changeHallmark, ...changeSerialNumber, ...changeSerie, ...requestTeabag, ...saveTeabag};
 
 const emptyRef = {id: '', name: ''};
 const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageid: '', serialnumber: '', serie: '', type: emptyRef};
-const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag, searchedBagTypes: [], searchedCountries: [] };
+const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag };
 type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryAction | ClearBagTypeAction | ClearBrandAction | ClearCountryAction | ChangeFlavourAction | ChangeHallmarkAction | ChangeSerialNumberAction | ChangeSerieAction | ReceiveTeabagAction | RequestTeabagAction | SaveTeabag;
 export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: KnownActions) => {
   switch (action.type) {

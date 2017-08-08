@@ -19,7 +19,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
 
   constructor(props: TeabagsProps) {
     super();
-    console.log(props);
+
     this.onSearch = this.onSearch.bind(this);
     this.onSearchTermsChanged = this.onSearchTermsChanged.bind(this);
   }
@@ -74,7 +74,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
   }
 
   private renderTeabag(teabag: ITeabag, key: number) {
-    return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-2'>
+    return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-3 col-lg-2'>
               <div>
                 {teabag.imageid ? <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'pointer'}} onClick={this.onZoomClicked.bind(this, teabag.imageid)}/> : undefined}
                 <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}}>

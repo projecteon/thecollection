@@ -17,7 +17,7 @@ class BrandForm extends React.Component<BrandProps, void> {
 
   constructor(props: BrandProps) {
     super();
-    console.log(props);
+
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onAdd = this.onAdd.bind(this);
     this.onUpdate = this.onUpdate.bind(this);

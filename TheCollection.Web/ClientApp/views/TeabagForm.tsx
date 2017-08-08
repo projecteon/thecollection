@@ -11,6 +11,7 @@ import {Loader} from '../components/Loader';
 import {FormGroupItem} from '../components/FormGroupItem';
 import {TextInput} from '../components/TextInput';
 import {Textarea} from '../components/Textarea';
+import {Image} from '../components/Image';
 
 import {IBrand} from '../interfaces/IBrand';
 import {ICountry} from '../interfaces/ICountry';
@@ -35,7 +36,6 @@ class TeabagForm extends React.Component<TeabagProps, void> {
 
   constructor(props: TeabagProps) {
     super();
-    console.log('TeabagForm ctor', props);
     this.onAddNewBagType = this.onAddNewBagType.bind(this);
     this.onAddNewBrand = this.onAddNewBrand.bind(this);
     this.onAddNewCountry = this.onAddNewCountry.bind(this);
@@ -46,13 +46,17 @@ class TeabagForm extends React.Component<TeabagProps, void> {
 
   componentWillMount() {
     if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      this.props.requestTeabag(this.props.params.id);
+      if (this.props.teabag !== undefined && this.props.teabag.id !== this.props.params.id) {
+        this.props.requestTeabag(this.props.params.id);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps: TeabagProps) {
-    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.teabag.id !== this.props.params.id) {
-      this.props.requestTeabag(this.props.params.id);
+    if (nextProps.isLoading === false && nextProps.params && nextProps.params.id && nextProps.params.id.length > 0) {
+      if (nextProps.teabag !== undefined && nextProps.teabag.id !== nextProps.params.id) {
+        this.props.requestTeabag(nextProps.params.id);
+      }
     }
   }
 
@@ -108,7 +112,7 @@ class TeabagForm extends React.Component<TeabagProps, void> {
     return  <form className='form-horizontal' style={{marginTop: 10}}>
               <div className='form-group'>
                 <div className='col-sm-offset-2 col-sm-10'>
-                  {/*<img src={`/images/${this.state.teabag.image}`}  style={{maxWidth: 'calc(100vw - 30px)', maxHeight: '95vh', cursor: 'ponter'}} />*/}
+                  <Image imageid={this.props.teabag.imageid}/>
                 </div>
               </div>
               <BrandInputGroupItem  inputid='inputBrand'
