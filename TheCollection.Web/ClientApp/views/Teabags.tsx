@@ -85,7 +85,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
                   <div style={{color: '#959595'}}><small>{teabag.type ? teabag.type.name : ''}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.country ? teabag.country.name : ''}</small></div>
                   <p className='edit'>
-                    <Link to={ `/teabagform/${teabag.id}` } activeClassName='active'>
+                    <Link to={ `/teabagform/${teabag.id}` } activeClassName='active' className='text-info'>
                       <span className='fa fa-pencil'></span>
                     </Link>
                   </p>
