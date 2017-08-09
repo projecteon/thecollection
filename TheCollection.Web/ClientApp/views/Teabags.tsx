@@ -77,14 +77,14 @@ class Teabags extends React.Component<TeabagsProps, void> {
     return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-3 col-lg-2'>
               <div>
                 {teabag.imageid ? <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'pointer'}} onClick={this.onZoomClicked.bind(this, teabag.imageid)}/> : undefined}
-                <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}}>
-                  <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595'}}>{teabag.brand.name} - {teabag.flavour}</strong>
+                <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}} className='details'>
+                  <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595', overflow: 'hidden'}}>{teabag.brand.name} - {teabag.flavour}</strong>
                   <div style={{color: '#959595'}}><small>{teabag.serie}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.hallmark}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.serialnumber}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.type ? teabag.type.name : ''}</small></div>
                   <div style={{color: '#959595'}}><small>{teabag.country ? teabag.country.name : ''}</small></div>
-                  <p style={{position: 'absolute', bottom: -5, right: 15}}>
+                  <p className='edit'>
                     <Link to={ `/teabagform/${teabag.id}` } activeClassName='active'>
                       <span className='fa fa-pencil'></span>
                     </Link>
