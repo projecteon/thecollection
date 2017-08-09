@@ -60,7 +60,7 @@ class Teabags extends React.Component<TeabagsProps, void> {
     let groupClassName = this.props.searchError.length > 0 ? 'input-group has-error' : 'input-group';
     let btnClassName = this.props.searchError.length > 0 ? 'btn btn-danger' : 'btn btn-default';
     let alert = this.props.searchError.length > 0 ? <div className='alert alert-danger' role='alert'>{this.props.searchError}</div> : undefined;
-    return  <div style={{position: 'sticky', zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff', width: '100%'}}>
+    return  <div style={{position: 'sticky', top: -1, zIndex: 3, paddingTop: 10, paddingRight: 15, backgroundColor: '#ffffff', width: '100%', marginBottom: 20}}>
               {alert}
               <div className={groupClassName}>
                 <input ref={input => this.controls.searchInput = input} type='text' className='form-control' placeholder='Search for...' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
@@ -105,9 +105,9 @@ class Teabags extends React.Component<TeabagsProps, void> {
       ? undefined
       : this.renderTeabags(this.props.teabags);
 
-    return  <div>
+    return  <div style={{position: 'relative'}}>
               {this.props.zoomImageId !== undefined ? <ImageZoom imageid={this.props.zoomImageId} onClick={this.onZoomClicked.bind(this, undefined)} /> : undefined}
-              <div style={{marginBottom: 20, position: 'relative'}}>{this.renderSearchBar()}</div>
+              {this.renderSearchBar()}
               {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccesses()}
               <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}
