@@ -12,7 +12,7 @@ type TeabagsProps =
     TeaBagsReducer.ITeabagsState     // ... state we've requested from the Redux store
     & typeof TeaBagsReducer.actionCreators   // ... plus action creators we've requested
 
-class Teabags extends React.Component<TeabagsProps, void> {
+class Teabags extends React.Component<TeabagsProps, {}> {
   controls: {
       searchInput?: HTMLInputElement;
     } = {};

@@ -87,10 +87,6 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
     if (this.props.filetypes.length) return undefined;
 
     let filetypes = Util.FileUpload.getUniqueFileTypeExtensions(this.props.filetypes);
-    if (filetypes.length > 6) {
-      return <i className='fa fa-upload' role='button' title='File chooser button' style={{ fontSize: '1.3em' }} />;
-    }
-
     let icons = filetypes.map(function (filetype, index) {
       return <FileTypeIcon key={index}
                           filetype={filetype} />;
@@ -115,6 +111,7 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
                  onDrop={this.onDrop}
                  onClick={this.onFileInput}>
               {this.renderFileIcons()}
+              <i className='fa fa-upload' role='button' title='File chooser button' style={{ fontSize: '1.3em' }} />
               <input style={{visibility: 'hidden', position: 'absolute', top: 0, left: 0, height: 0, width: 0}} ref={(input) => this.controls.fileinput = input} multiple={this.props.allowMultiple} type='file' onChange={this.onDrop} accept={this.createAcceptAttribute()}/>
             </div>;
   }

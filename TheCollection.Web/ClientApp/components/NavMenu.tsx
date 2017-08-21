@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 
-export class NavMenu extends React.Component<any, void> {
+export class NavMenu extends React.Component<any, {}> {
     public render() {
         return  <div className='main-nav'>
                   <nav className='navbar flex-column navbar-toggleable-md navbar-inverse'>

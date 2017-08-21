@@ -76,6 +76,8 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         this.setState({...this.state, ...{displayResults: false, selectedItem: this.props.selectedItem, searchTerm: this.props.selectedItem === undefined ? this.state.searchTerm : this.props.selectedItem[this.props.displayProperty]}});
         return;
       }
+
+      this.setState({...this.state, ...{displayResults: false, searchTerm: ''}});
     }
 
     onClear() {

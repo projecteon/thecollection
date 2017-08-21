@@ -13,7 +13,7 @@ type CountryProps =
     & { params?: { id?: string } }        // ... plus incoming routing parameters
     & { history: History; };              // ... plus naviation through react router
 
-class CountryForm extends React.Component<CountryProps, void> {
+class CountryForm extends React.Component<CountryProps, {}> {
 
   constructor(props: CountryProps) {
     super();

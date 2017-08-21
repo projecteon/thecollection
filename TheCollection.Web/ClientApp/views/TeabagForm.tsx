@@ -32,7 +32,7 @@ type TeabagProps =
     & { params?: { id?: string } }        // ... plus incoming routing parameters
     & { history: History; };              // ... plus naviation through react router
 
-class TeabagForm extends React.Component<TeabagProps, void> {
+class TeabagForm extends React.Component<TeabagProps, {}> {
 
   constructor(props: TeabagProps) {
     super();

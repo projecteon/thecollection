@@ -13,7 +13,7 @@ type BrandProps =
     & { params?: { id?: string } }        // ... plus incoming routing parameters
     & { history: History; };              // ... plus naviation through react router
 
-class BrandForm extends React.Component<BrandProps, void> {
+class BrandForm extends React.Component<BrandProps, {}> {
 
   constructor(props: BrandProps) {
     super();

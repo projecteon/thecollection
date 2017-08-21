@@ -13,7 +13,7 @@ type BagtypeProps =
     & { params?: { id?: string } }        // ... plus incoming routing parameters
     & { history: History; };              // ... plus naviation through react router
 
-class BagtypeForm extends React.Component<BagtypeProps, void> {
+class BagtypeForm extends React.Component<BagtypeProps, {}> {
 
   constructor(props: BagtypeProps) {
     super();
