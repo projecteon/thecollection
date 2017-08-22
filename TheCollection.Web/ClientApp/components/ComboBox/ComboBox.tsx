@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 
 import { ItemsList } from './ItemsList';
 
-import './ComboBox.css';
+import './ComboBox.scss';
 
 export interface IComboBoxProps<T> {
   inputid: string;

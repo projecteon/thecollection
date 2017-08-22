@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './Loader.css';
+import './Loader.scss';
 
 // other options:
 // https://projects.lukehaas.me/css-loaders/

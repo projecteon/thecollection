@@ -6,7 +6,7 @@ import * as TeaBagsReducer from '../reducers/teabags';
 import { ImageZoom } from '../components/ImageZoom';
 import { ITeabag } from '../interfaces/ITeaBag';
 
-import './Teabags.css';
+import './Teabags.scss';
 
 type TeabagsProps =
     TeaBagsReducer.ITeabagsState     // ... state we've requested from the Redux store

@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
+const webpackCommon = require('./webpack.config.common');
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
@@ -46,15 +47,17 @@ module.exports = (env) => {
         ]
     };
 
-    const clientBundleConfig = merge(sharedConfig, {
+    const clientBundleConfig = merge(sharedConfig,
+      webpackCommon.loadSass(isDevBuild, 'vender.css'),
+      {
         output: { path: path.join(__dirname, 'wwwroot', 'dist') },
-        module: {
-            rules: [
-                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
-            ]
-        },
+        // module: {
+        //     rules: [
+        //         { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
+        //     ]
+        // },
         plugins: [
-            extractCSS,
+            // extractCSS,
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'
@@ -64,16 +67,17 @@ module.exports = (env) => {
         ])
     });
 
-    const serverBundleConfig = merge(sharedConfig, {
+    const serverBundleConfig = merge(sharedConfig,
+      webpackCommon.loadSass(isDevBuild, 'vender.css'), {
         target: 'node',
         resolve: { mainFields: ['main'] },
         output: {
             path: path.join(__dirname, 'ClientApp', 'dist'),
             libraryTarget: 'commonjs2',
         },
-        module: {
-            rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
-        },
+        // module: {
+        //     rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
+        // },
         entry: { vendor: ['aspnet-prerendering', 'react-dom/server'] },
         plugins: [
             new webpack.DllPlugin({
