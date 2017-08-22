@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
 import * as TeaBagsReducer from '../reducers/teabags';
 import { ImageZoom } from '../components/ImageZoom';
+import { TeabagCard } from '../components/TeabagCard';
 import { ITeabag } from '../interfaces/ITeaBag';
 
 import './Teabags.scss';
@@ -22,6 +23,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
 
     this.onSearch = this.onSearch.bind(this);
     this.onSearchTermsChanged = this.onSearchTermsChanged.bind(this);
+    this.onZoomClicked = this.onZoomClicked.bind(this);
   }
 
   onSearchTermsChanged() {
@@ -74,24 +76,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   }
 
   private renderTeabag(teabag: ITeabag, key: number) {
-    return  <div key={key} style={{padding: 10, boxSizing: 'border-box', position: 'relative'}} className='col-xs-12 col-sm-4 col-md-3 col-lg-2'>
-              <div>
-                {teabag.imageid ? <img src={`/thumbnails/${teabag.imageid}/teabag.png`} style={{width: '100%', cursor: 'pointer'}} onClick={this.onZoomClicked.bind(this, teabag.imageid)}/> : undefined}
-                <div style={{padding: '5px 10px', backgroundColor: '#fff', width: '100%', position: 'relative', minHeight: 55}} className='details'>
-                  <strong style={{display: 'block', width: '100%', borderTop: '1px solid #959595', overflow: 'hidden'}}>{teabag.brand.name} - {teabag.flavour}</strong>
-                  <div style={{color: '#959595'}}><small>{teabag.serie}</small></div>
-                  <div style={{color: '#959595'}}><small>{teabag.hallmark}</small></div>
-                  <div style={{color: '#959595'}}><small>{teabag.serialnumber}</small></div>
-                  <div style={{color: '#959595'}}><small>{teabag.type ? teabag.type.name : ''}</small></div>
-                  <div style={{color: '#959595'}}><small>{teabag.country ? teabag.country.name : ''}</small></div>
-                  <p className='edit'>
-                    <Link to={ `/teabagform/${teabag.id}` } activeClassName='active' className='text-info'>
-                      <span className='fa fa-pencil'></span>
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>;
+    return  <TeabagCard key={key} teabag={teabag} onZoomClicked={this.onZoomClicked} />;
   }
 
   private renderTeabags(teabags: ITeabag[]) {
