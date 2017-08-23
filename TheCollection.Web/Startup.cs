@@ -16,6 +16,8 @@ using AspNetCore.Identity.DocumentDb;
 using System.IO;
 using TheCollection.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using TheCollection.Web.Controllers;
+using TheCollection.Web.Constants;
 
 namespace TheCollection_Web
 {
@@ -49,13 +51,17 @@ namespace TheCollection_Web
             services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options =>
             {
                 options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
+                options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
+                options.Cookies.ApplicationCookie.AutomaticChallenge = true;
                 options.Cookies.ApplicationCookie.CookieName = "Interop";
-                options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+                options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
+                options.Cookies.ApplicationCookie.LoginPath = $"/Account/{nameof(AccountController.Login)}";
+                options.Cookies.ApplicationCookie.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
             })
             .AddDocumentDbStores(options =>
             {
                 options.UserStoreDocumentCollection = "AspNetIdentity";
-                options.Database = "TheCollection";
+                options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
 
@@ -151,7 +157,7 @@ namespace TheCollection_Web
             try
             {
                 // Does the DB exist?
-                var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri("TheCollection")).Result;
+                var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId)).Result;
             }
             catch (AggregateException ae)
             {
@@ -160,7 +166,7 @@ namespace TheCollection_Web
                     if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound)
                     {
                         // Create DB
-                        var db = client.CreateDatabaseAsync(new Database() { Id = "TheCollection" }).Result;
+                        var db = client.CreateDatabaseAsync(new Database() { Id = DocumentDB.DatabaseId }).Result;
                         return true;
                     }
 
@@ -171,7 +177,7 @@ namespace TheCollection_Web
             try
             {
                 // Does the Collection exist?
-                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri("TheCollection", "AspNetIdentity")).Result;
+                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, "AspNetIdentity")).Result;
             }
             catch (AggregateException ae)
             {
@@ -180,7 +186,7 @@ namespace TheCollection_Web
                     if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound)
                     {
                         DocumentCollection collection = new DocumentCollection() { Id = "AspNetIdentity" };
-                        collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri("TheCollection"), collection).Result;
+                        collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
 
                         return true;
                     }
