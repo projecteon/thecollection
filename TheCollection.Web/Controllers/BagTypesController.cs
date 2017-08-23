@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheCollection.Business.Tea;
+using TheCollection.Web.Commands;
+using TheCollection.Web.Constants;
 using TheCollection.Web.Services;
 
 namespace TheCollection.Web.Controllers
@@ -19,20 +21,10 @@ namespace TheCollection.Web.Controllers
         }
 
         [HttpGet()]
-        public async Task<IEnumerable<BagType>> BagTypes([FromQuery] string searchterm = "")
+        public async Task<IActionResult> BagTypes([FromQuery] string searchterm = "")
         {
-            var bagtypesRepository = new DocumentDBRepository<BagType>(documentDbClient, "TheCollection", "BagTypes");
-            IEnumerable<BagType> bagtypes;
-            if (searchterm != "")
-            {
-                bagtypes = await bagtypesRepository.GetItemsAsync(searchterm);
-            }
-            else
-            {
-                bagtypes = await bagtypesRepository.GetItemsAsync();
-            }
-
-            return bagtypes.OrderBy(bagtype => bagtype.Name);
+            var command = new SearchBagTypesCommand(documentDbClient);
+            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 
         [HttpPost()]

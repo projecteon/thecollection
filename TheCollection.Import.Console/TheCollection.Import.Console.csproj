@@ -116,8 +116,20 @@
     <Compile Include="..\TheCollection.Lib\Extensions\TypeExtensions.cs">
       <Link>Models\TypeExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\DocumentDBRepository.cs">
-      <Link>Services\DocumentDBRepository.cs</Link>
+    <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
+      <Link>Constants\DocumentDB.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Web\Extensions\IDocumentClientExtensions.cs">
+      <Link>Extensions\IDocumentClientExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Web\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Web\Services\CreateRepository.cs">
+      <Link>Services\CreateRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Web\Services\GetRepository.cs">
+      <Link>Services\GetRepository.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Web\Services\IImageService.cs">
       <Link>Services\IImageService.cs</Link>
@@ -130,6 +142,9 @@
     </Compile>
     <Compile Include="..\TheCollection.Web\Services\SearchableQuery.cs">
       <Link>Services\SearchableQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Web\Services\UpdateRepository.cs">
+      <Link>Services\UpdateRepository.cs</Link>
     </Compile>
     <Compile Include="AccessExport.cs" />
     <Compile Include="AzureStorageClient.cs" />

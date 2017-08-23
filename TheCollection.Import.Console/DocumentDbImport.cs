@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using TheCollection.Business.Tea;
 using TheCollection.Import.Console.Models;
+using TheCollection.Web.Constants;
 using TheCollection.Web.Services;
 
 namespace TheCollection.Import.Console
@@ -21,7 +22,7 @@ namespace TheCollection.Import.Console
                 };
             }).ToList();
 
-            var brandsRepository = new DocumentDBRepository<Brand>(client, collection, "Brands");
+            var brandsRepository = new CreateRepository<Brand>(client, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
             var insertCounter = 0;
             await brands.ForEachAsync(async brand =>
             {
@@ -43,7 +44,7 @@ namespace TheCollection.Import.Console
             var bagTypes = await ImportBagTypesAsync(client, collection, thees);
             var images = await ImportImagesAsync(client, collection, thees);
 
-            var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
+            var bagsRepository = new CreateRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var bags = thees.Select(thee =>
             {
                 var teabrand = brands.FirstOrDefault(brand => brand.Name == thee.TheeMerk.Trim());
@@ -83,7 +84,7 @@ namespace TheCollection.Import.Console
         private static async System.Threading.Tasks.Task<List<Country>> ImportCountriesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var countries = thees.Select(thee => thee.TheeLandvanherkomst.Trim()).Distinct().Where(country => country.Length > 0).Select(country => { return new Country { Name = country }; }).ToList();
-            var countryRepository = new DocumentDBRepository<Country>(client, collection, "Countries");
+            var countryRepository = new CreateRepository<Country>(client, DocumentDB.DatabaseId, DocumentDB.CountriesCollectionId);
             var insertCounter = 0;
             await countries.ForEachAsync(async country =>
             {
@@ -98,7 +99,7 @@ namespace TheCollection.Import.Console
         private static async System.Threading.Tasks.Task<List<BagType>> ImportBagTypesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var bagTypes = thees.Select(thee => thee.TheeSoortzakje.Trim()).Distinct().Where(bagType => bagType.Length > 0).Select(type => { return new BagType { Name = type }; }).ToList();
-            var bagTypeRepository = new DocumentDBRepository<BagType>(client, collection, "BagTypes");
+            var bagTypeRepository = new CreateRepository<BagType>(client, DocumentDB.DatabaseId, DocumentDB.BagTypesCollectionId);
             var insertCounter = 0;
             await bagTypes.ForEachAsync(async bagType =>
             {
@@ -113,7 +114,7 @@ namespace TheCollection.Import.Console
         private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees)
         {
             var images = thees.Where(thee => File.Exists($"{ImageFilesystemService.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
-            var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
+            var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image =>
             {
@@ -132,7 +133,7 @@ namespace TheCollection.Import.Console
         private static async System.Threading.Tasks.Task<List<Image>> ImportImages2Async(DocumentClient client, string collection, IEnumerable<Bag> bags, IImageService imageservice)
         {
             var images = bags.Where(bag => File.Exists($"{ImageFilesystemService.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
-            var imageRepository = new DocumentDBRepository<Image>(client, collection, "Images");
+            var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image =>
             {
@@ -159,7 +160,8 @@ namespace TheCollection.Import.Console
         public static async System.Threading.Tasks.Task<IEnumerable<Bag>> UpdateBagsAsync(DocumentClient client, string collection, IImageService imageservice)
         {
 
-            var bagsRepository = new DocumentDBRepository<Bag>(client, collection, "Bags");
+            var bagsRepository = new GetRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var updateBagsRepository = new UpdateRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var bags = await bagsRepository.GetItemsAsync(bag => bag.ImageId == null && bag.MainID != 165 && bag.MainID != 1193, 50);
             System.Console.WriteLine($"Fetched {bags.Count()} bags");
             var images = await ImportImages2Async(client, collection, bags, imageservice);
@@ -172,7 +174,7 @@ namespace TheCollection.Import.Console
             var insertCounter = 0;
             await bags.ToList().ForEachAsync(async bag =>
             {
-                var bagid = await bagsRepository.UpdateItemAsync(bag.Id, bag);
+                var bagid = await updateBagsRepository.UpdateItemAsync(bag.Id, bag);
                 insertCounter++;
                 System.Console.WriteLine($"Update bag: {insertCounter} - {bag.MainID}");
             });

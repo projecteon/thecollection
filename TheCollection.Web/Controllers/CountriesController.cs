@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheCollection.Business.Tea;
+using TheCollection.Web.Commands;
+using TheCollection.Web.Constants;
 using TheCollection.Web.Services;
 
 namespace TheCollection.Web.Controllers
@@ -19,19 +21,10 @@ namespace TheCollection.Web.Controllers
         }
 
         [HttpGet()]
-        public async Task<IEnumerable<Country>> Countries([FromQuery] string searchterm = "")
+        public async Task<IActionResult> Countries([FromQuery] string searchterm = "")
         {
-            var brandsRepository = new DocumentDBRepository<Country>(documentDbClient, "TheCollection", "Countries");
-            IEnumerable<Country> countries;
-            if (searchterm != "")
-            {
-                countries = await brandsRepository.GetItemsAsync(searchterm);
-            }
-            else
-            {
-                countries = await brandsRepository.GetItemsAsync();
-            }
-            return countries.OrderBy(country => country.Name);
+            var command = new SearchCountriesCommand(documentDbClient);
+            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 
         [HttpPost()]

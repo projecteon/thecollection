@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TheCollection.Business.Tea;
-using TheCollection.Web.Services;
+using TheCollection.Web.Commands;
 
 namespace TheCollection.Web.Controllers
 {
@@ -19,35 +17,17 @@ namespace TheCollection.Web.Controllers
         }
 
         [HttpGet()]
-        public async Task<SearchResult<Bag>> Bags([FromQuery] string searchterm = "", [FromQuery] int pagesize = 300, [FromQuery] int page = 0)
+        public async Task<IActionResult> Bags([FromQuery] string searchterm = "", [FromQuery] int pagesize = 300, [FromQuery] int page = 0)
         {
-            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
-            IEnumerable<Bag> bags;
-            if (searchterm != "")
-            {
-                bags = await bagsRepository.GetItemsAsync(searchterm, pagesize);
-            }
-            else
-            {
-                bags = await bagsRepository.GetItemsAsync();
-            }
-
-            return new SearchResult<Bag>
-            {
-                count = await bagsRepository.GetRowCountAsync(searchterm),
-                data = bags.OrderBy(bag => bag.Brand.Name)
-                        .ThenBy(bag => bag.Hallmark)
-                        .ThenBy(bag => bag.Serie)
-                        .ThenBy(bag => bag.BagType?.Name)
-                        .ThenBy(bag => bag.Flavour)
-            };
+            var command = new SearchBagsCommand(documentDbClient);
+            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm, pagesize = pagesize });
         }
 
         [HttpGet("{id}")]
-        public async Task<Bag> Bag(string id)
+        public async Task<IActionResult> Bag(string id)
         {
-            var bagsRepository = new DocumentDBRepository<Bag>(documentDbClient, "TheCollection", "Bags");
-            return await bagsRepository.GetItemAsync(id);
+            var command = new GetTeabagCommand(documentDbClient);
+            return await command.ExecuteAsync(id);
         }
 
         [HttpPost()]
@@ -62,11 +42,5 @@ namespace TheCollection.Web.Controllers
         {
             return bag;
         }
-    }
-
-    public class SearchResult<T>
-    {
-        public long count { get; set; }
-        public IEnumerable<T> data { get; set; }
     }
 }
