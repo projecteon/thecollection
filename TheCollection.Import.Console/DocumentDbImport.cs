@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Documents.Client;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace TheCollection.Import.Console
                     BagType = teabagType != null ? new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null,
                     Country = teacountry != null ? new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null,
                     SerialNumber = thee.TheeSerienummer.Trim(),
-                    InsertDate = thee.Theeinvoerdatum.Trim(),
+                    InsertDate = DateTime.Parse(thee.Theeinvoerdatum.Trim()),
                     ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
                 };
             }).ToList();

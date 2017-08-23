@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TheCollection.Business.Tea
@@ -46,7 +47,7 @@ namespace TheCollection.Business.Tea
         public string SerialNumber { get; set; }
 
         [JsonProperty(PropertyName = "insertdate")]
-        public string InsertDate { get; set; }
+        public DateTime InsertDate { get; set; }
 
         [JsonProperty(PropertyName = "imageid")]
         public string ImageId { get; set; }
