@@ -4,6 +4,7 @@ using Microsoft.Azure.Documents;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TheCollection.Web.Constants;
 using TheCollection.Web.Extensions;
 using TheCollection.Web.Services;
 
@@ -24,7 +25,7 @@ namespace TheCollection.Web.Handlers
 
         public async Task Invoke(HttpContext context, IDocumentClient documentDbClient, IImageService imageService)
         {
-            var imagesRepository = new DocumentDBRepository<Business.Tea.Image>(documentDbClient, "TheCollection", "Images");
+            var imagesRepository = new GetRepository<Business.Tea.Image>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var matches = Regex.Matches(context.Request.Path, RegEx);
             if (matches.Count > 0 && matches[0].Groups.Count > 1)
             {
