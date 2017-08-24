@@ -38,10 +38,7 @@ namespace TheCollection_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSingleton<DocumentClient>(x => new DocumentClient(
-            //    Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
-            //    Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey")
-            //));
+            services.AddScoped<IApplicationUserAccessor, ApplicationUserAccessor>();
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),

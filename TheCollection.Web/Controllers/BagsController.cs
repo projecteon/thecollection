@@ -3,6 +3,7 @@ using Microsoft.Azure.Documents;
 using System.Threading.Tasks;
 using TheCollection.Business.Tea;
 using TheCollection.Web.Commands;
+using TheCollection.Web.Services;
 
 namespace TheCollection.Web.Controllers
 {
@@ -10,10 +11,12 @@ namespace TheCollection.Web.Controllers
     public class BagsController : Controller
     {
         private readonly IDocumentClient documentDbClient;
+        private readonly IApplicationUserAccessor applicationUserAccessor;
 
-        public BagsController(IDocumentClient documentDbClient)
+        public BagsController(IDocumentClient documentDbClient, IApplicationUserAccessor applicationUserAccessor)
         {
             this.documentDbClient = documentDbClient;
+            this.applicationUserAccessor = applicationUserAccessor;
         }
 
         [HttpGet()]
