@@ -60,7 +60,7 @@ namespace TheCollection.Import.Console
                     BagType = teabagType != null ? new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null,
                     Country = teacountry != null ? new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null,
                     SerialNumber = thee.TheeSerienummer.Trim(),
-                    InsertDate = DateTime.Parse(thee.Theeinvoerdatum.Trim()),
+                    InsertDate = thee.Theeinvoerdatum.Trim(),
                     ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
                 };
             }).ToList();

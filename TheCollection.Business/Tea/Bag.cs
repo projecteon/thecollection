@@ -47,7 +47,7 @@ namespace TheCollection.Business.Tea
         public string SerialNumber { get; set; }
 
         [JsonProperty(PropertyName = "insertdate")]
-        public DateTime InsertDate { get; set; }
+        public string InsertDate { get; set; }
 
         [JsonProperty(PropertyName = "imageid")]
         public string ImageId { get; set; }
