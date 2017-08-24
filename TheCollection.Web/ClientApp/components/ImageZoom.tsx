@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import './ImageZoom.scss'
+
 export interface IImageZoomProps extends React.Props<any> {
   imageid: string;
   onClick(): void;
@@ -27,13 +29,16 @@ export class ImageZoom extends React.Component<IImageZoomProps, IImageZoomState>
   }
 
   renderImage() {
-    return <img src={`/images/${this.props.imageid}/Image.png`} onClick={this.props.onClick} style={{maxWidth: '90vw', maxHeight: '95vh', cursor: 'ponter'}}/>;
+    return  <div className='image' onClick={this.props.onClick}>
+              <p className='overlay'><i className='text-danger fa fa-times'/></p>
+              <img src={`/images/${this.props.imageid}/Image.png`} style={{maxWidth: '90vw', maxHeight: '95vh', cursor: 'ponter'}}/>
+            </div>;
   }
 
   render() {
     let element = this.state.imageLoadFailed ? this.renderIcon() : this.renderImage();
     return  <div style={{zIndex: 10, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)'}}>
-              <img src={`/images/${this.props.imageid}/image.png`} onClick={this.props.onClick} style={{maxWidth: '90vw', maxHeight: '95vh', cursor: 'pointer'}}/>
+              {element}
             </div>;
   }
 }
