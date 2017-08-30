@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using TheCollection.Business.Tea;
 using TheCollection.Import.Console.Models;
+using TheCollection.Import.Console.Translators;
 using TheCollection.Web.Constants;
 using TheCollection.Web.Services;
 
@@ -14,12 +15,12 @@ namespace TheCollection.Import.Console
     {
         public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, string collection, List<Merk> meerken)
         {
+            var translator = new MerkToBrandTranslator();
             var brands = meerken.Select(merk =>
             {
-                return new Brand
-                {
-                    Name = merk.TheeMerk.Trim()
-                };
+                var newBrand = new Brand();
+                translator.Translate(merk, newBrand);
+                return newBrand;
             }).ToList();
 
             var brandsRepository = new CreateRepository<Brand>(client, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
@@ -43,26 +44,14 @@ namespace TheCollection.Import.Console
             var countries = await ImportCountriesAsync(client, collection, thees);
             var bagTypes = await ImportBagTypesAsync(client, collection, thees);
             var images = await ImportImagesAsync(client, collection, thees);
+            var translater = new TheeToBagTranslator(countries, brands, bagTypes, images);
 
             var bagsRepository = new CreateRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var bags = thees.Select(thee =>
             {
-                var teabrand = brands.FirstOrDefault(brand => brand.Name == thee.TheeMerk.Trim());
-                var teabagType = bagTypes.FirstOrDefault(bagType => bagType.Name == thee.TheeSoortzakje.Trim());
-                var teacountry = countries.FirstOrDefault(country => country.Name == thee.TheeLandvanherkomst.Trim());
-                return new Bag
-                {
-                    MainID = thee.MainID,
-                    Brand = teabrand != null ? new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name } : null,
-                    Serie = thee.TheeSerie.Trim(),
-                    Flavour = thee.TheeSmaak.Trim(),
-                    Hallmark = thee.TheeKenmerken.Trim(),
-                    BagType = teabagType != null ? new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null,
-                    Country = teacountry != null ? new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null,
-                    SerialNumber = thee.TheeSerienummer.Trim(),
-                    InsertDate = thee.Theeinvoerdatum.Trim(),
-                    ImageId = images.FirstOrDefault(image => image.Filename == $"{thee.MainID}.jpg")?.Id
-                };
+                var newBag = new Bag();
+                translater.Translate(thee, newBag);
+                return newBag;
             }).ToList();
 
             System.Console.WriteLine($"Attempting to insert {bags.Count()} bags out of {thees.Count()} thees");
