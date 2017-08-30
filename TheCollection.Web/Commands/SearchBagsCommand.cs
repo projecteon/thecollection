@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
-using TheCollection.Web.Constants;
-using TheCollection.Business.Tea;
-using TheCollection.Web.Services;
 using System.Linq;
-using TheCollection.Web.Models;
+using System.Threading.Tasks;
+using TheCollection.Business.Tea;
+using TheCollection.Web.Constants;
 using TheCollection.Web.Extensions;
+using TheCollection.Web.Models;
+using TheCollection.Web.Services;
 
 namespace TheCollection.Web.Commands
 {
@@ -27,7 +27,7 @@ namespace TheCollection.Web.Commands
             }
 
             var bagsRepository = new SearchRepository<Bag>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
-            var bags = await bagsRepository.SearchAsync(search.searchterm, search.pagesize); 
+            var bags = await bagsRepository.SearchAsync(search.searchterm, search.pagesize);
             var result = new SearchResult<Bag>
             {
                 count = await bagsRepository.SearchRowCountAsync(search.searchterm),
