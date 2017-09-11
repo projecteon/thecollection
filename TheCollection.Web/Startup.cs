@@ -114,20 +114,20 @@ namespace TheCollection_Web
             // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
             app.UseGoogleAuthentication(new GoogleOptions()
             {
-                ClientId = "229435238043-uudbjbi8e0tul6evho5vk8lkmck6r1rc.apps.googleusercontent.com",
-                ClientSecret = "4te-tqjVO2VvvTwTudoKXq-s"
+                ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId"),
+                ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret")
             });
 
             app.UseFacebookAuthentication(new FacebookOptions()
             {
-                ClientId = "652967514908861",
-                ClientSecret = "8cf4ab15da3083db31e313864458b616"
+                ClientId = Configuration.GetValue<string>("OAuth:Facebook:ClientId"),
+                ClientSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret")
             });
 
             app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
             {
-                ClientId = "e75794ef-c77a-446a-a260-d03d45f361d5",
-                ClientSecret = "EBo9NqAJSRPKcAtrdX52ZxC"
+                ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId"),
+                ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret")
             });
 
             app.UseMvc(routes =>
