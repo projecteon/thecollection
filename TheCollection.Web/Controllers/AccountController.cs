@@ -71,6 +71,12 @@ namespace TheCollection.Web.Controllers
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != "gledesrus@hotmail.com" || email != "l.wolterink@hotmail.com" || email != "abspro@gmail.com")
+                {
+                    return RedirectToAction(nameof(LogOff));
+                }
+
                 //_logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
