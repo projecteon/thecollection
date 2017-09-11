@@ -15,7 +15,7 @@
     "@types/redux": "3.5.27",
     "@types/webpack": "^2.2.0",
     "@types/webpack-env": "^1.13.0",
-    "aspnet-prerendering": "^2.0.0",
+    "aspnet-prerendering": "^3.0.1",
     "aspnet-webpack": "^1.0.27",
     "aspnet-webpack-react": "^1.0.4",
     "awesome-typescript-loader": "^3.2.3",
