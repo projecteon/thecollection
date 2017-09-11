@@ -72,7 +72,7 @@ namespace TheCollection.Web.Controllers
             if (result.Succeeded)
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != "gledesrus@hotmail.com" || email != "l.wolterink@hotmail.com" || email != "abspro@gmail.com")
+                if (email != "gledesrus@hotmail.com" && email != "l.wolterink@hotmail.com" && email != "abspro@gmail.com")
                 {
                     return RedirectToAction(nameof(LogOff));
                 }
