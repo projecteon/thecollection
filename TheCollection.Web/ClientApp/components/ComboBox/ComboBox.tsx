@@ -30,7 +30,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
   let Items = ItemsList<T>(); // tslint:disable-line:variable-name
 
   return class extends Component<IComboBoxProps<T>, IComboBoxState<T>> {
-    delayedSearch: ((searchedTerm: string) => void) & _.Cancelable;
+    delayedSearch: ((searchedTerm: string) => void);
     controls: {
       input?: HTMLInputElement;
     } = {};

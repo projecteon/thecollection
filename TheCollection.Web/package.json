@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@types/history": "^2.0.0",
-    "@types/lodash.debounce": "4.0.2",
+    "@types/lodash.debounce": "^4.0.3",
     "@types/react": "15.6.1",
     "@types/react-dom": "15.5.3",
     "@types/react-redux": "^4.4.29",
