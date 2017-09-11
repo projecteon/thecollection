@@ -51,7 +51,7 @@ namespace TheCollection_Web
                 options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
                 options.Cookies.ApplicationCookie.AutomaticChallenge = true;
                 options.Cookies.ApplicationCookie.CookieName = "Interop";
-                options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
+                //options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
                 options.Cookies.ApplicationCookie.LoginPath = $"/Account/{nameof(AccountController.Login)}";
                 options.Cookies.ApplicationCookie.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
             })
