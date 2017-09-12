@@ -8,7 +8,7 @@ export interface ITeabag {
   serie: string;
   flavour: string;
   hallmark: string;
-  type: IBagType;
+  bagtype: IBagType;
   country: ICountry;
   serialnumber: string;
   imageid: string;
