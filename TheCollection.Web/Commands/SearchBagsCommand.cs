@@ -32,8 +32,8 @@ namespace TheCollection.Web.Commands
             {
                 count = await bagsRepository.SearchRowCountAsync(search.searchterm),
                 data = bags.OrderBy(bag => bag.Brand.Name)
-                        .ThenBy(bag => bag.Hallmark)
                         .ThenBy(bag => bag.Serie)
+                        .ThenBy(bag => bag.Hallmark)
                         .ThenBy(bag => bag.BagType?.Name)
                         .ThenBy(bag => bag.Flavour)
             };
