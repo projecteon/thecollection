@@ -7,9 +7,11 @@ namespace TheCollection.Business.Tea
     public class Country : IRef
     {
         [Key]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         [Searchable]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
     }
 }

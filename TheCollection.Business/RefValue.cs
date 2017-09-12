@@ -1,10 +1,14 @@
-﻿namespace TheCollection.Business
+﻿using Newtonsoft.Json;
+
+namespace TheCollection.Business
 {
     public class RefValue : IRef
     {
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         [Searchable]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
     }
 
