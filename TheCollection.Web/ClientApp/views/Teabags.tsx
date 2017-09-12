@@ -62,7 +62,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     let groupClassName = this.props.searchError.length > 0 ? 'input-group has-error' : 'input-group';
     let btnClassName = this.props.searchError.length > 0 ? 'btn btn-danger' : 'btn btn-default';
     let alert = this.props.searchError.length > 0 ? <div className='alert alert-danger' role='alert'>{this.props.searchError}</div> : undefined;
-    return  <div style={{position: 'sticky', top: -1, zIndex: 1, paddingTop: 10, paddingBottom: 3, backgroundColor: '#ffffff', width: '100%', marginBottom: 5}}>
+    return  <div style={{position: 'sticky', top: -1, zIndex: 10, paddingTop: 10, paddingBottom: 3, backgroundColor: '#ffffff', width: '100%', marginBottom: 5}}>
               {alert}
               <div className={groupClassName}>
                 <input ref={input => this.controls.searchInput = input} type='text' className='form-control' placeholder='Search for...' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
