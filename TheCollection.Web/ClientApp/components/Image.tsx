@@ -14,7 +14,7 @@ export class Image extends React.Component<ImageProps, {}> {
   }
 
   renderImage() {
-    return <img src={`/images/${this.props.imageid}/teabag.png`}  style={{maxWidth: 'calc(100vw - 30px)', maxHeight: '95vh', cursor: 'ponter'}} />;
+    return <img src={`/images/${this.props.imageid}/teabag.png`}  style={{maxWidth: '100%', cursor: 'ponter'}} />;
   }
 
   renderPlaceholder() {
