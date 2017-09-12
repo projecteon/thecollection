@@ -18,7 +18,7 @@ export const TeabagCard : React.StatelessComponent<TeabagCardProps> = props =>
         <div style={{color: '#959595'}}><small>{props.teabag.serie}</small></div>
         <div style={{color: '#959595'}}><small>{props.teabag.hallmark}</small></div>
         <div style={{color: '#959595'}}><small>{props.teabag.serialnumber}</small></div>
-        <div style={{color: '#959595'}}><small>{props.teabag.type ? props.teabag.type.name : ''}</small></div>
+        <div style={{color: '#959595'}}><small>{props.teabag.bagtype ? props.teabag.bagtype.name : ''}</small></div>
         <div style={{color: '#959595'}}><small>{props.teabag.country ? props.teabag.country.name : ''}</small></div>
         <p className='edit'>
           <Link to={ `/teabagform/${props.teabag.id}` } activeClassName='active' className='text-info'>
