@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Mousetrap from 'mousetrap';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
@@ -14,6 +15,7 @@ type TeabagsProps =
     & typeof TeaBagsReducer.actionCreators   // ... plus action creators we've requested
 
 class Teabags extends React.Component<TeabagsProps, {}> {
+  static SearchKeyboardShortcut = 'enter';
   controls: {
       searchInput?: HTMLInputElement;
     } = {};
@@ -21,15 +23,34 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   constructor(props: TeabagsProps) {
     super();
 
+    this.onKeyboardSearch = this.onKeyboardSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onSearchTermsChanged = this.onSearchTermsChanged.bind(this);
     this.onZoomClicked = this.onZoomClicked.bind(this);
+
+    // var mousetrap = new Mousetrap(/*add ref to searchbar dom*/);
+    // mousetrap.stopCallback = function(){ return false; };
+  }
+
+  componentDidMount() {
+    Mousetrap.prototype.stopCallback = () => { return false; };
+    Mousetrap.bind(Teabags.SearchKeyboardShortcut, this.onKeyboardSearch);
+  }
+
+  componentWillUnmount() {
+    Mousetrap.unbind(Teabags.SearchKeyboardShortcut);
   }
 
   onSearchTermsChanged() {
     event.preventDefault();
     event.stopPropagation();
     this.props.validateSearchTerms(this.controls.searchInput.value.trim());
+  }
+
+  onKeyboardSearch(event: ExtendedKeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.props.requestTeabags(this.controls.searchInput.value.trim());
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
