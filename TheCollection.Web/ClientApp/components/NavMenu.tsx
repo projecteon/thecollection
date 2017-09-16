@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 
+import './NavMenu.scss';
+
 export class NavMenu extends React.Component<any, {}> {
     public render() {
         return  <div className='main-nav'>
