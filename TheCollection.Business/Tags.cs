@@ -15,10 +15,10 @@ namespace TheCollection.Business
 
         public static string[] Generate(string tagString)
         {
-            var clean = StripAccents(tagString.ToLower());
+            var clean = Regex.Replace(tagString.ToLower(), $"(\\b{string.Join("\\b|", StopWords)})", string.Empty);
+            clean = StripAccents(clean);
             clean = Regex.Replace(clean, @"[^-&a-z0-9\s]", string.Empty);
-            var stopWords = new Regex($"^({string.Join("|", StopWords)})$");
-            return clean.Split(' ').Where(x => String.IsNullOrWhiteSpace(x) == false && !stopWords.IsMatch(x.Trim())).Distinct().ToArray();
+            return clean.Split(' ').Where(x => String.IsNullOrWhiteSpace(x) == false).Distinct().ToArray();
         }
 
         public static string StripAccents(string s)
