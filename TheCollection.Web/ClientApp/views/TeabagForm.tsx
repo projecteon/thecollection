@@ -7,10 +7,10 @@ import * as TeabagReducer from '../reducers/teabag';
 import * as BrandReducer from '../reducers/brand';
 
 import {ComboBox} from '../components/ComboBox/ComboBox';
-import {Loader} from '../components/Loader';
+import Loader from '../components/Loader';
 import {FormGroupItem} from '../components/FormGroupItem';
-import {TextInput} from '../components/TextInput';
-import {Textarea} from '../components/Textarea';
+import TextInput from '../components/TextInput';
+import Textarea from '../components/Textarea';
 import {Image} from '../components/Image';
 
 import {IBrand} from '../interfaces/IBrand';

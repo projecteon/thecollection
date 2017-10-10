@@ -1,21 +1,21 @@
 import * as React from 'react';
-import { NavMenu } from './NavMenu';
+import NavMenu from './NavMenu';
 
-export interface LayoutProps {
+type LayoutProps = {
     body: React.ReactElement<any>;
 }
 
-export class Layout extends React.Component<LayoutProps, {}> {
-    public render() {
-        return <div className='container-fluid'>
-            <div className='row'>
-                <div className='col-sm-3' style={{zIndex: 5, marginBottom: 2}}>
+const Layout: React.StatelessComponent<LayoutProps> = props => {
+  return  <div>
+            <div className='row' style={{position: 'relative'}}>
+                <div className='col-sm-12 col-md-3' style={{zIndex: 5, position: 'sticky', top: 0}}>
                     <NavMenu />
                 </div>
-                <div className='col-sm-9'>
-                    { this.props.body }
+                <div className='col-sm-12 col-md-9'>
+                    { props.body }
                 </div>
             </div>
-        </div>;
-    }
+          </div>;
 }
+
+export default Layout;

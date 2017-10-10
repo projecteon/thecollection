@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { IApplicationState }  from '../store';
 import * as TeaBagsReducer from '../reducers/teabags';
 import { ImageZoom } from '../components/ImageZoom';
-import { TeabagCard } from '../components/TeabagCard';
+import TeabagCard from '../components/TeabagCard';
 import { ITeabag } from '../interfaces/ITeaBag';
 
 import './Teabags.scss';
@@ -75,10 +75,8 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
     let tags = brands.map((brand, index) => { return this.renderSuccessTag(brand, index); });
     return  <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5}}>
-              <p style={{width: '100%'}}>
-                <span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>Total <span className='badge badge-default'>{this.props.resultCount}</span></span>
-                {tags}
-              </p>
+              <span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>Total <span className='badge badge-default'>{this.props.resultCount}</span></span>
+              {tags}
             </div>;
   }
 
@@ -87,7 +85,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     let groupClassName = this.props.searchError.length > 0 ? 'input-group has-error' : 'input-group';
     let btnClassName = this.props.searchError.length > 0 ? 'btn btn-danger' : 'btn btn-default';
     let alert = this.props.searchError.length > 0 ? <div className='alert alert-danger' role='alert'>{this.props.searchError}</div> : undefined;
-    return  <div style={{position: 'sticky', top: -1, zIndex: 4, paddingTop: 10, paddingBottom: 8, backgroundColor: '#ffffff', width: '100%' }}>
+    return  <div style={{position: 'sticky', zIndex: 4, paddingTop: 10, paddingBottom: 8, backgroundColor: '#ffffff', width: '100%' }} className='searchBar'>
               {alert}
               <div className={groupClassName}>
                 <input ref={input => this.controls.searchInput = input} type='text' className='form-control mousetrap' placeholder='Search for...' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>

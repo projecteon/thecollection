@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import FileTypeIcon from './FileTypeIcon';
 import * as Util from '../../util/FileUpload';
 import {FILE_TYPE} from '../../enums/FileTypes';
@@ -98,8 +99,7 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
   }
 
   render() {
-    // let className = XLUtils.classNames('filepicker', {dragHover: this.state.draggedCount > 0});
-    let className = 'filepicker';
+    let className = classNames('filepicker', {dragHover: this.state.draggedCount > 0});
     return  <div className={className}
                  onDragStart={this.onDragStart}
                  onDragEnter={this.onDragEnter}

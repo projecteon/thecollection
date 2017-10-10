@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../store';
 import * as BrandReducer from '../reducers/brand';
-import {Loader} from '../components/Loader';
+import Loader from '../components/Loader';
 import {IBrand} from '../interfaces/IBrand';
 
 type BrandProps =

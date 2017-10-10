@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Redirect, Router, Route, HistoryBase } from 'react-router';
-import { Layout } from './components/Layout';
+import Layout from './components/Layout';
 import Home from './views/Home';
 import Teabags from './views/Teabags';
 import TeabagForm from './views/TeabagForm';

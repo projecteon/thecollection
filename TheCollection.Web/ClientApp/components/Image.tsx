@@ -1,29 +1,25 @@
 import * as React from 'react';
 
-export type ImageProps = {
+type ImageProps = {
   imageid: string;
 }
 
-export class Image extends React.Component<ImageProps, {}> {
-  constructor(props: ImageProps) {
-    super();
+export const Image: React.StatelessComponent<ImageProps> = props => {
+
+  const hasValidImageId = () => {
+    return props.imageid !== undefined && props.imageid.length > 0;
   }
 
-  hasValidImageId() {
-    return this.props.imageid !== undefined && this.props.imageid.length > 0;
+  const renderImage = () => {
+    return <img src={`/images/${props.imageid}/teabag.png`}  style={{maxWidth: '100%', cursor: 'ponter'}} />;
   }
 
-  renderImage() {
-    return <img src={`/images/${this.props.imageid}/teabag.png`}  style={{maxWidth: '100%', cursor: 'ponter'}} />;
-  }
-
-  renderPlaceholder() {
+  const renderPlaceholder = () => {
     return <div />
   }
 
-  render() {
-    return  <div>
-              {this.hasValidImageId() ? this.renderImage() : this.renderPlaceholder()}
-            </div>;
-  }
+
+  return  <div>
+            {hasValidImageId() ? renderImage() : renderPlaceholder()}
+          </div>;
 }

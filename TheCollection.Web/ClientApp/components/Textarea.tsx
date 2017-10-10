@@ -7,25 +7,18 @@ type TextareaProps = {
   placeholder?: string;
 }
 
-export class Textarea extends React.Component<TextareaProps, {}> {
-
-  constructor(props: TextareaProps) {
-    super(props);
-
-    this.onChange = this.onChange.bind(this);
-  }
-
-  getBindValue(value: string) {
+const Textarea: React.StatelessComponent<TextareaProps> = props => {
+  const getBindValue = (value: string) => {
     if (value === undefined || value === null) { return ''; }
 
     return value;
   }
 
-  onChange(event: React.FormEvent<HTMLTextAreaElement>) {
-    this.props.onChange(event.currentTarget.value);
+  const onChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    props.onChange(event.currentTarget.value);
   }
 
-  render() {
-    return <textarea className='form-control' id={this.props.inputid} placeholder={this.props.placeholder} value={this.getBindValue(this.props.value)} onChange={this.onChange}/>;
-  }
+  return <textarea className='form-control' id={props.inputid} placeholder={props.placeholder} value={getBindValue(props.value)} onChange={onChange}/>;
 }
+
+export default Textarea;

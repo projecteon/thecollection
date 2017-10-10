@@ -1,8 +1,9 @@
 
 .main-nav {
+  background-color: #4b610b;
+
   .navbar {
     &.navbar-inverse {
-      background-color: #4b610b;
       border: none;
 
       .navbar-brand {
@@ -23,6 +24,25 @@
           text-decoration: none;
         }
       }
+
+      .navbar-toggler,
+      .navbar-toggler:focus,
+      .navbar-toggler:active {
+        border: none;
+        outline: none;
+      }
+
+      /* Highlighting rules for nav menu items */
+      .navbar-nav > li > a.active,
+      .navbar-nav > li > a.active:hover,
+      .navbar-nav > li > a.active:focus,
+      .navbar-nav > li .btn-link.active,
+      .navbar-nav > li .btn-link.active:hover,
+      .navbar-nav > li .btn-link.active:focus {
+        background-color: #86b404;
+        color: white;
+        text-decoration: none;
+      }
     }
 
     li a {
@@ -34,46 +54,18 @@
   }
 }
 
-.main-nav .navbar-inverse .navbar-toggler,
-.main-nav .navbar-inverse .navbar-toggler:focus,
-.main-nav .navbar-inverse .navbar-toggler:active {
-  border: none;
-  outline: none;
-}
-
-/* Highlighting rules for nav menu items */
-.main-nav .navbar-inverse .navbar-nav > li > a.active,
-.main-nav .navbar-inverse .navbar-nav > li > a.active:hover,
-.main-nav .navbar-inverse .navbar-nav > li > a.active:focus,
-.main-nav .navbar-inverse .navbar-nav > li .btn-link.active,
-.main-nav .navbar-inverse .navbar-nav > li .btn-link.active:hover,
-.main-nav .navbar-inverse .navbar-nav > li .btn-link.active:focus {
-  background-color: #86b404;
-  color: white;
-  text-decoration: none;
-}
-
-/* Keep the nav menu independent of scrolling and on top of other items */
-.main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-}
-
 @media (max-width: 767px) {
-    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
-    body {
-        padding-top: 50px;
-    }
+  /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+  .main-nav {
+    width: 100vw;
+  }
 }
 
 @media (min-width: 768px) {
   /* On small screens, convert the nav menu to a vertical sidebar */
   .main-nav {
+    min-height: calc(100vh - 2px);
     height: 100%;
-    width: calc(25% - 20px);
 
     .navbar {
       border-radius: 0px;
@@ -92,6 +84,16 @@
       li {
         font-size: 15px;
         margin: 0 6px;
+      }
+
+      .navbar-brand {
+        position: sticky;
+        top: 0;
+      }
+
+      .navbar-collapse {
+        position: sticky;
+        top: 38px;
       }
     }
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../store';
 import * as CountryReducer from '../reducers/country';
-import {Loader} from '../components/Loader';
+import Loader from '../components/Loader';
 import {ICountry} from '../interfaces/ICountry';
 
 type CountryProps =

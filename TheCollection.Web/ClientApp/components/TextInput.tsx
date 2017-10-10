@@ -7,25 +7,18 @@ type TextInputProps = {
   placeholder?: string;
 }
 
-export class TextInput extends React.Component<TextInputProps, {}> {
-
-  constructor(props: TextInputProps) {
-    super(props);
-
-    this.onChange = this.onChange.bind(this);
-  }
-
-  getBindValue(value: string) {
+const TextInput: React.StatelessComponent<TextInputProps> = props => {
+  const getBindValue = (value: string) => {
     if (value === undefined || value === null) { return ''; }
 
     return value;
   }
 
-  onChange(event: React.FormEvent<HTMLInputElement>) {
-    this.props.onChange(event.currentTarget.value);
+  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+    props.onChange(event.currentTarget.value);
   }
 
-  render() {
-    return <input type='text' className='form-control' id={this.props.inputid} placeholder={this.props.placeholder} value={this.getBindValue(this.props.value)} onChange={this.onChange}/>;
-  }
+  return <input type='text' className='form-control' id={props.inputid} placeholder={props.placeholder} value={getBindValue(props.value)} onChange={onChange}/>;
 }
+
+export default TextInput;

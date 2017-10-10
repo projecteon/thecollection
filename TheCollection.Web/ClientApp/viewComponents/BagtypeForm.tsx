@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../store';
 import * as BagtypeReducer from '../reducers/bagtype';
-import {Loader} from '../components/Loader';
+import Loader from '../components/Loader';
 import {IBagType} from '../interfaces/IBagType';
 
 type BagtypeProps =
