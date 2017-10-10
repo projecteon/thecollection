@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Component, ComponentClass} from 'react';
+import {Component, ComponentClass, StatelessComponent} from 'react';
 
 type FormGroupItemProps = {
   inputid: string;
@@ -7,7 +7,7 @@ type FormGroupItemProps = {
   responsiveInputComponentWidth: string;
 }
 
-export function FormGroupItem<T>(InputComponent: ComponentClass<T>): ComponentClass<T & FormGroupItemProps> {
+export function FormGroupItem<T>(InputComponent: ComponentClass<T> | StatelessComponent<T>): ComponentClass<T & FormGroupItemProps> {
   return class extends Component<T & FormGroupItemProps, {}> {
    render() {
     return (
