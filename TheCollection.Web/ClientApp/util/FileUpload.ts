@@ -1,5 +1,6 @@
 import {IUploadResult} from '../interfaces/IUploadResult';
 import {FILE_TYPE} from '../enums/FileTypes';
+import { FILE_LOCATION } from '../enums/FileLocation';
 
 export namespace FileUpload {
   'use strict';
@@ -50,11 +51,11 @@ export namespace FileUpload {
     return xhr;
   }
 
-  export function apiFileUploadReplace(files: File[], uploadApiPath: string, originalKey: number, success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress?: (progress: number) => void) {
+  export function apiFileUploadReplace(files: File[], uploadApiPath: string, originalKey: string, success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress?: (progress: number) => void) {
     let xhr = generateFileUploadXhr(files, success, error, updateProgress);
 
     if (originalKey) {
-      uploadApiPath = uploadApiPath + '\?original_p_key=' + originalKey;
+      uploadApiPath = uploadApiPath + '\?original_id=' + originalKey;
     }
 
     let data = new FormData();
@@ -64,7 +65,7 @@ export namespace FileUpload {
     xhr.send(data);
   }
 
-  export function apiFileUpload(files: File[], uploadApiPath: string, fileLocation: number, success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress?: (progress: number) => void) {
+  export function apiFileUpload(files: File[], uploadApiPath: string, fileLocation: FILE_LOCATION, success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress?: (progress: number) => void) {
     let xhr = generateFileUploadXhr(files, success, error, updateProgress);
 
     if (fileLocation) {
@@ -171,43 +172,16 @@ export namespace FileUpload {
       return '';
     }
 
-    switch (filetype) {
-      case FILE_TYPE.XML_UBL_CREDIT_NOTE:
-      case FILE_TYPE.XML_UBL_INVOICE:
-      case FILE_TYPE.XML_UBL_PURCHASE_ORDER:
-      case FILE_TYPE.XML_UBL_REMINDER:
-        return 'xml';
-      default:
-        return FILE_TYPE[filetype].toLowerCase();
-    }
+    return FILE_TYPE[filetype].toLowerCase();
   }
 
   export function getMimeType(filetype: FILE_TYPE): string {
       switch (filetype) {
           case FILE_TYPE.BMP: return 'image/bmp';
-          case FILE_TYPE.CSS: return 'text/css';
-          case FILE_TYPE.CSV: return 'text/csv';
-          case FILE_TYPE.DOC: return 'application/msword';
           case FILE_TYPE.GIF: return 'image/gif';
-          case FILE_TYPE.HTML: return 'text/html';
           case FILE_TYPE.JPG: return 'image/jpeg';
-          case FILE_TYPE.MPEG4: return 'video/mp4';
-          case FILE_TYPE.PDF: return 'application/pdf';
           case FILE_TYPE.PNG: return 'image/png';
-          case FILE_TYPE.RTF: return 'application/rtf';
-          case FILE_TYPE.SWF: return 'application/x-shockwave-flash';
           case FILE_TYPE.TIF: return 'image/tiff';
-          case FILE_TYPE.TXT: return 'text/plain';
-          case FILE_TYPE.XHTML: return 'application/xhtml+xml';
-          case FILE_TYPE.XLS: return 'application/vnd.ms-excel';
-          case FILE_TYPE.XLSX: return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-          case FILE_TYPE.XSLT: return 'application/xslt+xml';
-          case FILE_TYPE.XML: return 'text/xml';
-          case FILE_TYPE.XML_UBL_INVOICE: return 'text/xml';
-          case FILE_TYPE.XML_UBL_CREDIT_NOTE: return 'text/xml';
-          case FILE_TYPE.XML_UBL_PURCHASE_ORDER: return 'text/xml';
-          case FILE_TYPE.XML_UBL_REMINDER: return 'text/xml';
-          case FILE_TYPE.ZIP: return 'application/zip';
           default: return 'text/plain';
       }
   }
@@ -232,42 +206,6 @@ export namespace FileUpload {
             FILE_TYPE.JPG,
             FILE_TYPE.PNG,
             FILE_TYPE.TIF];
-  }
-
-  export function getPdfFileTypes(): FILE_TYPE[] {
-    return [FILE_TYPE.PDF];
-  }
-
-  export function getMsOfficeFileTypes(): FILE_TYPE[] {
-    return [FILE_TYPE.DOC,
-            FILE_TYPE.XLS,
-            FILE_TYPE.XLSX];
-  }
-
-  export function getXmlFileTypes(): FILE_TYPE[] {
-    return [FILE_TYPE.XML,
-            FILE_TYPE.XML_UBL_CREDIT_NOTE,
-            FILE_TYPE.XML_UBL_INVOICE,
-            FILE_TYPE.XML_UBL_PURCHASE_ORDER,
-            FILE_TYPE.XML_UBL_REMINDER];
-  }
-
-  export function getOtherFileTypes(): FILE_TYPE[] {
-    return [FILE_TYPE.CSV,
-            FILE_TYPE.RTF,
-            FILE_TYPE.TXT,
-            FILE_TYPE.HTML];
-  }
-
-  export function getAllKnownUploadFileTypes(): FILE_TYPE[] {
-    return getImageFileTypes()
-            .concat(getPdfFileTypes()
-              .concat(getMsOfficeFileTypes()
-                .concat(getXmlFileTypes()
-                  .concat(getOtherFileTypes()),
-                ),
-              ),
-            );
   }
 
   export function getUniqueFileTypeExtensions(filetypes: FILE_TYPE[]): string[] {
