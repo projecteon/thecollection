@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TheCollection.Web.Constants
+﻿namespace TheCollection.Web.Constants
 {
     public class DocumentDB
     {
@@ -13,7 +8,5 @@ namespace TheCollection.Web.Constants
         public const string BrandsCollectionId = "Brands";
         public const string CountriesCollectionId = "Countries";
         public const string ImagesCollectionId = "Images";
-
-        public static object Bran { get; internal set; }
     }
 }
