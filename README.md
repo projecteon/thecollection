@@ -26,6 +26,9 @@ http://stackoverflow.com/questions/31272321/documentdb-queries-with-arrays
 http://stackoverflow.com/questions/27390189/where-clause-on-an-array-in-azure-documentdb
 https://azure.microsoft.com/en-us/blog/documentdb-paging-support-with-top-and-more-query-improvements/
 https://stackoverflow.com/questions/26779482/documentdb-lambda-sqlmethod-like-and-contains-notimplemented-exception
+https://www.linkedin.com/pulse/pagination-sample-microsofts-documentdb-while-paging-requested
+http://www.kevinkuszyk.com/2016/08/19/paging-through-query-results-in-azure-documentdb/
+https://stackoverflow.com/questions/35117304/pagination-in-c-sharp-against-documentdb-without-skip
 
 HttpHandler/Module/Middlewear
 https://docs.microsoft.com/en-us/aspnet/core/migration/http-modules
