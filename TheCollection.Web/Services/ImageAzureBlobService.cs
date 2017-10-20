@@ -27,6 +27,15 @@ namespace TheCollection.Web.Services
             CreateContainerIfNotExistsAsync().Wait();
         }
 
+        public ImageAzureBlobService(string scheme, string name, string key, string endpoints)
+        {
+            var connectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endpoints}";
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            Container = blobClient.GetContainerReference("images");
+            CreateContainerIfNotExistsAsync().Wait();
+        }
+
         public async Task<bool> Delete(string filename)
         {
             var blockBlob = Container.GetBlockBlobReference(filename);            

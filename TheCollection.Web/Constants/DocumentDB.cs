@@ -8,5 +8,7 @@
         public const string BrandsCollectionId = "Brands";
         public const string CountriesCollectionId = "Countries";
         public const string ImagesCollectionId = "Images";
+
+        public const string AspNetIdentity = nameof(AspNetIdentity);
     }
 }

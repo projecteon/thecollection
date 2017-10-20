@@ -42,7 +42,8 @@ namespace TheCollection_Web
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
-                Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey")));
+                Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey"))
+            );
 
             // Add framework services.
             services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options =>
@@ -57,13 +58,17 @@ namespace TheCollection_Web
             })
             .AddDocumentDbStores(options =>
             {
-                options.UserStoreDocumentCollection = "AspNetIdentity";
+                options.UserStoreDocumentCollection = DocumentDB.AspNetIdentity;
                 options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageService>(x => new ImageAzureBlobService($"DefaultEndpointsProtocol={Configuration.GetValue<string>("StorageAccount:Scheme")};AccountName={Configuration.GetValue<string>("StorageAccount:Name")};AccountKey={Configuration.GetValue<string>("StorageAccount:Key")};{Configuration.GetValue<string>("StorageAccount:Endpoints")}"));
+            services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"), 
+                                                                                Configuration.GetValue<string>("StorageAccount:Name"), 
+                                                                                Configuration.GetValue<string>("StorageAccount:Key"), 
+                                                                                Configuration.GetValue<string>("StorageAccount:Endpoints"))
+            );
 
             // Add framework services.
             services.AddMvc(
@@ -95,7 +100,6 @@ namespace TheCollection_Web
             }
 
             // Create branch to the MyHandlerMiddleware. 
-            // All requests ending in .report will follow this branch.
             app.MapWhen(
                 context => Regex.IsMatch(context.Request.Path.ToString(), ThumbnailHandler.RegEx),
                 appBranch => { appBranch.UseThumbnailHandler(); }
@@ -146,7 +150,7 @@ namespace TheCollection_Web
             });
         }
 
-        private DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey)
+        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey)
         {
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             DocumentClient client = new DocumentClient(endpointUri, authorizationKey, new ConnectionPolicy { EnableEndpointDiscovery = false });
@@ -182,7 +186,7 @@ namespace TheCollection_Web
                 {
                     if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound)
                     {
-                        DocumentCollection collection = new DocumentCollection() { Id = "AspNetIdentity" };
+                        DocumentCollection collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentity };
                         collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
 
                         return true;
