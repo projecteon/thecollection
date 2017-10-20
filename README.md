@@ -35,3 +35,10 @@ https://spin.atomicobject.com/2017/07/24/redux-action-pattern-typescript/
 
 Redux-thunk
 https://github.com/gaearon/redux-thunk
+
+Identity
+https://stormpath.com/blog/tutorial-policy-based-authorization-asp-net-core
+http://benfoster.io/blog/asp-net-identity-role-claims
+http://johnatten.com/2014/06/22/asp-net-identity-2-0-customizing-users-and-roles/
+http://www.blinkingcaret.com/2016/11/30/asp-net-identity-core-from-scratch/
+https://andrewlock.net/introduction-to-authorisation-in-asp-net-core/
