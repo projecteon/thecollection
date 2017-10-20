@@ -49,7 +49,7 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    //this.props.addBagtype(this.props.bagtype);
+    // this.props.addBagtype(this.props.bagtype);
     // this.props.history.goBack();
   }
 
@@ -91,6 +91,6 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
 
 export default withRouter(connect(
     (state: IApplicationState) => state.bagtype, // selects which state properties are merged into the component's props
-    BagtypeReducer.actionCreators                 // selects which action creators are merged into the component's props
+    BagtypeReducer.actionCreators,               // selects which action creators are merged into the component's props
 )(BagtypeForm));
 

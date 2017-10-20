@@ -49,7 +49,7 @@ class CountryForm extends React.Component<CountryProps, {}> {
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    //this.props.addCountry(this.props.country);
+    // this.props.addCountry(this.props.country);
     // this.props.history.goBack();
   }
 
@@ -91,6 +91,6 @@ class CountryForm extends React.Component<CountryProps, {}> {
 
 export default withRouter(connect(
     (state: IApplicationState) => state.country, // selects which state properties are merged into the component's props
-    CountryReducer.actionCreators                 // selects which action creators are merged into the component's props
+    CountryReducer.actionCreators,                // selects which action creators are merged into the component's props
 )(CountryForm));
 

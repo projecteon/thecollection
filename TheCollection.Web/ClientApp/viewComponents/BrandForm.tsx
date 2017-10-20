@@ -49,7 +49,7 @@ class BrandForm extends React.Component<BrandProps, {}> {
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    //this.props.addBrand(this.props.brand);
+    // this.props.addBrand(this.props.brand);
     // this.props.history.goBack();
   }
 
@@ -91,6 +91,6 @@ class BrandForm extends React.Component<BrandProps, {}> {
 
 export default withRouter(connect(
     (state: IApplicationState) => state.brand, // selects which state properties are merged into the component's props
-    BrandReducer.actionCreators                 // selects which action creators are merged into the component's props
+    BrandReducer.actionCreators,               // selects which action creators are merged into the component's props
 )(BrandForm));
 

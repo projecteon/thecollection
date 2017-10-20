@@ -53,8 +53,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     componentWillReceiveProps(props: IComboBoxProps<T>) {
       if (props.selectedItem === undefined || props.selectedItem === null) {
         this.setState({...this.state, ...{displayResults: false, searchTerm: '', searchedTerm: '', selectedItem: undefined, results: [] }});
-      }
-      else if (props.selectedItem !== this.props.selectedItem) {
+      } else if (props.selectedItem !== this.props.selectedItem) {
         this.setState({...this.state, ...{displayResults: false, searchTerm: props.selectedItem[props.displayProperty], searchedTerm: props.selectedItem[props.displayProperty], selectedItem: props.selectedItem, results: [props.selectedItem] }});
       }
     }
@@ -65,7 +64,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       }
 
       return this.state.results.filter(item => { return item[this.props.displayProperty].toString().toLowerCase().indexOf(this.state.searchTerm.toString().toLowerCase()) > -1; });
-    };
+    }
 
     onFocus() {
       this.setState({...this.state, ...{displayResults: true}});
