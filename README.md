@@ -25,6 +25,7 @@ https://azure.microsoft.com/en-us/blog/azure-documentdb-javascript-as-modern-day
 http://stackoverflow.com/questions/31272321/documentdb-queries-with-arrays
 http://stackoverflow.com/questions/27390189/where-clause-on-an-array-in-azure-documentdb
 https://azure.microsoft.com/en-us/blog/documentdb-paging-support-with-top-and-more-query-improvements/
+https://stackoverflow.com/questions/26779482/documentdb-lambda-sqlmethod-like-and-contains-notimplemented-exception
 
 HttpHandler/Module/Middlewear
 https://docs.microsoft.com/en-us/aspnet/core/migration/http-modules
