@@ -1,31 +1,37 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using TheCollection.Business.Tea;
-using TheCollection.Web.Services;
-using TheCollection.Web.Constants;
-
-namespace TheCollection.Web.Commands
+﻿namespace TheCollection.Web.Commands
 {
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
+    using TheCollection.Business.Tea;
+    using TheCollection.Web.Services;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Translators.Tea;
+    using TheCollection.Web.Translators;
+    using TheCollection.Web.Extensions;
+
     public class GetTeabagCommand : IAsyncCommand<string>
     {
-        private readonly IDocumentClient documentDbClient;
-            
         public GetTeabagCommand(IDocumentClient documentDbClient)
         {
-            this.documentDbClient = documentDbClient;
+            DocumentDbClient = documentDbClient;
+            BagTranslator = new BagToBagTranslator();
         }
+
+        public IDocumentClient DocumentDbClient { get; }
+        public ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(string id)
         {
-            var bagsRepository = new GetRepository<Bag>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new GetRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var teabag = await bagsRepository.GetItemAsync(id);
             if (teabag == null)
             {
                 return new NotFoundResult();
             }
 
-            return new OkObjectResult(teabag);
+            var teabagViewModel = BagTranslator.Translate(teabag);
+            return new OkObjectResult(teabagViewModel);
         }
     }
 }
