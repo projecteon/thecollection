@@ -33,7 +33,8 @@ namespace TheCollection.Business.Tests.Unit.Tea
                 Brand = BrandRef,
                 Country = CountryRef,
                 InsertDate = "1985-08-22",
-                ImageId = "imageid"
+                ImageId = "imageid",
+                UserId = Guid.NewGuid().ToString()
             };
             SearchableBag = new Searchable(Bag);
         }
@@ -87,6 +88,13 @@ namespace TheCollection.Business.Tests.Unit.Tea
         {
             Assert.False(SearchableBag.Tags.Any(tag => tag == Bag.ImageId));
             Assert.False(SearchableBag.Tags.Any(tag => tag == Bag.ImageId.ToLower()));
+        }
+
+        [Fact(DisplayName = "Tag does not contain user id")]
+        public void NotContainsUserId()
+        {
+            Assert.False(SearchableBag.Tags.Any(tag => tag == Bag.UserId));
+            Assert.False(SearchableBag.Tags.Any(tag => tag == Bag.UserId.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain stopwords except for words with accents parsed to stop words")]
