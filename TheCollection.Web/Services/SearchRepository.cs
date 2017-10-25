@@ -14,7 +14,7 @@ namespace TheCollection.Web.Services
     //              https://auth0.com/blog/documentdb-with-aspnetcore/
     //              http://www.dotnetcurry.com/windows-azure/1262/documentdb-nosql-json-introduction
     //              https://www.tutorialspoint.com/documentdb_sql/documentdb_sql_parameterized.htm
-    public class SearchRepository<T> where T : class
+    public class SearchRepository<T> : ISearchRepository<T> where T: class
     {
         private readonly string DatabaseId;
         private readonly string CollectionId;

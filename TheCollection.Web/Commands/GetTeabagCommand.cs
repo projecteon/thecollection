@@ -9,13 +9,14 @@
     using TheCollection.Web.Translators.Tea;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Extensions;
+    using TheCollection.Web.Models;
 
     public class GetTeabagCommand : IAsyncCommand<string>
     {
-        public GetTeabagCommand(IDocumentClient documentDbClient)
+        public GetTeabagCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser)
         {
             DocumentDbClient = documentDbClient;
-            BagTranslator = new BagToBagTranslator();
+            BagTranslator = new BagToBagTranslator(applicationUser);
         }
 
         public IDocumentClient DocumentDbClient { get; }

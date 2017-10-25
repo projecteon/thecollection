@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using System.Threading.Tasks;
-using TheCollection.Business.Tea;
-using TheCollection.Web.Commands;
-using TheCollection.Web.Services;
-
-namespace TheCollection.Web.Controllers
+﻿namespace TheCollection.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
+    using System.Threading.Tasks;
+    using TheCollection.Business.Tea;
+    using TheCollection.Web.Commands;
+    using TheCollection.Web.Services;
+
     [Route("api/[controller]")]
     public class BagsController : Controller
     {
@@ -22,27 +22,31 @@ namespace TheCollection.Web.Controllers
         [HttpGet()]
         public async Task<IActionResult> Bags([FromQuery] string searchterm = "", [FromQuery] int pagesize = 300, [FromQuery] int page = 0)
         {
-            var command = new SearchBagsCommand(documentDbClient);
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new SearchBagsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm, pagesize = pagesize });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Bag(string id)
         {
-            var command = new GetTeabagCommand(documentDbClient);
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new GetTeabagCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(id);
         }
 
         [HttpPost()]
-        public Bag Create([FromBody] Bag bag)
+        public async Task<Bag> Create([FromBody] Bag bag)
         {
+            var applicationUser = await applicationUserAccessor.GetUser();
             bag.Id = System.Guid.NewGuid().ToString();
             return bag;
         }
 
         [HttpPut()]
-        public Bag Update([FromBody] Bag bag)
+        public async Task<Bag> Update([FromBody] Bag bag)
         {
+            var applicationUser = await applicationUserAccessor.GetUser();
             return bag;
         }
     }

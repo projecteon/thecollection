@@ -14,10 +14,10 @@
 
     public class SearchBagsCommand : IAsyncCommand<Search>
     {
-        public SearchBagsCommand(IDocumentClient documentDbClient)
+        public SearchBagsCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser)
         {
             this.DocumentDbClient = documentDbClient;
-            BagTranslator = new BagToBagTranslator();
+            BagTranslator = new BagToBagTranslator(applicationUser);
         }
 
         public IDocumentClient DocumentDbClient { get; }

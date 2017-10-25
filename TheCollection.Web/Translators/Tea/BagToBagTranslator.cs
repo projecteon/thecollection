@@ -1,29 +1,33 @@
 namespace TheCollection.Web.Translators.Tea
 {
     using TheCollection.Web.Extensions;
+    using TheCollection.Web.Models;
 
     public class BagToBagTranslator : ITranslator<Business.Tea.Bag, Models.Tea.Bag>
     {
-        public BagToBagTranslator()
+        public BagToBagTranslator(ApplicationUser applicationUser)
         {
-            RefValueTranslator = new RefValueToRefValueTranslator();
+            RefValueTranslator = new RefValueToRefValueTranslator(applicationUser);
+            ApplicationUser = applicationUser;
         }
 
         public RefValueToRefValueTranslator RefValueTranslator { get; }
+        public ApplicationUser ApplicationUser { get; }
 
         public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination)
         {
-            destination.Id = source.Id;
-            destination.MainID = source.MainID;
-            destination.Brand = RefValueTranslator.Translate(source.Brand);
-            destination.Serie = source.Serie;
-            destination.Flavour = source.Flavour;
-            destination.Hallmark = source.Hallmark;
-            destination.BagType = RefValueTranslator.Translate(source.BagType);
-            destination.Country = RefValueTranslator.Translate(source.Country);
-            destination.SerialNumber = source.SerialNumber;
-            destination.InsertDate = source.InsertDate;
-            destination.ImageId = source.ImageId;
+            destination.id = source.Id;
+            destination.mainid = source.MainID;
+            destination.brand = RefValueTranslator.Translate(source.Brand);
+            destination.serie = source.Serie;
+            destination.flavour = source.Flavour;
+            destination.hallmark = source.Hallmark;
+            destination.bagtype = RefValueTranslator.Translate(source.BagType);
+            destination.country = RefValueTranslator.Translate(source.Country);
+            destination.serialnumber = source.SerialNumber;
+            destination.insertdate = source.InsertDate;
+            destination.imageid = source.ImageId;
+            destination.iseditable = source.UserId == ApplicationUser.Id;
         }
     }
 }
