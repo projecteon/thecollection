@@ -19,13 +19,13 @@ namespace TheCollection.Business.Tests.Unit.Tea
         [Fact(DisplayName = "Tag contains name in lowercase")]
         public void ContainsNameLowerCase()
         {
-            Assert.True(SearchableCountry.Tags.Any(tag => tag == Country.Name.ToLower()));
+            Assert.NotNull(SearchableCountry.Tags.FirstOrDefault(tag => tag == Country.Name.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain Id")]
         public void NotContainsId()
         {
-            Assert.False(SearchableCountry.Tags.Any(tag => tag.ToLower() == Country.Id.ToLower()));
+            Assert.Null(SearchableCountry.Tags.FirstOrDefault(tag => tag.ToLower() == Country.Id.ToLower()));
         }
     }
 }
