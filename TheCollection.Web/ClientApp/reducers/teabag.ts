@@ -2,9 +2,6 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../store';
 import { ITeabag } from '../interfaces/ITeaBag';
-import { IBrand } from '../interfaces/IBrand';
-import { ICountry } from '../interfaces/ICountry';
-import { IBagType } from '../interfaces/IBagType';
 import {
     CHANGE_BAGTYPE,
     CHANGE_BRAND,
@@ -30,8 +27,8 @@ export interface ITeabagState {
 
 export const actionCreators = {...changeBagtype, ...changeBrand, ...changeCountry, ...clearBagtype, ...clearBrand, ...clearCountry, ...changeFlavour, ...changeHallmark, ...changeSerialNumber, ...changeSerie, ...requestTeabag, ...saveTeabag};
 
-const emptyRef = {id: '', name: ''};
-const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageid: '', serialnumber: '', serie: '', bagtype: emptyRef};
+const emptyRef = {id: '', name: '', canaddnew: true};
+const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageid: '', serialnumber: '', serie: '', bagtype: emptyRef, iseditable: true};
 const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag };
 type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryAction | ClearBagTypeAction | ClearBrandAction | ClearCountryAction | ChangeFlavourAction | ChangeHallmarkAction | ChangeSerialNumberAction | ChangeSerieAction | ReceiveTeabagAction | RequestTeabagAction | SaveTeabag;
 export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: KnownActions) => {

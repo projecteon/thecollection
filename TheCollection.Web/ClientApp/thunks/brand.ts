@@ -16,7 +16,7 @@ export const requestBrand = {
     }
 
     try {
-      let fetchTask = fetch(`/api/Brands/${brandid}`)
+      let fetchTask = fetch(`/api/Brands/${brandid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBrand>)
         .then(data => {
           dispatch({ type: RECIEVE_BRAND, brand: data });
@@ -38,6 +38,7 @@ export const requestBrand = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
           method: 'post',
           body: JSON.stringify(brand),
         })

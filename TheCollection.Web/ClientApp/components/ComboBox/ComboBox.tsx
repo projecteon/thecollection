@@ -10,6 +10,7 @@ export interface IComboBoxProps<T> {
   inputid: string;
   selectedItem?: T;
   displayProperty: keyof T;
+  isReadOnly: boolean;
   renderItem(item: T): JSX.Element;
   onAddNew?(): void;
   onClear(): void;
@@ -105,7 +106,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     renderClearButton() {
-      if (this.state.selectedItem === undefined) {
+      if (this.state.selectedItem === undefined || this.props.isReadOnly === true) {
         return undefined;
       }
 
@@ -126,7 +127,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     renderSearchIcon() {
-      if (this.state.isLoading === true) {
+      if (this.state.isLoading === true || this.props.isReadOnly === true) {
         return undefined;
       }
 
@@ -135,7 +136,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     renderAddButton() {
-      if (this.props.onAddNew === undefined) {
+      if (this.props.onAddNew === undefined || this.props.isReadOnly === true) {
         return undefined;
       }
 
@@ -160,9 +161,9 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
       return  <div style={{position: 'relative'}}>
                 <div className={className}>
                   {this.renderClearButton()}
-                  <input ref={input => this.controls.input = input} type='text' className='form-control' id={this.props.inputid} placeholder='Search for...' autoComplete='off' role='combobox' onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
                   {this.renderSearchIcon()}
                   {this.renderLoadingIcon()}
+                  <input ref={input => this.controls.input = input} type='text' className='form-control' id={this.props.inputid} placeholder='Search for...' autoComplete='off' role='combobox' disabled={this.props.isReadOnly} onChange={this.onSearchTermChanged} value={this.state.searchTerm} onFocus={this.onFocus} onBlur={this.onBlur}/>
                   {this.renderAddButton()}
                 </div>
                 {this.renderResult()}

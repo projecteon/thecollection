@@ -1,7 +1,5 @@
 import { ITeabag } from '../interfaces/ITeaBag';
-import { IBrand } from '../interfaces/IBrand';
-import { ICountry } from '../interfaces/ICountry';
-import { IBagType } from '../interfaces/IBagType';
+import { IRefValue } from '../interfaces/IRefValue';
 import * as Constant from '../constants/teabags';
 
 export type ReceiveTeabagsAction = {
@@ -38,7 +36,7 @@ export type RequestTeabagAction = {
 
 export type ChangeBrandAction = {
   type: Constant.CHANGE_BRAND;
-  brand: IBrand;
+  brand: IRefValue;
 };
 
 export type ClearBrandAction = {
@@ -47,7 +45,7 @@ export type ClearBrandAction = {
 
 export type ChangeBagTypeAction = {
   type: Constant.CHANGE_BAGTYPE;
-  bagtype: IBagType;
+  bagtype: IRefValue;
 };
 
 export type ClearBagTypeAction = {
@@ -56,7 +54,7 @@ export type ClearBagTypeAction = {
 
 export type ChangeCountryAction = {
   type: Constant.CHANGE_COUNTRY;
-  country: ICountry;
+  country: IRefValue;
 };
 
 export type ClearCountryAction = {

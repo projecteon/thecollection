@@ -1,12 +1,16 @@
 
-.fa.fa-refresh.fa-spin.form-control-feedback.has-new, .fa.fa-search.form-control-feedback.has-new {
-  right: 55px;
+.fa.fa-refresh.fa-spin.form-control-feedback, .fa.fa-search.form-control-feedback {
+  right: 10px;
   z-index: 4;
   position: absolute;
   font-size: inherit;
   line-height: inherit;
+
+  &.has-new {
+    right: 55px;
+  }
 }
 
-.fa.fa-search.form-control-feedback.has-new {
+.fa.fa-search.form-control-feedback {
   opacity: 0.5;
 }

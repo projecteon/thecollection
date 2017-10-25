@@ -2,9 +2,7 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../store';
 import { ITeabag } from '../interfaces/ITeaBag';
-import { IBrand } from '../interfaces/IBrand';
-import { ICountry } from '../interfaces/ICountry';
-import { IBagType } from '../interfaces/IBagType';
+import { IRefValue } from '../interfaces/IRefValue';
 import { ISearchResult } from '../interfaces/ISearchResult';
 import * as Constants from '../constants/teabags';
 import * as Actions from '../actions/teabags';
@@ -19,7 +17,7 @@ export const requestTeabag = {
     dispatch({ type: Constants.REQUEST_TEABAG, teabagid: teabagid });
 
     try {
-      let fetchTask = fetch(`/api/Bags/${teabagid}`)
+      let fetchTask = fetch(`/api/Bags/${teabagid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ITeabag>)
         .then(data => {
           dispatch({ type: Constants.RECEIVE_TEABAG, teabag: data });
@@ -32,7 +30,7 @@ export const requestTeabag = {
 };
 
 export const changeBrand = {
-  changeBrand: (brand: IBrand): AppThunkAction<Actions.ChangeBrandAction> => (dispatch, getState) => {
+  changeBrand: (brand: IRefValue): AppThunkAction<Actions.ChangeBrandAction> => (dispatch, getState) => {
     dispatch({type: Constants.CHANGE_BRAND, brand: brand});
   },
 };
@@ -44,7 +42,7 @@ export const clearBrand = {
 };
 
 export const changeBagtype = {
-  changeBagtype: (bagtype: IBagType): AppThunkAction<Actions.ChangeBagTypeAction> => (dispatch, getState) => {
+  changeBagtype: (bagtype: IRefValue): AppThunkAction<Actions.ChangeBagTypeAction> => (dispatch, getState) => {
     dispatch({type: Constants.CHANGE_BAGTYPE, bagtype: bagtype});
   },
 };
@@ -56,7 +54,7 @@ export const clearBagtype = {
 };
 
 export const changeCountry = {
-  changeCountry: (country: ICountry): AppThunkAction<Actions.ChangeCountryAction> => (dispatch, getState) => {
+  changeCountry: (country: IRefValue): AppThunkAction<Actions.ChangeCountryAction> => (dispatch, getState) => {
     dispatch({type: Constants.CHANGE_COUNTRY, country: country});
   },
 };
@@ -101,7 +99,7 @@ export const requestTeabags = {
     dispatch({ type: Constants.REQUEST_TEABAGS, searchTerms: searchTerms });
     let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
     try {
-      let fetchTask = fetch(uri)
+      let fetchTask = fetch(uri, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ISearchResult<ITeabag>>)
         .then(data => {
           dispatch({ type: Constants.RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: data.data, resultCount: data.count });
@@ -137,6 +135,7 @@ export const saveTeabag = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
+      credentials: 'same-origin',
       method: method,
       body: JSON.stringify(teabag),
     })

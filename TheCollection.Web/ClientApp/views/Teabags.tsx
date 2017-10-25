@@ -11,8 +11,8 @@ import { ITeabag } from '../interfaces/ITeaBag';
 import './Teabags.scss';
 
 type TeabagsProps =
-    TeaBagsReducer.ITeabagsState     // ... state we've requested from the Redux store
-    & typeof TeaBagsReducer.actionCreators   // ... plus action creators we've requested
+    TeaBagsReducer.ITeabagsState            // ... state we've requested from the Redux store
+    & typeof TeaBagsReducer.actionCreators; // ... plus action creators we've requested
 
 class Teabags extends React.Component<TeabagsProps, {}> {
   searchKeyboardShortcut = 'enter';
@@ -35,14 +35,11 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     this.searchinputMouseTrap = new Mousetrap(this.controls.searchInput);
     this.searchinputMouseTrap.stopCallback = function(){ return false; };
     this.searchinputMouseTrap.bind(this.searchKeyboardShortcut, this.onKeyboardSearch);
-    // Mousetrap.prototype.stopCallback = () => { return false; };
-    // Mousetrap.bind(this.searchKeyboardShortcut, this.onKeyboardSearch);
   }
 
   componentWillUnmount() {
     this.searchinputMouseTrap.unbind(this.searchKeyboardShortcut);
-    this.searchinputMouseTrap = null;
-    // Mousetrap.unbind(this.searchKeyboardShortcut);
+    this.searchinputMouseTrap = undefined;
   }
 
   onSearchTermsChanged() {
@@ -88,7 +85,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     return  <div style={{position: 'sticky', zIndex: 4, paddingTop: 10, paddingBottom: 8, backgroundColor: '#ffffff', width: '100%' }} className='searchBar'>
               {alert}
               <div className={groupClassName}>
-                <input ref={input => this.controls.searchInput = input} type='text' className='form-control mousetrap' placeholder='Search for...' disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
+                <input ref={input => this.controls.searchInput = input} type='text' className='form-control mousetrap' placeholder='Search for...' value={this.props.searchedTerms} disabled={this.props.isLoading} onChange={this.onSearchTermsChanged}/>
                 <span className='input-group-btn'>
                   <button type='button' className={btnClassName} onClick={this.onSearch} disabled={this.props.isLoading}>
                     <span className={iconClassName} aria-hidden='true' />
@@ -127,5 +124,5 @@ class Teabags extends React.Component<TeabagsProps, {}> {
 
 export default connect(
     (state: IApplicationState) => state.teabags,
-    TeaBagsReducer.actionCreators
+    TeaBagsReducer.actionCreators,
 )(Teabags);

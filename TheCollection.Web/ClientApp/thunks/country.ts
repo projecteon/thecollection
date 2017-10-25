@@ -16,7 +16,7 @@ export const requestCountry = {
     }
 
     try {
-      let fetchTask = fetch(`/api/Countries/${countryid}`)
+      let fetchTask = fetch(`/api/Countries/${countryid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountry>)
         .then(data => {
           dispatch({ type: RECIEVE_COUNTRY, country: data });
@@ -38,6 +38,7 @@ export const requestCountry = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
           method: 'post',
           body: JSON.stringify(country),
         })

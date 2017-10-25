@@ -5,8 +5,9 @@ type FormGroupItemProps = {
   inputid: string;
   label: string;
   responsiveInputComponentWidth: string;
-}
+};
 
+// tslint:disable-next-line:variable-name
 export function FormGroupItem<T>(InputComponent: ComponentClass<T> | StatelessComponent<T>): ComponentClass<T & FormGroupItemProps> {
   return class extends Component<T & FormGroupItemProps, {}> {
    render() {

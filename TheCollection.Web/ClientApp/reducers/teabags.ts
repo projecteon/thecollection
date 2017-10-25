@@ -26,14 +26,14 @@ export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: Kn
       return {...state, ...{
         searchedTerms: action.searchTerms,
         teabags: [],
-        isLoading: true
+        isLoading: true,
       }};
     case RECEIVE_TEABAGS:
       return {...state, ...{
           searchedTerms: action.searchTerms,
           teabags: action.teabags,
           resultCount: action.resultCount,
-          isLoading: false
+          isLoading: false,
         }};
     case SEARCH_TERMS_ERROR:
       return {...state, ...{searchError: action.searchError}};

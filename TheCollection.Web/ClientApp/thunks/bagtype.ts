@@ -16,7 +16,7 @@ export const requestBagtype = {
     }
 
     try {
-      let fetchTask = fetch(`/api/BagTypes/${bagtypeid}`)
+      let fetchTask = fetch(`/api/BagTypes/${bagtypeid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBagType>)
         .then(data => {
           dispatch({ type: RECIEVE_BAGTYPE, bagtype: data });
@@ -38,6 +38,7 @@ export const requestBagtype = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
+          credentials: 'same-origin',
           method: 'post',
           body: JSON.stringify(bagtype),
         })
