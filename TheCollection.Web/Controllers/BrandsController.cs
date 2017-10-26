@@ -27,9 +27,10 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPost()]
-        public Brand Create([FromBody] Brand brand) {
-            brand.Id = System.Guid.NewGuid().ToString();
-            return brand;
+        public async Task<IActionResult> Create([FromBody] Brand brand) {
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new CreateBrandCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(brand);
         }
 
         [HttpPut()]

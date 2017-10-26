@@ -1,0 +1,33 @@
+namespace TheCollection.Web.Commands {
+
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
+    using TheCollection.Business.Tea;
+    using TheCollection.Data.DocumentDB;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Extensions;
+    using TheCollection.Web.Models;
+    using TheCollection.Web.Translators.Tea;
+
+    public class CreateBrandCommand : IAsyncCommand<Brand> {
+
+        public CreateBrandCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
+            DocumentDbClient = documentDbClient;
+            BrandTranslator = new BrandToBrandTranslator(applicationUser);
+        }
+
+        public IDocumentClient DocumentDbClient { get; }
+        public BrandToBrandTranslator BrandTranslator { get; }
+
+        public async Task<IActionResult> ExecuteAsync(Brand brand) {
+            if (brand == null) {
+                return new BadRequestObjectResult("Brand cannot be null");
+            }
+
+            var brandRepository = new CreateRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
+            brand.Id = await brandRepository.CreateItemAsync(brand);
+            return new OkObjectResult(BrandTranslator.Translate(brand));
+        }
+    }
+}
