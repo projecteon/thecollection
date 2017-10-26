@@ -86,6 +86,9 @@
     <Compile Include="..\TheCollection.Business\ISearchable.cs">
       <Link>Models\ISearchable.cs</Link>
     </Compile>
+    <Compile Include="..\TheCollection.Business\ISearchRepository.cs">
+      <Link>ISearchRepository.cs</Link>
+    </Compile>
     <Compile Include="..\TheCollection.Business\RefValue.cs">
       <Link>Models\RefValue.cs</Link>
     </Compile>
@@ -116,6 +119,24 @@
     <Compile Include="..\TheCollection.Business\Tea\Image.cs">
       <Link>Models\Image.cs</Link>
     </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\Extensions\IDocumentClientExtensions.cs">
+      <Link>Extensions\IDocumentClientExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\Repositories\CreateRepository.cs">
+      <Link>Repositories\CreateRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\Repositories\GetRepository.cs">
+      <Link>Repositories\GetRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\Repositories\SearchRepository.cs">
+      <Link>Repositories\SearchRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\Repositories\UpdateRepository.cs">
+      <Link>Repositories\UpdateRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Data.DocumentDB\SearchableQuery.cs">
+      <Link>Repositories\SearchableQuery.cs</Link>
+    </Compile>
     <Compile Include="..\TheCollection.Lib\Extensions\StringExtensions.cs">
       <Link>Extensions\StringExtensions.cs</Link>
     </Compile>
@@ -125,15 +146,6 @@
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Extensions\IDocumentClientExtensions.cs">
-      <Link>Extensions\IDocumentClientExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Services\CreateRepository.cs">
-      <Link>Services\CreateRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Services\GetRepository.cs">
-      <Link>Services\GetRepository.cs</Link>
-    </Compile>
     <Compile Include="..\TheCollection.Web\Services\IImageService.cs">
       <Link>Services\IImageService.cs</Link>
     </Compile>
@@ -142,12 +154,6 @@
     </Compile>
     <Compile Include="..\TheCollection.Web\Services\ImageFilesystemService.cs">
       <Link>Services\ImageFilesystemService.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Services\SearchableQuery.cs">
-      <Link>Services\SearchableQuery.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Services\UpdateRepository.cs">
-      <Link>Services\UpdateRepository.cs</Link>
     </Compile>
     <Compile Include="AccessExport.cs" />
     <Compile Include="AzureStorageClient.cs" />

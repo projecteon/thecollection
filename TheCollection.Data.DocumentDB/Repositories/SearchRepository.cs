@@ -1,12 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using TheCollection.Web.Extensions;
-
-namespace TheCollection.Web.Services {
+namespace TheCollection.Data.DocumentDB {
 
     // consider     https://github.com/Crokus/documentdb-repo/blob/master/src/DocumentDb.Repository/DocumentDbRepository.cs
     // partitioning https://petarivanovblog.wordpress.com/2015/10/13/azure-documentdb-generic-repository-with-partitioning-part-1/
@@ -14,6 +6,16 @@ namespace TheCollection.Web.Services {
     //              https://auth0.com/blog/documentdb-with-aspnetcore/
     //              http://www.dotnetcurry.com/windows-azure/1262/documentdb-nosql-json-introduction
     //              https://www.tutorialspoint.com/documentdb_sql/documentdb_sql_parameterized.htm
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
+    using Microsoft.Azure.Documents.Linq;
+    using TheCollection.Business;
+    using TheCollection.Data.DocumentDB;
+    using TheCollection.Data.DocumentDB.Extensions;
+
     public class SearchRepository<T> : ISearchRepository<T> where T : class {
         private readonly string DatabaseId;
         private readonly string CollectionId;

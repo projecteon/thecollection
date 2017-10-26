@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using TheCollection.Web.Extensions;
+namespace TheCollection.Data.DocumentDB {
 
-namespace TheCollection.Web.Services {
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
+    using TheCollection.Data.DocumentDB.Extensions;
 
     public class CreateRepository<T> where T : class {
         private readonly string DatabaseId;

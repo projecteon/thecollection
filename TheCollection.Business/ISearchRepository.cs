@@ -1,4 +1,4 @@
-namespace TheCollection.Web.Services {
+namespace TheCollection.Business {
 
     using System.Collections.Generic;
     using System.Threading.Tasks;

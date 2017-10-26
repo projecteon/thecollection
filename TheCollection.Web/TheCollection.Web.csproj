@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TheCollection.Business\TheCollection.Business.csproj" />
+    <ProjectReference Include="..\TheCollection.Data.DocumentDB\TheCollection.Data.DocumentDB.csproj" />
     <ProjectReference Include="..\TheCollection.Lib\TheCollection.Lib.csproj" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">

@@ -4,10 +4,10 @@ namespace TheCollection.Web.Commands {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Business.Tea;
+    using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
-    using TheCollection.Web.Services;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 

@@ -1,14 +1,15 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.Azure.Documents.Client;
-using TheCollection.Business.Tea;
-using TheCollection.Import.Console.Models;
-using TheCollection.Import.Console.Translators;
-using TheCollection.Web.Constants;
-using TheCollection.Web.Services;
-
 namespace TheCollection.Import.Console {
+
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Microsoft.Azure.Documents.Client;
+    using TheCollection.Business.Tea;
+    using TheCollection.Data.DocumentDB;
+    using TheCollection.Import.Console.Models;
+    using TheCollection.Import.Console.Translators;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Services;
 
     public class DocumentDbImport {
 

@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using TheCollection.Web.Extensions;
+namespace TheCollection.Data.DocumentDB {
 
-namespace TheCollection.Web.Services {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
+    using Microsoft.Azure.Documents.Linq;
+    using TheCollection.Data.DocumentDB.Extensions;
 
     public class GetRepository<T> where T : class {
         private readonly string DatabaseId;

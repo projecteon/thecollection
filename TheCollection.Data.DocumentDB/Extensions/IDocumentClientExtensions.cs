@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
+namespace TheCollection.Data.DocumentDB.Extensions {
 
-namespace TheCollection.Web.Extensions {
+    using System.Threading.Tasks;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
 
     public static class IDocumentClientExtensions {
 

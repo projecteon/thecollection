@@ -6,6 +6,7 @@ namespace TheCollection.Web.Handlers {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Azure.Documents;
+    using TheCollection.Data.DocumentDB;
     using TheCollection.Lib;
     using TheCollection.Lib.Converters;
     using TheCollection.Lib.Extensions;
