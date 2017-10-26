@@ -41,7 +41,13 @@ namespace TheCollection.Web.Services {
             return await GetBitmap(blockBlob);
         }
 
-        private async Task<Bitmap> GetBitmap(CloudBlockBlob blockBlob) {
+        public async Task<string> Upload(Stream stream, string filename) {
+            var blockBlob = Container.GetBlockBlobReference(filename);
+            await blockBlob.UploadFromStreamAsync(stream);
+            return blockBlob?.Uri.ToString();
+        }
+
+        async Task<Bitmap> GetBitmap(CloudBlockBlob blockBlob) {
             Bitmap image;
             using (var memoryStream = new MemoryStream()) {
                 await blockBlob.DownloadToStreamAsync(memoryStream);
@@ -51,13 +57,7 @@ namespace TheCollection.Web.Services {
             return image;
         }
 
-        public async Task<string> Upload(Stream stream, string filename) {
-            var blockBlob = Container.GetBlockBlobReference(filename);
-            await blockBlob.UploadFromStreamAsync(stream);
-            return blockBlob?.Uri.ToString();
-        }
-
-        private async Task CreateContainerIfNotExistsAsync() {
+        async Task CreateContainerIfNotExistsAsync() {
             await Container.CreateIfNotExistsAsync();
         }
     }
