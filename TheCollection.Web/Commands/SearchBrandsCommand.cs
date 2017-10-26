@@ -11,18 +11,19 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Services;
 
     public class SearchBrandsCommand : IAsyncCommand<Search> {
-        private readonly IDocumentClient documentDbClient;
 
         public SearchBrandsCommand(IDocumentClient documentDbClient) {
-            this.documentDbClient = documentDbClient;
+            DocumentDbClient = documentDbClient;
         }
+
+        public IDocumentClient DocumentDbClient { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
-            var brandsRepository = new SearchRepository<Brand>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
+            var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
             var brands = await brandsRepository.SearchAsync(search.searchterm);
 
             return new OkObjectResult(brands.OrderBy(brand => brand.Name));

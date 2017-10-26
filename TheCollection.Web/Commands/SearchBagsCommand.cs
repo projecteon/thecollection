@@ -16,7 +16,7 @@ namespace TheCollection.Web.Commands {
     public class SearchBagsCommand : IAsyncCommand<Search> {
 
         public SearchBagsCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
-            this.DocumentDbClient = documentDbClient;
+            DocumentDbClient = documentDbClient;
             BagTranslator = new BagToBagTranslator(applicationUser);
         }
 

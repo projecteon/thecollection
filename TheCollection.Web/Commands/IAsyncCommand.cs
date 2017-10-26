@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
 namespace TheCollection.Web.Commands {
+
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
 
     public interface IAsyncCommand<T> {
 

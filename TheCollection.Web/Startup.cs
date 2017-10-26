@@ -65,6 +65,9 @@ namespace TheCollection_Web {
                                                                                 Configuration.GetValue<string>("StorageAccount:Endpoints"))
             );
 
+            // wire repositories
+            // services.AddScoped(typeof(ISearchRepository<>), typeof(SearchRepository<>));
+
             // Add framework services.
             services.AddMvc(
                 options => {
