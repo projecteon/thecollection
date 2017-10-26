@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Reflection;
-
-namespace TheCollection.Business
+﻿namespace TheCollection.Business
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using System;
+    using System.Linq;
+    using System.Reflection;
+
     public class SearchableConverter : JsonConverter
     {
         public override bool CanRead { get { return false; } }

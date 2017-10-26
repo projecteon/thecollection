@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-
-namespace TheCollection.Business
+﻿namespace TheCollection.Business
 {
+    using Newtonsoft.Json;
+
     public class RefValue : IRef
     {
         [JsonProperty(PropertyName = "id")]

@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
-
-namespace TheCollection.Business.Tea
+﻿namespace TheCollection.Business.Tea
 {
+    using Newtonsoft.Json;
+    using System.ComponentModel.DataAnnotations;
+
     public class Image
     {
         [Key]
