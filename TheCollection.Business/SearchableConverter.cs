@@ -1,41 +1,33 @@
-﻿namespace TheCollection.Business
-{
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+namespace TheCollection.Business {
+
     using System;
     using System.Linq;
     using System.Reflection;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
-    public class SearchableConverter : JsonConverter
-    {
+    public class SearchableConverter : JsonConverter {
         public override bool CanRead { get { return false; } }
 
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return objectType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => p.GetCustomAttributes(typeof(SearchableAttribute), true).Count() == 1).Any();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             JObject jo = new JObject();
             Type type = value.GetType();
 
-            foreach (PropertyInfo prop in type.GetProperties())
-            {
-                if (prop.CanRead)
-                {
+            foreach (PropertyInfo prop in type.GetProperties()) {
+                if (prop.CanRead) {
                     object propVal = prop.GetValue(value, null);
-                    if (propVal != null)
-                    {
+                    if (propVal != null) {
                         jo.Add(prop.Name.ToLower(), JToken.FromObject(propVal, serializer));
                     }
-                    else
-                    {
+                    else {
                         jo.Add(prop.Name.ToLower(), null);
                     }
                 }

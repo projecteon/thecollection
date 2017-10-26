@@ -1,9 +1,9 @@
-﻿namespace TheCollection.Business
-{
+namespace TheCollection.Business {
+
     using Newtonsoft.Json;
 
-    public class RefValue : IRef
-    {
+    public class RefValue : IRef {
+
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
@@ -12,8 +12,7 @@
         public string Name { get; set; }
     }
 
-    public interface IRef
-    {
+    public interface IRef {
         string Id { get; set; }
 
         string Name { get; set; }

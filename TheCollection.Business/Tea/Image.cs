@@ -1,10 +1,10 @@
-﻿namespace TheCollection.Business.Tea
-{
-    using Newtonsoft.Json;
-    using System.ComponentModel.DataAnnotations;
+namespace TheCollection.Business.Tea {
 
-    public class Image
-    {
+    using System.ComponentModel.DataAnnotations;
+    using Newtonsoft.Json;
+
+    public class Image {
+
         [Key]
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
