@@ -1,22 +1,19 @@
-﻿namespace TheCollection.Business.Tests.Unit.Tea
-{
+namespace TheCollection.Business.Tests.Unit.Tea {
+
     using System;
     using System.Linq;
     using TheCollection.Business.Tea;
     using Xunit;
 
     [Trait("Bag", "Tags are created")]
-    public class BagTagsTests
-    {
-        Bag Bag { get; }
-        RefValue BagTypeRef { get; }
-        RefValue BrandRef { get; }
-        RefValue CountryRef { get; }
-        Searchable SearchableBag { get; }
-        
+    public class BagTagsTests {
+        private Bag Bag { get; }
+        private RefValue BagTypeRef { get; }
+        private RefValue BrandRef { get; }
+        private RefValue CountryRef { get; }
+        private Searchable SearchableBag { get; }
 
-        public BagTagsTests()
-        {
+        public BagTagsTests() {
             BagTypeRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Paper" };
             BrandRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Twinning" };
             CountryRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Norway" };
@@ -38,98 +35,84 @@
         }
 
         [Fact(DisplayName = "Tags are distinct")]
-        public void TagsAreDistinct()
-        {
+        public void TagsAreDistinct() {
             Assert.Equal(SearchableBag.Tags.Count(), SearchableBag.Tags.Distinct().Count());
         }
 
         [Fact(DisplayName = "Tag contains main id")]
-        public void ContainsMainId()
-        {
+        public void ContainsMainId() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == $"{Bag.MainID}"));
         }
 
         [Fact(DisplayName = "Tag contains bagtype name in lowercase")]
-        public void ContainsBagTypeNameLowerCase()
-        {
+        public void ContainsBagTypeNameLowerCase() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == BagTypeRef.Name.ToLower()));
         }
 
         [Fact(DisplayName = "Tag contains brand name in lowercase")]
-        public void ContainsBrandNameLowerCase()
-        {
+        public void ContainsBrandNameLowerCase() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == BrandRef.Name.ToLower()));
         }
 
         [Fact(DisplayName = "Tag contains country name in lowercase")]
-        public void ContainsCountryNameLowerCase()
-        {
+        public void ContainsCountryNameLowerCase() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == CountryRef.Name.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain Id")]
-        public void NotContainsId()
-        {
+        public void NotContainsId() {
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.Id));
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.Id.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain insert date")]
-        public void NotContainsInsertDate()
-        {
+        public void NotContainsInsertDate() {
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.InsertDate));
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.InsertDate.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain image id")]
-        public void NotContainsImageId()
-        {
+        public void NotContainsImageId() {
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.ImageId));
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.ImageId.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain user id")]
-        public void NotContainsUserId()
-        {
+        public void NotContainsUserId() {
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId));
             Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain stopwords except for words with accents parsed to stop words")]
-        public void NotContainsStopWords()
-        {
+        public void NotContainsStopWords() {
             var stopWords = new[] { "as", "at", "was" };
             Assert.True(SearchableBag.Tags.None(tag => stopWords.Any(stopword => stopword == tag)));
         }
 
         [Fact(DisplayName = "Tag does flavour words that are not stop words in lowercase")]
-        public void ContainsFlavourWordsThatAreNotStopWordsInLowerCase()
-        {
+        public void ContainsFlavourWordsThatAreNotStopWordsInLowerCase() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "earl"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "grey"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "the"));
         }
 
         [Fact(DisplayName = "Tag does words from series in lowercase that are not stop words")]
-        public void ContainsSerieWordsThatAreNotStopWords()
-        {
+        public void ContainsSerieWordsThatAreNotStopWords() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "some"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "series"));
         }
 
         [Fact(DisplayName = "Tag does words from hallmark in lowercase that are not stop words")]
-        public void ContainsHallmarkWordsThatAreNotStopWords()
-        {
+        public void ContainsHallmarkWordsThatAreNotStopWords() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "some"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "hallmark"));
         }
 
         [Fact(DisplayName = "Tag does words from serial number in lowercase that are not stop words")]
-        public void ContainsSerialNumberWordsThatAreNotStopWords()
-        {
+        public void ContainsSerialNumberWordsThatAreNotStopWords() {
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "some"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "serial"));
             Assert.NotNull(SearchableBag.Tags.FirstOrDefault(tag => tag == "number"));
-        }   
+        }
     }
 }
