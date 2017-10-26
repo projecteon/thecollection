@@ -46,3 +46,12 @@ http://benfoster.io/blog/asp-net-identity-role-claims
 http://johnatten.com/2014/06/22/asp-net-identity-2-0-customizing-users-and-roles/
 http://www.blinkingcaret.com/2016/11/30/asp-net-identity-core-from-scratch/
 https://andrewlock.net/introduction-to-authorisation-in-asp-net-core/
+
+https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
+
+System.Drawing
+https://github.com/CoreCompat/System.Drawing
+
+
+Lookinto
+https://github.com/NancyFx/Nancy
