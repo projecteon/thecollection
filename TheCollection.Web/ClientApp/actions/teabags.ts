@@ -19,6 +19,11 @@ export type SearchTermsError = {
   searchError: string;
 };
 
+export type SearchTermsChanged = {
+  type: Constant.SEARCH_TERMS_CHANGED,
+  searchTerms: string;
+};
+
 export type ZoomImage = {
   type: Constant.ZOOM_IMAGE_TOGGLE,
   imageid: string;

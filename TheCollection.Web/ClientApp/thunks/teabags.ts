@@ -112,9 +112,11 @@ export const requestTeabags = {
 };
 
 export const validateSearchTerms = {
-  validateSearchTerms: (searchTerms: string): AppThunkAction<Actions.SearchTermsError> => (dispatch, getState) => {
+  validateSearchTerms: (searchTerms: string): AppThunkAction<Actions.SearchTermsError | Actions.SearchTermsChanged> => (dispatch, getState) => {
     if (getState().teabags.searchError !== '' && searchTerms.trim().length > 2) {
       dispatch({ type: Constants.SEARCH_TERMS_ERROR, searchError: '' });
+    } else {
+      dispatch({ type: Constants.SEARCH_TERMS_CHANGED, searchTerms: searchTerms });
     }
   },
 };

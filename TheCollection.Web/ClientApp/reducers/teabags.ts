@@ -3,8 +3,20 @@ import { fetch, addTask } from 'domain-task';
 import { AppThunkAction } from '../store';
 import { ISearchResult } from '../interfaces/ISearchResult';
 import { ITeabag } from '../interfaces/ITeaBag';
-import { RECEIVE_TEABAGS, REQUEST_TEABAGS, SEARCH_TERMS_ERROR, ZOOM_IMAGE_TOGGLE } from '../constants/teabags';
-import { ReceiveTeabagsAction, RequestTeabagsAction, SearchTermsError, ZoomImage } from '../actions/teabags';
+import {
+  RECEIVE_TEABAGS,
+  REQUEST_TEABAGS,
+  SEARCH_TERMS_CHANGED,
+  SEARCH_TERMS_ERROR,
+  ZOOM_IMAGE_TOGGLE,
+} from '../constants/teabags';
+import {
+  ReceiveTeabagsAction,
+  RequestTeabagsAction,
+  SearchTermsChanged,
+  SearchTermsError,
+  ZoomImage,
+} from '../actions/teabags';
 import { requestTeabags, validateSearchTerms, zoomImage } from '../thunks/teabags';
 
 export interface ITeabagsState {
@@ -19,7 +31,7 @@ export interface ITeabagsState {
 export const actionCreators = {...requestTeabags, ...validateSearchTerms, ...zoomImage};
 
 const unloadedState: ITeabagsState = { isLoading: false, teabags: [], searchError: '' };
-type KnownActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | ZoomImage;
+type KnownActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | SearchTermsChanged | ZoomImage;
 export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: KnownActions) => {
   switch (action.type) {
     case REQUEST_TEABAGS:
@@ -37,6 +49,8 @@ export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: Kn
         }};
     case SEARCH_TERMS_ERROR:
       return {...state, ...{searchError: action.searchError}};
+    case SEARCH_TERMS_CHANGED:
+        return {...state, ...{searchedTerms: action.searchTerms}};
     case ZOOM_IMAGE_TOGGLE:
       return {...state, ...{zoomImageId: action.imageid}};
     default:

@@ -45,19 +45,19 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   onSearchTermsChanged() {
     event.preventDefault();
     event.stopPropagation();
-    this.props.validateSearchTerms(this.controls.searchInput.value.trim());
+    this.props.validateSearchTerms(this.controls.searchInput.value);
   }
 
   onKeyboardSearch(event: ExtendedKeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags(this.controls.searchInput.value.trim());
+    this.props.requestTeabags(this.props.searchedTerms);
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags(this.controls.searchInput.value.trim());
+    this.props.requestTeabags(this.props.searchedTerms);
   }
 
   onZoomClicked(imageId?: string) {
