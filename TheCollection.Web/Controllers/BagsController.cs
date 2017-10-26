@@ -31,7 +31,7 @@
         public async Task<IActionResult> Bag(string id)
         {
             var applicationUser = await applicationUserAccessor.GetUser();
-            var command = new GetTeabagCommand(documentDbClient, applicationUser);
+            var command = new GetBagCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(id);
         }
 

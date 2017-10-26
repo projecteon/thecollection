@@ -11,9 +11,9 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
-    public class GetTeabagCommand : IAsyncCommand<string> {
+    public class GetBagCommand : IAsyncCommand<string> {
 
-        public GetTeabagCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
+        public GetBagCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BagTranslator = new BagToBagTranslator(applicationUser);
         }
