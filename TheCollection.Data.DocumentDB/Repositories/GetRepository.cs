@@ -8,9 +8,10 @@ namespace TheCollection.Data.DocumentDB {
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.Azure.Documents.Linq;
+    using TheCollection.Business;
     using TheCollection.Data.DocumentDB.Extensions;
 
-    public class GetRepository<T> where T : class {
+    public class GetRepository<T> : IGetRepository<T> where T : class {
         private readonly string DatabaseId;
         private readonly string CollectionId;
         private IDocumentClient client;

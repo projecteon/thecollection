@@ -83,11 +83,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\TheCollection.Business\ICreateRepository.cs">
+      <Link>ICreateRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\IDeleteRepository.cs">
+      <Link>IDeleteRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\IGetRepository.cs">
+      <Link>IGetRepository.cs</Link>
+    </Compile>
     <Compile Include="..\TheCollection.Business\ISearchable.cs">
       <Link>Models\ISearchable.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Business\ISearchRepository.cs">
       <Link>ISearchRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\TheCollection.Business\IUpdateRepository.cs">
+      <Link>IUpdateRepository.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Business\RefValue.cs">
       <Link>Models\RefValue.cs</Link>

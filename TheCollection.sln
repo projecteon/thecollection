@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		CodeMaid.config = CodeMaid.config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCollection.Lib", "TheCollection.Lib\TheCollection.Lib.csproj", "{1EE522B3-C22C-45E8-8629-AF962B6221B4}"

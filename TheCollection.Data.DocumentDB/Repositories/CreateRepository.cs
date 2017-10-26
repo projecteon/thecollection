@@ -3,9 +3,10 @@ namespace TheCollection.Data.DocumentDB {
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
+    using TheCollection.Business;
     using TheCollection.Data.DocumentDB.Extensions;
 
-    public class CreateRepository<T> where T : class {
+    public class CreateRepository<T> : ICreateRepository<T> where T : class {
         private readonly string DatabaseId;
         private readonly string CollectionId;
         private IDocumentClient client;
