@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using TheCollection.Business.Tea;
-using Xunit;
-
-namespace TheCollection.Business.Tests.Unit.Tea
+﻿namespace TheCollection.Business.Tests.Unit.Tea
 {
+    using System.Linq;
+    using TheCollection.Business.Tea;
+    using Xunit;
+
     [Trait("BagType", "Tags are created")]
     public class BagTypeTagsTests
     {

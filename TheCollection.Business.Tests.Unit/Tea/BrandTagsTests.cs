@@ -1,9 +1,9 @@
-using System.Linq;
-using TheCollection.Business.Tea;
-using Xunit;
-
 namespace TheCollection.Business.Tests.Unit.Tea
 {
+    using System.Linq;
+    using TheCollection.Business.Tea;
+    using Xunit;
+
     [Trait("Brand", "Tags are created")]
     public class BrandTagsTests
     {
