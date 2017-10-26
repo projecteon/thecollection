@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using System.Linq;
-using System.Threading.Tasks;
-using TheCollection.Business.Tea;
-using TheCollection.Web.Constants;
-using TheCollection.Web.Extensions;
-using TheCollection.Web.Models;
-using TheCollection.Web.Services;
-
-namespace TheCollection.Web.Commands
+﻿namespace TheCollection.Web.Commands
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using TheCollection.Business.Tea;
+    using TheCollection.Lib.Extensions;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Models;
+    using TheCollection.Web.Services;
+
     public class SearchBagTypesCommand
     {
         private readonly IDocumentClient documentDbClient;

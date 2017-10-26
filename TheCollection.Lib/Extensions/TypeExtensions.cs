@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-
-namespace TheCollection.Lib.Extensions
+﻿namespace TheCollection.Lib.Extensions
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+
     public static class TypeExtensions
     {
         /// <summary>

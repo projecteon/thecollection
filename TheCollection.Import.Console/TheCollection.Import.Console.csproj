@@ -116,6 +116,9 @@
     <Compile Include="..\TheCollection.Business\Tea\Image.cs">
       <Link>Models\Image.cs</Link>
     </Compile>
+    <Compile Include="..\TheCollection.Lib\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\TheCollection.Lib\Extensions\TypeExtensions.cs">
       <Link>Models\TypeExtensions.cs</Link>
     </Compile>
@@ -124,9 +127,6 @@
     </Compile>
     <Compile Include="..\TheCollection.Web\Extensions\IDocumentClientExtensions.cs">
       <Link>Extensions\IDocumentClientExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Extensions\StringExtensions.cs">
-      <Link>Extensions\StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Web\Services\CreateRepository.cs">
       <Link>Services\CreateRepository.cs</Link>

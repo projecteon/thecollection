@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Documents;
-using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using TheCollection.Web.Constants;
-using TheCollection.Web.Extensions;
-using TheCollection.Web.Services;
-
-namespace TheCollection.Web.Handlers
+﻿namespace TheCollection.Web.Handlers
 {
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Azure.Documents;
+    using System;
+    using System.Drawing;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using TheCollection.Lib.Converters;
+    using TheCollection.Lib.Extensions;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Services;
+
     public class ImageHandler
     {
         public const string RegEx = @"[/]images[/]([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})[/](\S+.(jpg|png))$";
@@ -27,29 +28,28 @@ namespace TheCollection.Web.Handlers
             {
                 var image = await imagesRepository.GetItemAsync(matches[0].Groups[1].Value);
                 var bitmap = await imageService.Get(image.Filename);
-                var response = GenerateResponse(bitmap);
+                var response = GenerateResponse(bitmap, image.Filename);
 
-                context.Response.ContentType = GetContentType(bitmap);
+                context.Response.ContentType = bitmap.GetMimeType("image/png");
                 await context.Response.Body.WriteAsync(response, 0, response.Length);
             }
         }
 
-        private byte[] GenerateResponse(Bitmap image)
+        private byte[] GenerateResponse(Bitmap image, string fileName)
         {
-            return ImageConverter.GetBytesPNG(image);
+            return ConverterFactory(fileName).GetBytes(image);
         }
 
-        private string GetContentType(Bitmap image)
+        IImageConverter ConverterFactory(string fileName)
         {
-            return image.GetMimeType() ?? "image/png";
-        }
-    }
+            if (fileName.EndsWith("png"))
+                return new PngImageConverter();
 
-    public static class ImageHandlerExtensions
-    {
-        public static IApplicationBuilder UseImageHandler(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<ImageHandler>();
+
+            if (fileName.EndsWith("jpg"))
+                return new JpgImageConverter();
+
+            throw new NotImplementedException();
         }
     }
 }

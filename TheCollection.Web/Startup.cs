@@ -1,26 +1,25 @@
-using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Azure.Documents.Client;
-using TheCollection.Web.Services;
-using System.Text.RegularExpressions;
-using TheCollection.Web.Handlers;
-using Microsoft.Azure.Documents;
-using System.Net;
-using AspNetCore.Identity.DocumentDb;
-using System.IO;
-using TheCollection.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using TheCollection.Web.Controllers;
-using TheCollection.Web.Constants;
-
 namespace TheCollection_Web
 {
+    using System;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.SpaServices.Webpack;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Azure.Documents.Client;
+    using TheCollection.Web.Services;
+    using System.Text.RegularExpressions;
+    using TheCollection.Web.Handlers;
+    using Microsoft.Azure.Documents;
+    using System.Net;
+    using AspNetCore.Identity.DocumentDb;
+    using TheCollection.Web.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using TheCollection.Web.Controllers;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Extensions;
+
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -81,7 +80,7 @@ namespace TheCollection_Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

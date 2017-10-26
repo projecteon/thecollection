@@ -1,42 +1,53 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace TheCollection.Lib.Converters
+﻿namespace TheCollection.Lib.Converters
 {
-    public class JpgImageConverter
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
+    using TheCollection.Lib.Extensions;
+
+    public class JpgImageConverter: IImageConverter
     {
-        public static byte[] GetBytesScaledJPEG(Image imgSrc, int iWidth, int iHeight)
+        public Stream GetStream(Image pngImage)
         {
-            return ImageConverter.GetBytes(ImageConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight), GetJpegEncoder(), GetJPegEncoderParams());
+            var memoryStream = new MemoryStream();
+            pngImage.Save(memoryStream, GetJpegEncoder, GetJPegEncoderParams);
+            return memoryStream;
+        }
+
+        public byte[] GetBytes(Image imgSrc)
+        {
+            return imgSrc.GetBytes(GetJpegEncoder, GetJPegEncoderParams);
+        }
+
+        public byte[] GetBytesScaled(Image imgSrc, int iWidth, int iHeight)
+        {
+            return BitmapConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight).GetBytes(GetJpegEncoder, GetJPegEncoderParams);
         }
         
-        /// <summary>
-         /// The Jpeg Encoder
-         /// </summary>
-         /// <returns>The Jpeg Encoder</returns>
-        static ImageCodecInfo GetJpegEncoder()
+        static ImageCodecInfo GetJpegEncoder
         {
-            ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
-
-            for (int i = 0; i < infos.Length; i++)
+            get
             {
-                if (ImageFormat.Jpeg.Guid.Equals(infos[i].FormatID))
-                    return infos[i];
-            }
+                ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
 
-            return null;
+                for (int i = 0; i < infos.Length; i++)
+                {
+                    if (ImageFormat.Jpeg.Guid.Equals(infos[i].FormatID))
+                        return infos[i];
+                }
+
+                return null;
+            }
         }
 
-        /// <summary>
-        /// The Jpeg Compression Encoder Params (High Quality)
-        /// </summary>
-        /// <returns>The Tiff Encoder Params</returns>
-        static EncoderParameters GetJPegEncoderParams()
+        static EncoderParameters GetJPegEncoderParams
         {
-            EncoderParameters encParams = new EncoderParameters(1);
-            encParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 80L);
-
-            return encParams;
+            get
+            {
+                EncoderParameters encParams = new EncoderParameters(1);
+                encParams.Param[0] = new EncoderParameter(Encoder.Quality, 80L);
+                return encParams;
+            }
         }
     }
 }

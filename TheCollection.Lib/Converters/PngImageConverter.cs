@@ -1,53 +1,58 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-
-namespace TheCollection.Lib.Converters
+﻿namespace TheCollection.Lib.Converters
 {
-    public class PngImageConverter
-    {
-        public const int THUMB_DEFAULT_WIDTH_PARAM = 100;
-        public const int THUMB_DEFAULT_HEIGHT_PARAM = 0;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
+    using TheCollection.Lib.Extensions;
 
-        public static Stream GetStreamPNG(Image pngImage)
+    public class PngImageConverter : IImageConverter
+    {
+        public Stream GetStream(Image pngImage)
         {
             var memoryStream = new System.IO.MemoryStream();
-            pngImage.Save(memoryStream, GetPngEncoder(), GetPngEncoderParams());
+            pngImage.Save(memoryStream, GetPngEncoder, GetPngEncoderParams);
             return memoryStream;
         }
 
-        public static byte[] GetBytesScaledPNG(Image imgSrc, int iWidth, int iHeight, bool bTransparent = false, bool bCenterAlign = false)
+        public byte[] GetBytes(Image imgSrc)
         {
-            return ImageConverter.GetBytes(ImageConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight, bTransparent, bCenterAlign), GetPngEncoder(), GetPngEncoderParams());
+            return imgSrc.GetBytes(GetPngEncoder, GetPngEncoderParams);
         }
 
-        /// <summary>
-        /// The Png Encoder
-        /// </summary>
-        /// <returns>The Png Encoder</returns>
-        static ImageCodecInfo GetPngEncoder()
+        public byte[] GetBytesScaled(Image imgSrc, int iWidth, int iHeight)
         {
-            ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
+            return GetBytesScaled(imgSrc, iWidth, iHeight, false, false);
+        }
 
-            for (int i = 0; i < infos.Length; i++)
+        public byte[] GetBytesScaled(Image imgSrc, int iWidth, int iHeight, bool bTransparent = false, bool bCenterAlign = false)
+        {
+            return BitmapConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight, bTransparent, bCenterAlign).GetBytes(GetPngEncoder, GetPngEncoderParams);
+        }
+
+        static ImageCodecInfo GetPngEncoder
+        {
+            get
             {
-                if (ImageFormat.Png.Guid.Equals(infos[i].FormatID))
-                    return infos[i];
-            }
+                ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
 
-            return null;
+                for (int i = 0; i < infos.Length; i++)
+                {
+                    if (ImageFormat.Png.Guid.Equals(infos[i].FormatID))
+                        return infos[i];
+                }
+
+                return null;
+            }
         }
 
-        /// <summary>
-        /// The Png 256 Encoder Params
-        /// </summary>
-        /// <returns>The Png Encoder Params</returns>
-        static EncoderParameters GetPngEncoderParams()
+        static EncoderParameters GetPngEncoderParams
         {
-            EncoderParameters encParams = new EncoderParameters(1);
-            encParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8L);
-
-            return encParams;
+            get
+            {
+                EncoderParameters encParams = new EncoderParameters(1);
+                encParams.Param[0] = new EncoderParameter(Encoder.ColorDepth, 8L);
+                return encParams;
+            }
         }
     }
 }

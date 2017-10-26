@@ -1,12 +1,16 @@
-﻿using System.Drawing;
-
-namespace TheCollection.Lib
+﻿namespace TheCollection.Lib
 {
+    using System.Drawing;
+    using TheCollection.Lib.Converters;
+
     public class Thumbnail
     {
-        public static byte[] CreateThumbnail(Bitmap src)
+        public const int THUMB_DEFAULT_WIDTH_PARAM = 200;
+        public const int THUMB_DEFAULT_HEIGHT_PARAM = 0;
+
+        public static byte[] CreateThumbnail(Bitmap src, IImageConverter imageConverter)
         {
-            return Converters.PngImageConverter.GetBytesScaledPNG(src, Converters.ImageConverter.THUMB_DEFAULT_WIDTH_PARAM, 0);
+            return imageConverter.GetBytesScaled(src, THUMB_DEFAULT_WIDTH_PARAM, 0);
         }
     }
 }

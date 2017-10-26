@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TheCollection.Web.Extensions
+﻿namespace TheCollection.Lib.Extensions
 {
     public static class StringExtensions
     {
