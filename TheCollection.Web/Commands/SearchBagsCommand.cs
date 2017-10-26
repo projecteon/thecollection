@@ -20,8 +20,8 @@ namespace TheCollection.Web.Commands {
             BagTranslator = new BagToBagTranslator(applicationUser);
         }
 
-        public IDocumentClient DocumentDbClient { get; }
-        public ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
+        IDocumentClient DocumentDbClient { get; }
+        ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {

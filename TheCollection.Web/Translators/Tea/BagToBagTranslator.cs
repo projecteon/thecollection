@@ -10,8 +10,8 @@ namespace TheCollection.Web.Translators.Tea {
             ApplicationUser = applicationUser;
         }
 
-        public RefValueToRefValueTranslator RefValueTranslator { get; }
-        public IApplicationUser ApplicationUser { get; }
+        ITranslator<Business.RefValue, Models.RefValue> RefValueTranslator { get; }
+        IApplicationUser ApplicationUser { get; }
 
         public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination) {
             destination.id = source.Id;

@@ -21,9 +21,9 @@ namespace TheCollection.Web.Commands {
             RefValueTranslator = new IRefToRefValueTranslator();
         }
 
-        public IDocumentClient DocumentDbClient { get; }
-        public string RefValueCollectionId { get; }
-        public ITranslator<T, Models.RefValue> RefValueTranslator { get; }
+        IDocumentClient DocumentDbClient { get; }
+        string RefValueCollectionId { get; }
+        ITranslator<T, Models.RefValue> RefValueTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {

@@ -10,17 +10,18 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
     public class SearchBagTypesCommand {
 
-        public SearchBagTypesCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
+        public SearchBagTypesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BagTypeTranslator = new BagTypeToBagTypeTranslator(applicationUser);
         }
 
-        public IDocumentClient DocumentDbClient { get; }
-        public BagTypeToBagTypeTranslator BagTypeTranslator { get; }
+        IDocumentClient DocumentDbClient { get; }
+        ITranslator<BagType, Models.Tea.BagType> BagTypeTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {

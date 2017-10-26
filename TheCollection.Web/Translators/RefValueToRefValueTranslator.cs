@@ -9,7 +9,7 @@ namespace TheCollection.Web.Translators {
             ApplicationUser = applicationUser;
         }
 
-        public IApplicationUser ApplicationUser { get; }
+        IApplicationUser ApplicationUser { get; }
 
         public void Translate(Business.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;

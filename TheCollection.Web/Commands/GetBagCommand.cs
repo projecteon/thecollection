@@ -13,13 +13,13 @@ namespace TheCollection.Web.Commands {
 
     public class GetBagCommand : IAsyncCommand<string> {
 
-        public GetBagCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
+        public GetBagCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BagTranslator = new BagToBagTranslator(applicationUser);
         }
 
-        public IDocumentClient DocumentDbClient { get; }
-        public ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
+        IDocumentClient DocumentDbClient { get; }
+        ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(string id) {
             var bagsRepository = new GetRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);

@@ -10,7 +10,7 @@ namespace TheCollection.Web.Translators.Tea {
             ApplicationUser = applicationUser;
         }
 
-        public IApplicationUser ApplicationUser { get; }
+        IApplicationUser ApplicationUser { get; }
 
         public void Translate(Country source, Models.Tea.Country destination) {
             destination.id = source.Id;

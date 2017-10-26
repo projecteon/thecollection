@@ -10,17 +10,18 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
     public class SearchCountriesCommand {
 
-        public SearchCountriesCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
+        public SearchCountriesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             CountryTranslator = new CountryToCountryTranslator(applicationUser);
         }
 
-        public IDocumentClient DocumentDbClient { get; }
-        public CountryToCountryTranslator CountryTranslator { get; }
+        IDocumentClient DocumentDbClient { get; }
+        ITranslator<Country, Models.Tea.Country> CountryTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {
