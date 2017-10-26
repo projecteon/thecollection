@@ -1,30 +1,26 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace TheCollection.Import.Console
-{
-    public class AzureStorageClient
-    {
+namespace TheCollection.Import.Console {
+
+    public class AzureStorageClient {
         public CloudBlobContainer Container { get; }
 
-        public AzureStorageClient(string connectionString)
-        {
+        public AzureStorageClient(string connectionString) {
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             Container = blobClient.GetContainerReference("images");
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        private async Task CreateContainerIfNotExistsAsync()
-        {
+        private async Task CreateContainerIfNotExistsAsync() {
             await Container.CreateIfNotExistsAsync();
         }
 
-        public List<string> GetList()
-        {
+        public List<string> GetList() {
             var list = Container.ListBlobs();
             var blobNames = list.OfType<CloudBlockBlob>().Select(b => b.Name).ToList();
             return blobNames;

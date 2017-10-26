@@ -1,11 +1,10 @@
-﻿using Microsoft.WindowsAzure.Storage;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace TheCollection.Web.Services
-{
+namespace TheCollection.Web.Services {
     // https://blogs.msdn.microsoft.com/premier_developer/2017/03/14/building-a-simple-photo-album-using-azure-blob-storage-with-net-core/
     // https://docs.microsoft.com/en-us/azure/storage/storage-samples-dotnet
     // https://docs.microsoft.com/en-us/azure/storage/storage-use-emulator
@@ -14,21 +13,17 @@ namespace TheCollection.Web.Services
     // http://dotnetthoughts.net/working-with-azure-blob-storage-in-aspnet-core/
     // http://www.dotnetcurry.com/visualstudio/1328/visual-studio-connected-services-aspnet-core-azure-storage
 
-
-    public class ImageAzureBlobService : IImageService
-    {
+    public class ImageAzureBlobService : IImageService {
         public CloudBlobContainer Container { get; }
 
-        public ImageAzureBlobService(string connectionString)
-        {
+        public ImageAzureBlobService(string connectionString) {
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             Container = blobClient.GetContainerReference("images");
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        public ImageAzureBlobService(string scheme, string name, string key, string endpoints)
-        {
+        public ImageAzureBlobService(string scheme, string name, string key, string endpoints) {
             var connectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endpoints}";
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -36,23 +31,19 @@ namespace TheCollection.Web.Services
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        public async Task<bool> Delete(string filename)
-        {
-            var blockBlob = Container.GetBlockBlobReference(filename);            
+        public async Task<bool> Delete(string filename) {
+            var blockBlob = Container.GetBlockBlobReference(filename);
             return await blockBlob.DeleteIfExistsAsync();
         }
 
-        public async Task<Bitmap> Get(string filename)
-        {
+        public async Task<Bitmap> Get(string filename) {
             var blockBlob = Container.GetBlockBlobReference(filename);
             return await GetBitmap(blockBlob);
         }
 
-        private async Task<Bitmap> GetBitmap(CloudBlockBlob blockBlob)
-        {
+        private async Task<Bitmap> GetBitmap(CloudBlockBlob blockBlob) {
             Bitmap image;
-            using (var memoryStream = new MemoryStream())
-            {
+            using (var memoryStream = new MemoryStream()) {
                 await blockBlob.DownloadToStreamAsync(memoryStream);
                 image = new Bitmap(Image.FromStream(memoryStream));
             }
@@ -60,15 +51,13 @@ namespace TheCollection.Web.Services
             return image;
         }
 
-        public async Task<string> Upload(Stream stream, string filename)
-        {
+        public async Task<string> Upload(Stream stream, string filename) {
             var blockBlob = Container.GetBlockBlobReference(filename);
             await blockBlob.UploadFromStreamAsync(stream);
             return blockBlob?.Uri.ToString();
         }
 
-        private async Task CreateContainerIfNotExistsAsync()
-        {
+        private async Task CreateContainerIfNotExistsAsync() {
             await Container.CreateIfNotExistsAsync();
         }
     }

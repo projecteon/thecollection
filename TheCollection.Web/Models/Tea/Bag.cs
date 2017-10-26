@@ -1,7 +1,6 @@
-namespace TheCollection.Web.Models.Tea
-{
-    public class Bag
-    {
+namespace TheCollection.Web.Models.Tea {
+
+    public class Bag {
         public string id { get; set; }
 
         public int mainid { get; set; }

@@ -1,9 +1,9 @@
-﻿namespace TheCollection.Web.Commands
-{
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.Documents;
+namespace TheCollection.Web.Commands {
+
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
     using TheCollection.Business.Tea;
     using TheCollection.Lib.Extensions;
     using TheCollection.Web.Constants;
@@ -13,10 +13,9 @@
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
-    public class SearchBagsCommand : IAsyncCommand<Search>
-    {
-        public SearchBagsCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser)
-        {
+    public class SearchBagsCommand : IAsyncCommand<Search> {
+
+        public SearchBagsCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
             this.DocumentDbClient = documentDbClient;
             BagTranslator = new BagToBagTranslator(applicationUser);
         }
@@ -24,10 +23,8 @@
         public IDocumentClient DocumentDbClient { get; }
         public ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
 
-        public async Task<IActionResult> ExecuteAsync(Search search)
-        {
-            if (search.searchterm.IsNullOrWhiteSpace())
-            {
+        public async Task<IActionResult> ExecuteAsync(Search search) {
+            if (search.searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
@@ -38,8 +35,7 @@
                                  .ThenBy(bag => bag.Hallmark)
                                  .ThenBy(bag => bag.BagType?.Name)
                                  .ThenBy(bag => bag.Flavour);
-            var result = new SearchResult<Models.Tea.Bag>
-            {
+            var result = new SearchResult<Models.Tea.Bag> {
                 count = await bagsRepository.SearchRowCountAsync(search.searchterm),
                 data = BagTranslator.Translate(sortedbags)
             };

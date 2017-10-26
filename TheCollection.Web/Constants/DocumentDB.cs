@@ -1,7 +1,6 @@
-﻿namespace TheCollection.Web.Constants
-{
-    public class DocumentDB
-    {
+namespace TheCollection.Web.Constants {
+
+    public class DocumentDB {
         public const string DatabaseId = "TheCollection";
         public const string BagsCollectionId = "Bags";
         public const string BagTypesCollectionId = "BagTypes";

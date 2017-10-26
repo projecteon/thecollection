@@ -1,9 +1,8 @@
-﻿namespace TheCollection.Lib.Extensions
-{
-    public static class StringExtensions
-    {
-        public static bool IsNullOrWhiteSpace(this string value)
-        {
+namespace TheCollection.Lib.Extensions {
+
+    public static class StringExtensions {
+
+        public static bool IsNullOrWhiteSpace(this string value) {
             return string.IsNullOrWhiteSpace(value);
         }
     }

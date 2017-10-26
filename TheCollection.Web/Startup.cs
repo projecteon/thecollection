@@ -1,29 +1,28 @@
-namespace TheCollection_Web
-{
+namespace TheCollection_Web {
+
     using System;
+    using System.Net;
+    using System.Text.RegularExpressions;
+    using AspNetCore.Identity.DocumentDb;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.Webpack;
+    using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Azure.Documents.Client;
-    using TheCollection.Web.Services;
-    using System.Text.RegularExpressions;
-    using TheCollection.Web.Handlers;
-    using Microsoft.Azure.Documents;
-    using System.Net;
-    using AspNetCore.Identity.DocumentDb;
-    using TheCollection.Web.Models;
-    using Microsoft.AspNetCore.Mvc;
-    using TheCollection.Web.Controllers;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Controllers;
     using TheCollection.Web.Extensions;
+    using TheCollection.Web.Handlers;
+    using TheCollection.Web.Models;
+    using TheCollection.Web.Services;
 
-    public class Startup
-    {
-        public Startup(IHostingEnvironment env)
-        {
+    public class Startup {
+
+        public Startup(IHostingEnvironment env) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -35,8 +34,7 @@ namespace TheCollection_Web
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services) {
             services.AddScoped<IApplicationUserAccessor, ApplicationUserAccessor>();
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
@@ -45,8 +43,7 @@ namespace TheCollection_Web
             );
 
             // Add framework services.
-            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options =>
-            {
+            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options => {
                 options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
                 options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
                 options.Cookies.ApplicationCookie.AutomaticChallenge = true;
@@ -55,24 +52,22 @@ namespace TheCollection_Web
                 options.Cookies.ApplicationCookie.LoginPath = $"/Account/{nameof(AccountController.Login)}";
                 options.Cookies.ApplicationCookie.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
             })
-            .AddDocumentDbStores(options =>
-            {
+            .AddDocumentDbStores(options => {
                 options.UserStoreDocumentCollection = DocumentDB.AspNetIdentity;
                 options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"), 
-                                                                                Configuration.GetValue<string>("StorageAccount:Name"), 
-                                                                                Configuration.GetValue<string>("StorageAccount:Key"), 
+            services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
+                                                                                Configuration.GetValue<string>("StorageAccount:Name"),
+                                                                                Configuration.GetValue<string>("StorageAccount:Key"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Endpoints"))
             );
 
             // Add framework services.
             services.AddMvc(
-                options =>
-                {
+                options => {
                     options.SslPort = 44330;
                     options.Filters.Add(new RequireHttpsAttribute());
                 }
@@ -80,25 +75,22 @@ namespace TheCollection_Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
             }
-            else
-            {
+            else {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // Create branch to the MyHandlerMiddleware. 
+            // Create branch to the MyHandlerMiddleware.
             app.MapWhen(
                 context => Regex.IsMatch(context.Request.Path.ToString(), ThumbnailHandler.RegEx),
                 appBranch => { appBranch.UseThumbnailHandler(); }
@@ -115,26 +107,22 @@ namespace TheCollection_Web
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
-            app.UseGoogleAuthentication(new GoogleOptions()
-            {
+            app.UseGoogleAuthentication(new GoogleOptions() {
                 ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId"),
                 ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret")
             });
 
-            app.UseFacebookAuthentication(new FacebookOptions()
-            {
+            app.UseFacebookAuthentication(new FacebookOptions() {
                 ClientId = Configuration.GetValue<string>("OAuth:Facebook:ClientId"),
                 ClientSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret")
             });
 
-            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
-            {
+            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions() {
                 ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId"),
                 ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret")
             });
 
-            app.UseMvc(routes =>
-            {
+            app.UseMvc(routes => {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
@@ -149,22 +137,17 @@ namespace TheCollection_Web
             });
         }
 
-        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey)
-        {
+        private DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey) {
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             DocumentClient client = new DocumentClient(endpointUri, authorizationKey, new ConnectionPolicy { EnableEndpointDiscovery = false });
 
-            try
-            {
+            try {
                 // Does the DB exist?
                 var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId)).Result;
             }
-            catch (AggregateException ae)
-            {
-                ae.Handle(ex =>
-                {
-                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound)
-                    {
+            catch (AggregateException ae) {
+                ae.Handle(ex => {
+                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
                         // Create DB
                         var db = client.CreateDatabaseAsync(new Database() { Id = DocumentDB.DatabaseId }).Result;
                         return true;
@@ -174,17 +157,13 @@ namespace TheCollection_Web
                 });
             }
 
-            try
-            {
+            try {
                 // Does the Collection exist?
                 var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, "AspNetIdentity")).Result;
             }
-            catch (AggregateException ae)
-            {
-                ae.Handle(ex =>
-                {
-                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound)
-                    {
+            catch (AggregateException ae) {
+                ae.Handle(ex => {
+                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
                         DocumentCollection collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentity };
                         collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
 

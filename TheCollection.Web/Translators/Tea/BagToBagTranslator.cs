@@ -1,12 +1,11 @@
-namespace TheCollection.Web.Translators.Tea
-{
+namespace TheCollection.Web.Translators.Tea {
+
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
 
-    public class BagToBagTranslator : ITranslator<Business.Tea.Bag, Models.Tea.Bag>
-    {
-        public BagToBagTranslator(ApplicationUser applicationUser)
-        {
+    public class BagToBagTranslator : ITranslator<Business.Tea.Bag, Models.Tea.Bag> {
+
+        public BagToBagTranslator(ApplicationUser applicationUser) {
             RefValueTranslator = new RefValueToRefValueTranslator(applicationUser);
             ApplicationUser = applicationUser;
         }
@@ -14,8 +13,7 @@ namespace TheCollection.Web.Translators.Tea
         public RefValueToRefValueTranslator RefValueTranslator { get; }
         public ApplicationUser ApplicationUser { get; }
 
-        public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination)
-        {
+        public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination) {
             destination.id = source.Id;
             destination.mainid = source.MainID;
             destination.brand = RefValueTranslator.Translate(source.Brand);

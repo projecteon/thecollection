@@ -1,10 +1,9 @@
-namespace BoilerPlateAPI.Models
-{
+namespace BoilerPlateAPI.Models {
+
     using System.Collections.Generic;
 
     public class PagedResult<T>
-        where T : class
-    {
+        where T : class {
         public int Page { get; set; }
 
         public int Count { get; set; }
