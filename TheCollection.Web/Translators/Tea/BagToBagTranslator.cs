@@ -5,13 +5,13 @@ namespace TheCollection.Web.Translators.Tea {
 
     public class BagToBagTranslator : ITranslator<Business.Tea.Bag, Models.Tea.Bag> {
 
-        public BagToBagTranslator(ApplicationUser applicationUser) {
+        public BagToBagTranslator(IApplicationUser applicationUser) {
             RefValueTranslator = new RefValueToRefValueTranslator(applicationUser);
             ApplicationUser = applicationUser;
         }
 
         public RefValueToRefValueTranslator RefValueTranslator { get; }
-        public ApplicationUser ApplicationUser { get; }
+        public IApplicationUser ApplicationUser { get; }
 
         public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination) {
             destination.id = source.Id;

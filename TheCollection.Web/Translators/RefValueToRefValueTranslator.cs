@@ -5,11 +5,11 @@ namespace TheCollection.Web.Translators {
 
     public class RefValueToRefValueTranslator : ITranslator<Business.RefValue, Models.RefValue> {
 
-        public RefValueToRefValueTranslator(ApplicationUser applicationUser) {
+        public RefValueToRefValueTranslator(IApplicationUser applicationUser) {
             ApplicationUser = applicationUser;
         }
 
-        public ApplicationUser ApplicationUser { get; }
+        public IApplicationUser ApplicationUser { get; }
 
         public void Translate(Business.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;

@@ -15,7 +15,7 @@ namespace TheCollection.Web.Commands {
 
     public class SearchRefValuesCommand<T> where T : class, IRef {
 
-        public SearchRefValuesCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser, string refValueCollectionId) {
+        public SearchRefValuesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser, string refValueCollectionId) {
             DocumentDbClient = documentDbClient;
             RefValueCollectionId = refValueCollectionId;
             RefValueTranslator = new IRefToRefValueTranslator();

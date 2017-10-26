@@ -1,7 +1,13 @@
-using AspNetCore.Identity.DocumentDb;
-
 namespace TheCollection.Web.Models {
 
-    public class ApplicationUser : DocumentDbIdentityUser<DocumentDbIdentityRole> {
+    using System.Collections.Generic;
+    using AspNetCore.Identity.DocumentDb;
+
+    public interface IApplicationUser {
+        string Id { get; }
+        IList<DocumentDbIdentityRole> Roles { get; }
+    }
+
+    public class ApplicationUser : DocumentDbIdentityUser<DocumentDbIdentityRole>, IApplicationUser {
     }
 }
