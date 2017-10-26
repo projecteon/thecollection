@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TheCollection.Business.Tea;
-using TheCollection.Web.Commands;
-using TheCollection.Web.Constants;
-using TheCollection.Web.Services;
-
 namespace TheCollection.Web.Controllers
 {
+    using Microsoft.Azure.Documents;
+    using System.Threading.Tasks;
+    using TheCollection.Business.Tea;
+    using TheCollection.Web.Commands;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Services;
+
     [Route("api/[controller]")]
     public class BrandsController : Controller
     {
         private readonly IDocumentClient documentDbClient;
+        private readonly IApplicationUserAccessor applicationUserAccessor;
 
-        public BrandsController(IDocumentClient documentDbClient)
+        public BrandsController(IDocumentClient documentDbClient, IApplicationUserAccessor applicationUserAccessor)
         {
             this.documentDbClient = documentDbClient;
+            this.applicationUserAccessor = applicationUserAccessor;
         }
 
         [HttpGet()]
@@ -38,6 +38,14 @@ namespace TheCollection.Web.Controllers
         public Brand Update([FromBody] Brand brand)
         {
             return brand;
+        }
+
+        [HttpGet, Route("refvalues/{searchterm:alpha}")]
+        public async Task<IActionResult> RefValues([FromQuery] string searchterm = "")
+        {
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new SearchRefValuesCommand<Brand>(documentDbClient, applicationUser, DocumentDB.BrandsCollectionId);
+            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
     }
 }
