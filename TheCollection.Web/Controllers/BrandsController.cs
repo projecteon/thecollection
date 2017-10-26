@@ -21,7 +21,8 @@ namespace TheCollection.Web.Controllers {
 
         [HttpGet()]
         public async Task<IActionResult> Brands([FromQuery] string searchterm = "") {
-            var command = new SearchBrandsCommand(documentDbClient);
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new SearchBrandsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 

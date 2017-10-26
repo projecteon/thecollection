@@ -20,7 +20,8 @@ namespace TheCollection.Web.Controllers {
 
         [HttpGet()]
         public async Task<IActionResult> Countries([FromQuery] string searchterm = "") {
-            var command = new SearchCountriesCommand(documentDbClient);
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new SearchCountriesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 

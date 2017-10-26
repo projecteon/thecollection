@@ -8,15 +8,19 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Data.DocumentDB;
     using TheCollection.Lib.Extensions;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Translators.Tea;
 
     public class SearchCountriesCommand {
 
-        public SearchCountriesCommand(IDocumentClient documentDbClient) {
+        public SearchCountriesCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
+            CountryTranslator = new CountryToCountryTranslator(applicationUser);
         }
 
         public IDocumentClient DocumentDbClient { get; }
+        public CountryToCountryTranslator CountryTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {
@@ -25,8 +29,9 @@ namespace TheCollection.Web.Commands {
 
             var countriesRepository = new SearchRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.CountriesCollectionId);
             var countries = await countriesRepository.SearchAsync(search.searchterm);
+            var sortedcountries = countries.OrderBy(country => country.Name);
 
-            return new OkObjectResult(countries.OrderBy(country => country.Name));
+            return new OkObjectResult(CountryTranslator.Translate(sortedcountries));
         }
     }
 }

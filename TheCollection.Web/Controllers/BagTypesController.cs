@@ -20,7 +20,8 @@ namespace TheCollection.Web.Controllers {
 
         [HttpGet()]
         public async Task<IActionResult> BagTypes([FromQuery] string searchterm = "") {
-            var command = new SearchBagTypesCommand(documentDbClient);
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new SearchBagTypesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 

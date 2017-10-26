@@ -1,0 +1,21 @@
+namespace TheCollection.Web.Translators.Tea {
+
+    using System.Linq;
+    using TheCollection.Business.Tea;
+    using TheCollection.Web.Models;
+
+    public class CountryToCountryTranslator : ITranslator<Country, Models.Tea.Country> {
+
+        public CountryToCountryTranslator(IApplicationUser applicationUser) {
+            ApplicationUser = applicationUser;
+        }
+
+        public IApplicationUser ApplicationUser { get; }
+
+        public void Translate(Country source, Models.Tea.Country destination) {
+            destination.id = source.Id;
+            destination.name = source.Name;
+            destination.iseditable = ApplicationUser.Roles.Any(x => x.Name == "sysadmin");
+        }
+    }
+}

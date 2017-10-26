@@ -8,15 +8,19 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Data.DocumentDB;
     using TheCollection.Lib.Extensions;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Translators.Tea;
 
     public class SearchBrandsCommand : IAsyncCommand<Search> {
 
-        public SearchBrandsCommand(IDocumentClient documentDbClient) {
+        public SearchBrandsCommand(IDocumentClient documentDbClient, ApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
+            BrandTranslator = new BrandToBrandTranslator(applicationUser);
         }
 
         public IDocumentClient DocumentDbClient { get; }
+        public BrandToBrandTranslator BrandTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {
@@ -25,8 +29,9 @@ namespace TheCollection.Web.Commands {
 
             var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
             var brands = await brandsRepository.SearchAsync(search.searchterm);
+            var sortedbrands = brands.OrderBy(brand => brand.Name);
 
-            return new OkObjectResult(brands.OrderBy(brand => brand.Name));
+            return new OkObjectResult(BrandTranslator.Translate(sortedbrands));
         }
     }
 }

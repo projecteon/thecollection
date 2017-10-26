@@ -36,7 +36,7 @@ namespace TheCollection.Web.Commands {
                 return new NotFoundResult();
             }
 
-            var refValueViewModels = refValues.Select(x => RefValueTranslator.Translate(x));
+            var refValueViewModels = RefValueTranslator.Translate(refValues);
             return new OkObjectResult(refValueViewModels.OrderBy(x => x.name));
         }
     }
