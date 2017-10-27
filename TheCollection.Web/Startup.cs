@@ -45,21 +45,37 @@ namespace TheCollection_Web {
             );
 
             // Add framework services.
-            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options => {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
-                options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
-                options.Cookies.ApplicationCookie.AutomaticChallenge = true;
-                options.Cookies.ApplicationCookie.CookieName = "Interop";
-                //options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
-                options.Cookies.ApplicationCookie.LoginPath = $"/Account/{nameof(AccountController.Login)}";
-                options.Cookies.ApplicationCookie.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
-            })
+            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>()
             .AddDocumentDbStores(options => {
                 options.UserStoreDocumentCollection = DocumentDB.AspNetIdentity;
                 options.RoleStoreDocumentCollection = DocumentDB.AspNetIdentityRoles;
                 options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options => {
+                //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
+                options.LoginPath = $"/Account/{nameof(AccountController.Login)}";
+                options.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
+            });
+
+
+            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
+            // https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
+            services.AddAuthentication()
+            .AddGoogle(options => {
+                options.ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId");
+                options.ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret");
+            })  
+            .AddFacebook(options => {
+                options.AppId = Configuration.GetValue<string>("OAuth:Facebook:ClientId");
+                options.AppSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret");
+            })
+            .AddMicrosoftAccount(options => {
+                options.ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId");
+                options.ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret");
+            });
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
             services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
@@ -109,24 +125,7 @@ namespace TheCollection_Web {
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
-            app.UseGoogleAuthentication(new GoogleOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret")
-            });
-
-            app.UseFacebookAuthentication(new FacebookOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Facebook:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret")
-            });
-
-            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret")
-            });
+            app.UseAuthentication();
 
             app.UseMvc(routes => {
                 routes.MapRoute(

@@ -1,27 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TheCollection.Business.Tea;
-using TheCollection.Import.Console.Models;
+namespace TheCollection.Import.Console.Translators {
+    using System.Collections.Generic;
+    using System.Linq;
+    using TheCollection.Business.Tea;
+    using TheCollection.Import.Console.Models;
+    using TheCollection.Web.Translators;
 
-namespace TheCollection.Import.Console.Translators
-{
-    public class TheeToBagTranslator : ITranslator<Thee, Bag>
-    {
+    public class TheeToBagTranslator : ITranslator<Thee, Bag> {
         public IList<Country> Countries { get; }
         public IList<Brand> Brands { get; }
         public IList<BagType> BagTypes { get; }
         public IList<Image> Images { get; }
 
-        public TheeToBagTranslator(IList<Country> countries, IList<Brand> brands, IList<BagType> bagTypes, IList<Image> images)
-        {
+        public TheeToBagTranslator(IList<Country> countries, IList<Brand> brands, IList<BagType> bagTypes, IList<Image> images) {
             Countries = countries;
             Brands = brands;
             BagTypes = bagTypes;
             Images = images;
         }
 
-        public void Translate(Thee source, Bag destination)
-        {
+        public void Translate(Thee source, Bag destination) {
             var teabrand = Brands.FirstOrDefault(brand => brand.Name == source.TheeMerk.Trim());
             var teabagType = BagTypes.FirstOrDefault(bagType => bagType.Name == source.TheeSoortzakje.Trim());
             var teacountry = Countries.FirstOrDefault(country => country.Name == source.TheeLandvanherkomst.Trim());
