@@ -100,9 +100,6 @@
     <Compile Include="..\TheCollection.Data.DocumentDB\SearchableQuery.cs">
       <Link>Repositories\SearchableQuery.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Lib\Extensions\StringExtensions.cs">
-      <Link>Extensions\StringExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
@@ -120,14 +117,16 @@
     </Compile>
     <Compile Include="AccessExport.cs" />
     <Compile Include="AzureStorageClient.cs" />
-    <Compile Include="DataTableExtensions.cs" />
+    <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="DocumentDbImport.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="JsonFileExport.cs" />
     <Compile Include="Models\Merkens.cs" />
     <Compile Include="Models\Thees.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\MerkRepository.cs" />
+    <Compile Include="Repositories\TheeRepository.cs" />
     <Compile Include="Translators\MerkenToBrandTranslator.cs" />
     <Compile Include="Translators\TheeToBagTranslator.cs" />
   </ItemGroup>

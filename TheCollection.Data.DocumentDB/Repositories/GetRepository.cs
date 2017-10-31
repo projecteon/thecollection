@@ -37,31 +37,5 @@ namespace TheCollection.Data.DocumentDB {
                 }
             }
         }
-
-        public async Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate = null, int pageSize = 0, int page = 0) {
-            var query = client.CreateDocumentQuery<T>(
-                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                new FeedOptions { MaxItemCount = -1 }).AsQueryable();
-
-            if (predicate != null) {
-                query = query.Where(predicate);
-            }
-
-            if (pageSize > 0) {
-                if (page > 0) {
-                    query = query.Skip(pageSize * page);
-                }
-
-                query = query.Take(pageSize);
-            }
-
-            var documentQuery = query.AsDocumentQuery();
-            var results = new List<T>();
-            while (documentQuery.HasMoreResults) {
-                results.AddRange(await documentQuery.ExecuteNextAsync<T>());
-            }
-
-            return results;
-        }
     }
 }
