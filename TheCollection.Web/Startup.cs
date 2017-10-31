@@ -105,6 +105,7 @@ namespace TheCollection_Web {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                     HotModuleReplacement = true,
+                    HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
                     ReactHotModuleReplacement = true
                 });
             }
