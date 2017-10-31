@@ -1,9 +1,10 @@
-﻿using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using TheCollection.Web.Services;
+using TheCollection.Import.Console.Repositories;
 
 namespace TheCollection.Import.Console
 {
@@ -77,11 +78,11 @@ namespace TheCollection.Import.Console
             });
         }
 
-        static (List<Models.Merk> meerkens, List<Models.Thee> thees) ImportFromAccess()
+        static (IEnumerable<Models.Merk> meerkens, IEnumerable<Models.Thee> thees) ImportFromAccess()
         {
             var accessDbPath = "importfiles/Thee Database.mdb";
-            var meerkens = AccessExport.GetMeerken(accessDbPath);
-            var thees = AccessExport.GetThees(accessDbPath);
+            var meerkens = (new MerkRepository(accessDbPath)).SearchItemsAsync().Result;
+            var thees = (new TheeRepository(accessDbPath)).SearchItemsAsync().Result;
 
             return (meerkens, thees);
         }

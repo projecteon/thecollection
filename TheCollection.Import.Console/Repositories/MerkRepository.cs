@@ -14,6 +14,10 @@ namespace TheCollection.Import.Console.Repositories {
 
         public string DbPath { get; }
 
+        public async Task<IEnumerable<Merk>> SearchItemsAsync(System.Linq.Expressions.Expression<System.Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
+            return await Task.Run(() => { return GetMeerken(DbPath); });
+        }
+
         private List<Merk> GetMeerken(string dbPath) {
             var meerkens = new List<Merk>();
             using (var connection = new OleDbConnection($"Provider=Microsoft.JET.OlEDB.4.0;Data Source={dbPath}")) {
@@ -26,10 +30,6 @@ namespace TheCollection.Import.Console.Repositories {
             }
 
             return meerkens;
-        }
-
-        public async Task<IEnumerable<Merk>> SearchItemsAsync(System.Linq.Expressions.Expression<System.Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
-            return await Task.Run(() => { return GetMeerken(DbPath); });
         }
     }
 }

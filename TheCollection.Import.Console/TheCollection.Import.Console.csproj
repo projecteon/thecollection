@@ -115,17 +115,17 @@
     <Compile Include="..\TheCollection.Web\Translators\ITranslator.cs">
       <Link>Translators\ITranslator.cs</Link>
     </Compile>
-    <Compile Include="AccessExport.cs" />
     <Compile Include="AzureStorageClient.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="DocumentDbImport.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
-    <Compile Include="JsonFileExport.cs" />
     <Compile Include="Models\Merkens.cs" />
     <Compile Include="Models\Thees.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\MerkJsonRepository.cs" />
     <Compile Include="Repositories\MerkRepository.cs" />
+    <Compile Include="Repositories\TheeJsonRepository.cs" />
     <Compile Include="Repositories\TheeRepository.cs" />
     <Compile Include="Translators\MerkenToBrandTranslator.cs" />
     <Compile Include="Translators\TheeToBagTranslator.cs" />
