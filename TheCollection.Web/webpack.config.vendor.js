@@ -48,7 +48,7 @@ module.exports = (env) => {
     };
 
     const clientBundleConfig = merge(sharedConfig,
-      webpackCommon.loadSass(isDevBuild, 'vender.css'),
+      webpackCommon.loadSass(isDevBuild, 'vendor.css'),
       {
         output: { path: path.join(__dirname, 'wwwroot', 'dist') },
         // module: {
@@ -68,7 +68,7 @@ module.exports = (env) => {
     });
 
     const serverBundleConfig = merge(sharedConfig,
-      webpackCommon.loadSass(isDevBuild, 'vender.css'), {
+      webpackCommon.loadSass(isDevBuild, 'vendor.css'), {
         target: 'node',
         resolve: { mainFields: ['main'] },
         output: {
