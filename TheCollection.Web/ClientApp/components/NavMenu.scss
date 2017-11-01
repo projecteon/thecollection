@@ -30,6 +30,7 @@
       .navbar-toggler:active {
         border: none;
         outline: none;
+        color: #688A08;
       }
 
       /* Highlighting rules for nav menu items */
@@ -58,6 +59,12 @@
   /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
   .main-nav {
     width: 100vw;
+
+    .navbar-toggler {
+      position: absolute;
+      top: 14px;
+      right: 3px;
+    }
   }
 }
 
@@ -90,6 +97,10 @@
         position: absolute;
         top: 0;
         left: 0;
+      }
+
+      .navbar-toggler {
+        display: none;
       }
 
       .navbar-collapse {
