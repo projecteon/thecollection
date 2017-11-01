@@ -6,10 +6,10 @@ import './NavMenu.scss';
 const NavMenu: React.StatelessComponent<{}> = () => {
   return  <div className='main-nav'>
             <nav className='navbar flex-column navbar-toggleable-sm navbar-inverse'>
+              <Link className='navbar-brand' to={ '/' }><img src='/images/teapot.svg' width='30' height='30' alt='' className='d-inline-block align-top' />The Collection</Link>
               <button className='navbar-toggler navbar-toggler-right' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>
                 <span className='navbar-toggler-icon'></span>
               </button>
-              <Link className='navbar-brand' to={ '/' }><img src='/images/teapot.svg' width='30' height='30' alt='' className='d-inline-block align-top' />The Collection</Link>
               <div className='collapse navbar-collapse' id='navbarNav'>
                 <ul className='nav navbar-nav flex-column'>
                   <li className='nav-item'>

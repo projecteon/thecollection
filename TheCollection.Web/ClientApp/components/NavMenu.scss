@@ -87,13 +87,17 @@
       }
 
       .navbar-brand {
-        position: sticky;
+        position: absolute;
         top: 0;
+        left: 0;
       }
 
       .navbar-collapse {
-        position: sticky;
+        display: block;
+        position: absolute;
         top: 38px;
+        left: 0;
+        width: 100%;
       }
     }
 
