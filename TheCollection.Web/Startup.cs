@@ -3,9 +3,11 @@ namespace TheCollection_Web {
     using System;
     using System.Net;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using AspNetCore.Identity.DocumentDb;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.Webpack;
     using Microsoft.Azure.Documents;
@@ -43,20 +45,37 @@ namespace TheCollection_Web {
             );
 
             // Add framework services.
-            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>(options => {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = "ApplicationCookie";
-                options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
-                options.Cookies.ApplicationCookie.AutomaticChallenge = true;
-                options.Cookies.ApplicationCookie.CookieName = "Interop";
-                //options.Cookies.ApplicationCookie.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
-                options.Cookies.ApplicationCookie.LoginPath = $"/Account/{nameof(AccountController.Login)}";
-                options.Cookies.ApplicationCookie.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
-            })
+            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>()
             .AddDocumentDbStores(options => {
                 options.UserStoreDocumentCollection = DocumentDB.AspNetIdentity;
+                options.RoleStoreDocumentCollection = DocumentDB.AspNetIdentityRoles;
                 options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options => {
+                //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
+                options.LoginPath = $"/Account/{nameof(AccountController.Login)}";
+                options.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
+            });
+
+
+            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
+            // https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
+            services.AddAuthentication()
+            .AddGoogle(options => {
+                options.ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId");
+                options.ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret");
+            })  
+            .AddFacebook(options => {
+                options.AppId = Configuration.GetValue<string>("OAuth:Facebook:ClientId");
+                options.AppSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret");
+            })
+            .AddMicrosoftAccount(options => {
+                options.ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId");
+                options.ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret");
+            });
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
             services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
@@ -86,6 +105,7 @@ namespace TheCollection_Web {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                     HotModuleReplacement = true,
+                    HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
                     ReactHotModuleReplacement = true
                 });
             }
@@ -106,24 +126,7 @@ namespace TheCollection_Web {
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
-            app.UseGoogleAuthentication(new GoogleOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret")
-            });
-
-            app.UseFacebookAuthentication(new FacebookOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Facebook:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret")
-            });
-
-            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions() {
-                ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId"),
-                ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret")
-            });
+            app.UseAuthentication();
 
             app.UseMvc(routes => {
                 routes.MapRoute(
@@ -138,12 +141,13 @@ namespace TheCollection_Web {
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            //CreateRoles(app.ApplicationServices);
         }
 
-        private DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey) {
+        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey) {
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
-            DocumentClient client = new DocumentClient(endpointUri, authorizationKey, new ConnectionPolicy { EnableEndpointDiscovery = false });
-
+            var client = new DocumentClient(endpointUri, authorizationKey, new ConnectionPolicy { EnableEndpointDiscovery = false });
             try {
                 // Does the DB exist?
                 var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId)).Result;
@@ -162,12 +166,29 @@ namespace TheCollection_Web {
 
             try {
                 // Does the Collection exist?
-                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, "AspNetIdentity")).Result;
+                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, DocumentDB.AspNetIdentity)).Result;
             }
             catch (AggregateException ae) {
                 ae.Handle(ex => {
                     if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
-                        DocumentCollection collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentity };
+                        var collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentity };
+                        collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
+
+                        return true;
+                    }
+
+                    return false;
+                });
+            }
+
+            try {
+                // Does the Collection exist?
+                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, DocumentDB.AspNetIdentityRoles)).Result;
+            }
+            catch (AggregateException ae) {
+                ae.Handle(ex => {
+                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
+                        var collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentityRoles };
                         collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
 
                         return true;
@@ -179,5 +200,78 @@ namespace TheCollection_Web {
 
             return client;
         }
+
+        //void CreateRoles(IServiceProvider serviceProvider) {
+        //    //initializing custom roles 
+        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
+        //    IdentityResult roleResult;
+
+        //    foreach (var roleName in roleNames) {
+        //        var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
+        //        if (!roleExist) {
+        //            //create the roles and seed them to the database: Question 1
+        //            roleResult = RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName }).Result;
+        //        }
+        //    }
+
+        //    //Here you could create a super user who will maintain the web app
+        //    var poweruser = new ApplicationUser {
+
+        //        UserName = "Aleksander Spro",
+        //        Email = "abspro@gmail.com",
+        //    };
+        //    //Ensure you have these values in your appsettings.json file
+        //    var userPWD = "dummy";
+        //    var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
+
+        //    if (_user == null) {
+        //        var createPowerUser = UserManager.CreateAsync(poweruser, userPWD).Result;
+        //        if (createPowerUser.Succeeded) {
+        //            //here we tie the new user to the role
+        //            roleResult = UserManager.AddToRoleAsync(poweruser, "SysAdmin").Result;
+
+        //        }
+        //    }
+        //    else {
+        //        roleResult = UserManager.AddToRoleAsync(_user, "SysAdmin").Result;
+        //    }
+        //}
+
+        //async Task CreateRoles(IServiceProvider serviceProvider) {
+        //    //initializing custom roles 
+        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
+        //    IdentityResult roleResult;
+
+        //    foreach (var roleName in roleNames) {
+        //        var roleExist = await RoleManager.RoleExistsAsync(roleName);
+        //        if (!roleExist) {
+        //            //create the roles and seed them to the database: Question 1
+        //            roleResult = await RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName });
+        //        }
+        //    }
+
+        //    //Here you could create a super user who will maintain the web app
+        //    var poweruser = new ApplicationUser {
+
+        //        UserName = Configuration["AppSettings:UserName"],
+        //        Email = Configuration["AppSettings:UserEmail"],
+        //    };
+        //    //Ensure you have these values in your appsettings.json file
+        //    var userPWD = Configuration["AppSettings:UserPassword"];
+        //    var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+
+        //    if (_user == null) {
+        //        var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
+        //        if (createPowerUser.Succeeded) {
+        //            //here we tie the new user to the role
+        //            await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+        //        }
+        //    }
+        //}
     }
 }

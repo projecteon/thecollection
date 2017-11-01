@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
 namespace TheCollection.Import.Console.Models
 {
+    using System.Collections.Generic;
+
     public class Thees
     {
         public List<Thee> TheeTotaallijst { get; set; }

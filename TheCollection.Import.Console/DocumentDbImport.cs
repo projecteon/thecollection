@@ -1,18 +1,17 @@
 namespace TheCollection.Import.Console {
-
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using Microsoft.Azure.Documents.Client;
     using TheCollection.Business.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
     using TheCollection.Import.Console.Translators;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Services;
 
     public class DocumentDbImport {
-
         public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, string collection, List<Merk> meerken) {
             var translator = new MerkToBrandTranslator();
             var brands = meerken.Select(merk => {
@@ -128,9 +127,9 @@ namespace TheCollection.Import.Console {
         }
 
         public static async System.Threading.Tasks.Task<IEnumerable<Bag>> UpdateBagsAsync(DocumentClient client, string collection, IImageService imageservice) {
-            var bagsRepository = new GetRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new SearchRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var updateBagsRepository = new UpdateRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
-            var bags = await bagsRepository.GetItemsAsync(bag => bag.ImageId == null && bag.MainID != 165 && bag.MainID != 1193, 50);
+            var bags = await bagsRepository.SearchItemsAsync(bag => bag.ImageId == null && bag.MainID != 165 && bag.MainID != 1193, 50);
             System.Console.WriteLine($"Fetched {bags.Count()} bags");
             var images = await ImportImages2Async(client, collection, bags, imageservice);
             bags.ToList().ForEach(bag => {

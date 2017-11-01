@@ -35,8 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreCompat.System.Drawing, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c0a7ed9c2333b592, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreCompat.System.Drawing.1.0.0-beta006\lib\net45\CoreCompat.System.Drawing.dll</HintPath>
+    <Reference Include="CoreCompat.System.Drawing, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreCompat.System.Drawing.v2.5.2.0-preview1-r131\lib\netstandard2.0\CoreCompat.System.Drawing.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Documents.Client, Version=1.18.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.18.0\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
@@ -79,58 +79,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TheCollection.Business\ICreateRepository.cs">
-      <Link>ICreateRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\IDeleteRepository.cs">
-      <Link>IDeleteRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\IGetRepository.cs">
-      <Link>IGetRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\ISearchable.cs">
-      <Link>Models\ISearchable.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\ISearchRepository.cs">
-      <Link>ISearchRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\IUpdateRepository.cs">
-      <Link>IUpdateRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\RefValue.cs">
-      <Link>Models\RefValue.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Searchable.cs">
-      <Link>Models\Searchable.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\SearchableAttribute.cs">
-      <Link>Models\SearchableAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\SearchableConverter.cs">
-      <Link>Models\SearchableConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tags.cs">
-      <Link>Models\Tags.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tea\Bag.cs">
-      <Link>Models\Bag.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tea\BagType.cs">
-      <Link>Models\BagType.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tea\Brand.cs">
-      <Link>Models\Brand.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tea\Country.cs">
-      <Link>Models\Country.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Business\Tea\Image.cs">
-      <Link>Models\Image.cs</Link>
-    </Compile>
     <Compile Include="..\TheCollection.Data.DocumentDB\Extensions\IDocumentClientExtensions.cs">
       <Link>Extensions\IDocumentClientExtensions.cs</Link>
     </Compile>
@@ -149,12 +100,6 @@
     <Compile Include="..\TheCollection.Data.DocumentDB\SearchableQuery.cs">
       <Link>Repositories\SearchableQuery.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Lib\Extensions\StringExtensions.cs">
-      <Link>Extensions\StringExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Lib\Extensions\TypeExtensions.cs">
-      <Link>Models\TypeExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
@@ -167,17 +112,21 @@
     <Compile Include="..\TheCollection.Web\Services\ImageFilesystemService.cs">
       <Link>Services\ImageFilesystemService.cs</Link>
     </Compile>
-    <Compile Include="AccessExport.cs" />
+    <Compile Include="..\TheCollection.Web\Translators\ITranslator.cs">
+      <Link>Translators\ITranslator.cs</Link>
+    </Compile>
     <Compile Include="AzureStorageClient.cs" />
-    <Compile Include="DataTableExtensions.cs" />
+    <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="DocumentDbImport.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
-    <Compile Include="JsonFileExport.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Models\Merkens.cs" />
     <Compile Include="Models\Thees.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Translators\ITranslator.cs" />
+    <Compile Include="Repositories\MerkJsonRepository.cs" />
+    <Compile Include="Repositories\MerkRepository.cs" />
+    <Compile Include="Repositories\TheeJsonRepository.cs" />
+    <Compile Include="Repositories\TheeRepository.cs" />
     <Compile Include="Translators\MerkenToBrandTranslator.cs" />
     <Compile Include="Translators\TheeToBagTranslator.cs" />
   </ItemGroup>
@@ -201,6 +150,16 @@
     <None Include="importfiles\teabrands.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TheCollection.Business\TheCollection.Business.csproj">
+      <Project>{3ab18d92-85df-46ae-8618-57fda17afa81}</Project>
+      <Name>TheCollection.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TheCollection.Lib\TheCollection.Lib.csproj">
+      <Project>{1ee522b3-c22c-45e8-8629-af962b6221b4}</Project>
+      <Name>TheCollection.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.18.0\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.18.0\build\Microsoft.Azure.DocumentDB.targets')" />

@@ -32,13 +32,13 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-4" style="border-radius: 12px;box-shadow: inset 0px 0px 10px 2px rgba(238,238,238,1);background-color: #ffffff;">
                 <section>
                     @{
-                        var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync())  .ToList();
                         <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                             <div>
                                 <p style="margin-top: 1rem">
                                     @foreach (var provider in loginProviders)
                                     {
-                                        <button type="submit" class="btn btn-block btn-social btn-@provider.DisplayName.ToLower()" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                        <button type="submit" style="cursor: pointer" class="btn btn-block btn-social btn-@provider.DisplayName.ToLower()" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
                                             <i class="fa fa-@(provider.DisplayName.ToLower() == "microsoft" ? "windows" : provider.DisplayName.ToLower())"></i> Sign in with @provider.DisplayName
                                         </button>
                                     }
