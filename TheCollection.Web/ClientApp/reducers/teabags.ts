@@ -24,13 +24,13 @@ export interface ITeabagsState {
   resultCount?: number;
   isLoading: boolean;
   zoomImageId?: string;
-  searchedTerms?: string;
-  searchError?: string;
+  searchedTerms: string;
+  searchError: string;
 }
 
 export const actionCreators = {...requestTeabags, ...validateSearchTerms, ...zoomImage};
 
-const unloadedState: ITeabagsState = { isLoading: false, teabags: [], searchError: '' };
+const unloadedState: ITeabagsState = { isLoading: false, teabags: [], searchError: '', searchedTerms: '' };
 type KnownActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | SearchTermsChanged | ZoomImage;
 export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: KnownActions) => {
   switch (action.type) {
