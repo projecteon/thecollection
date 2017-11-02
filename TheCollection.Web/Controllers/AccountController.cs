@@ -1,13 +1,13 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using TheCollection.Web.Models;
-using TheCollection.Web.Models.AccountViewModels;
-using TheCollection_Web.Controllers;
-
 namespace TheCollection.Web.Controllers {
+
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using TheCollection.Web.Models;
+    using TheCollection.Web.Models.AccountViewModels;
+    using TheCollection_Web.Controllers;
 
     [Authorize]
     public class AccountController : Controller {
