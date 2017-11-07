@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Router, Route, HistoryBase } from 'react-router';
 import Layout from './components/Layout';
 import Home from './views/Home';
+import TeaDashboard from './views/tea/Dashboard';
 import Teabags from './views/Teabags';
 import TeabagForm from './views/TeabagForm';
 import BrandForm from './viewComponents/BrandForm';
@@ -16,6 +17,7 @@ import CountryForm from './viewComponents/CountryForm';
 
 export default <Route component={ Layout }>
     <Route path='/' components={{ body: Home }} />
+    <Route path='/tea/dashboard' components={{ body: TeaDashboard }} />
     <Route path='/teabags' components={{ body: Teabags }} />
     <Route path='/teabagform' components={{ body: TeabagForm }}>
         <Route path='/teabagform/:id' components={{ body: TeabagForm }} />

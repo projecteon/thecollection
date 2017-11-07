@@ -18,6 +18,11 @@ const NavMenu: React.StatelessComponent<{}> = () => {
                     </Link>
                   </li>
                   <li className='nav-item'>
+                    <Link to={ '/tea/dashboard' } activeClassName='active'>
+                      <span className='fa fa-home'></span> Dashbaord
+                    </Link>
+                  </li>
+                  <li className='nav-item'>
                     <Link to={ '/teabags' } activeClassName='active'>
                       <span className='fa fa-th-list'></span> Teabags
                     </Link>
