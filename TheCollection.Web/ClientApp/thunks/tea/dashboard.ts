@@ -9,7 +9,7 @@ import { ReceiveBagTypeCountAction, RequestBagTypeCountAction } from '../../acti
 export const requestBagTypeCount = {
    requestBagTypeCount: (): AppThunkAction<ReceiveBagTypeCountAction | RequestBagTypeCountAction> => (dispatch, getState) => {
     try {
-      let fetchTask = fetch(`/api/tea/Dashboard/BagTypes/`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/tea/Dashboards/BagTypes/`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
           dispatch({ type: RECIEVE_BAGTYPECOUNT, bagtypecount: data });
