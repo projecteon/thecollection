@@ -2,9 +2,19 @@
 # yarn lockfile v1
 
 
+"@types/c3@^0.4.45":
+  version "0.4.45"
+  resolved "https://registry.yarnpkg.com/@types/c3/-/c3-0.4.45.tgz#99fbd477f2dc6606d351f2eddd7f630b9af93db6"
+  dependencies:
+    "@types/d3" "^3"
+
 "@types/classnames@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.3.tgz#3f0ff6873da793870e20a260cada55982f38a9e5"
+
+"@types/d3@^3":
+  version "3.5.38"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-3.5.38.tgz#76f8f2e9159ae562965b2fa0e6fbee1aa643a1bc"
 
 "@types/history@2.0.*", "@types/history@^2", "@types/history@^2.0.0":
   version "2.0.48"
