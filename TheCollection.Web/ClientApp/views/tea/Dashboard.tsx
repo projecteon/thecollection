@@ -1,10 +1,10 @@
-import { Chart } from '../../components/charts/Chart';
 import * as React from 'react';
 import * as c3 from 'c3';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
+import { Chart } from '../../components/charts/Chart';
 
 type DashboardProps =
   DashboardReducer.IDashboardState            // ... state we've requested from the Redux store
@@ -25,6 +25,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let data = this.props.bagtypecount.map(btc => {
+      if (btc.value === undefined || btc.value === null) {
+        return ['None', btc.count] as string | number[];
+      }
+
       return [btc.value.name, btc.count] as string | number[];
     });
 
