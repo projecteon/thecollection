@@ -23,7 +23,10 @@ namespace TheCollection.Web.Commands.Tea {
             var bags = await bagsRepository.SearchItemsAsync();
             var queryablebags = bags.AsQueryable();
             var countGroupByIRef = new CountGroupBy<Bag, Business.RefValue, RefValueComparer>(queryablebags);
-            var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.Brand);
+            var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.Brand)
+                                                   .OrderByDescending(x => x.Count)
+                                                   .Take(10)
+                                                   .OrderBy(x => x.Value.Name);
             return new OkObjectResult(bagsCountByBrand);
         }
     }
