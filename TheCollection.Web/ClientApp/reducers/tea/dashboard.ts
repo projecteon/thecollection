@@ -1,27 +1,42 @@
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../../store';
-import { IRefValue } from '../../interfaces/IRefValue';
 import { ICountBy } from '../../interfaces/ICountBy';
-import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction } from '../../actions/tea/dashboard';
-import { requestBagTypeCount } from '../../thunks/tea/dashboard';
+import { IRefValue } from '../../interfaces/IRefValue';
+import { IPeriod } from '../../interfaces/IPeriod';
+import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD } from '../../constants/tea/dashboard';
+import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction } from '../../actions/tea/dashboard';
+import { requestBagTypeCount, requestBrandCount, requestCountByPeriod } from '../../thunks/tea/dashboard';
 
 export interface IDashboardState {
   bagtypecount?: ICountBy<IRefValue>[];
+  brandcount?: ICountBy<IRefValue>[];
+  bagCountByPeriod?: ICountBy<IPeriod>[];
   isLoading: boolean;
 }
 
-export const actionCreators = {...requestBagTypeCount};
+export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod};
 
 const unloadedState: IDashboardState = { isLoading: false };
-type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction;
+type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction;
 export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
   switch (action.type) {
     case REQUEST_BAGTYPECOUNT:
       return  {...state, ...{ bagtypecount: undefined, isLoading: true }};
     case RECIEVE_BAGTYPECOUNT:
       return  {...state, ...{ bagtypecount: action.bagtypecount, isLoading: false }};
+    case REQUEST_BRANDCOUNT:
+      return  {...state, ...{ brandcount: undefined, isLoading: true }};
+    case RECIEVE_BRANDCOUNT:
+      return  {...state, ...{ brandcount: action.brandcount, isLoading: false }};
+    case REQUEST_COUNTBYPERIOD:
+      return  {...state, ...{ bagCountByPeriod: undefined, isLoading: true }};
+    case RECIEVE_COUNTBYPERIOD:
+      if (action.apipath !== BAGSCOUNTBYPERIOD) {
+        return state;
+      }
+
+      return  {...state, ...{ bagCountByPeriod: action.data, isLoading: false }};
     default:
       const exhaustiveCheck: never = action;
   }
