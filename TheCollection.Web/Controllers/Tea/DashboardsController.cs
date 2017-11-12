@@ -24,10 +24,10 @@ namespace TheCollection.Web.Controllers.Tea {
         }
 
         [HttpGet("Brands")]
-        public async Task<IActionResult> Brands() {
+        public async Task<IActionResult> Brands(int top = 10) {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new GetBagsCountByBrandsCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync();
+            return await command.ExecuteAsync(top);
         }
 
         [HttpGet("Periods")]
