@@ -11,6 +11,17 @@
         color: #555;
         font-size: 0.8rem;
         padding: 5px;
+
+        i.fa {
+          color: #551919;
+          opacity: 0.5;
+          cursor: pointer;
+          margin-left: 7px;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
       }
     }
 }

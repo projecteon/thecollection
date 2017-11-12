@@ -41,7 +41,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
     return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
               <div className='block'>
-                <div className='header'>Bag Types</div>
+                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span>Bag Types</span><i className='fa fa-bar-chart'/></div>
                 <Chart columns={data} chartType='pie' unloadBeforeLoad={false} />
               </div>
             </div>;
@@ -59,7 +59,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     let axis = { x: { type: 'category', categories: ['brands'] } };
     return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
               <div className='block'>
-                <div className='header'>Brands</div>
+                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>Brands</span>
+                  <div>
+                    <i className='fa fa-pie-chart'/>
+                    <i className='fa fa-expand'/>
+                  </div>
+                </div>
                 <Chart columns={data} chartType='bar' unloadBeforeLoad={false} axis={axis} />
               </div>
             </div>;
