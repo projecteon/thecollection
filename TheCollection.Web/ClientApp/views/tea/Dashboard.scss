@@ -1,0 +1,26 @@
+.dashboard {
+  .blockcol {
+    padding: 5px 0;
+
+    .block {
+      border: solid 1px #c7c7c7;
+      padding: 0;
+
+      .header {
+        background-color: #e6e6e6;
+        color: #555;
+        font-size: 0.8rem;
+        padding: 5px;
+      }
+    }
+}
+}
+
+@media (min-width: 767px) {
+  .dashboard {
+    padding-top: 5px;
+    .blockcol {
+      padding: 5px;
+    }
+  }
+}

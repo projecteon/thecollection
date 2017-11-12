@@ -9,6 +9,8 @@ import { getPeriodsFromNowTill } from '../../util/PeriodUtil';
 import { Chart } from '../../components/charts/Chart';
 import { BAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
 
+import './Dashboard.scss';
+
 type DashboardProps =
   DashboardReducer.IDashboardState            // ... state we've requested from the Redux store
   & typeof DashboardReducer.actionCreators; // ... plus action creators we've requested
@@ -37,7 +39,12 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return [btc.value.name, btc.count] as c3.PrimitiveArray;
     });
 
-    return <Chart columns={data} chartType='pie' unloadBeforeLoad={false} />;
+    return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
+              <div className='block'>
+                <div className='header'>Bag Types</div>
+                <Chart columns={data} chartType='pie' unloadBeforeLoad={false} />
+              </div>
+            </div>;
   }
 
   renderBrandChart() {
@@ -50,7 +57,12 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     });
 
     let axis = { x: { type: 'category', categories: ['brands'] } };
-    return <Chart columns={data} chartType='bar' unloadBeforeLoad={false} axis={axis} />;
+    return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
+              <div className='block'>
+                <div className='header'>Brands</div>
+                <Chart columns={data} chartType='bar' unloadBeforeLoad={false} axis={axis} />
+              </div>
+            </div>;
   }
 
   renderPeriodChart() {
@@ -75,14 +87,19 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     });
 
     let axis = { x: { type: 'timeseries', tick: { format: '%Y-%m' } } };
-    return <Chart columns={[x, data]} chartType='line' x='x' unloadBeforeLoad={false} axis={axis} />;
+    return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
+              <div className='block'>
+                <div className='header'>Added</div>
+                <Chart columns={[x, data]} chartType='line' x='x' unloadBeforeLoad={false} axis={axis} />
+              </div>
+            </div>;
   }
 
   render() {
-    return  <div className='row'>
-              <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3'>{this.renderBrandChart()}</div>
-              <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3'>{this.renderBagTypeChart()}</div>
-              <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6'>{this.renderPeriodChart()}</div>
+    return  <div style={{display: 'flex', flexWrap: 'wrap'}} className='dashboard'>
+              {this.renderBrandChart()}
+              {this.renderBagTypeChart()}
+              {this.renderPeriodChart()}
             </div>;
   }
 }
