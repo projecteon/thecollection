@@ -5,9 +5,11 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
-import { getPeriodsFromNowTill } from '../../util/PeriodUtil';
-import { Chart } from '../../components/charts/Chart';
 import { BAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
+import { getPeriodsFromNowTill } from '../../util/PeriodUtil';
+import { PeriodChart } from '../../components/charts/PeriodChart';
+import { BarChart } from '../../components/charts/BarChart';
+import { PieChart } from '../../components/charts/PieChart';
 
 import './Dashboard.scss';
 
@@ -41,8 +43,11 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
     return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
               <div className='block'>
-                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span>Bag Types</span><i className='fa fa-bar-chart'/></div>
-                <Chart columns={data} chartType='pie' unloadBeforeLoad={false} />
+                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>Bag Types</span>
+                  <i className='fa fa-bar-chart'/>
+                </div>
+                <PieChart data={data} />
               </div>
             </div>;
   }
@@ -56,7 +61,6 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return [btc.value.name, btc.count] as c3.PrimitiveArray;
     });
 
-    let axis = { x: { type: 'category', categories: ['brands'] } };
     return  <div className='col-xs-12 col-sm-6 col-md-4 col-lg-3 blockcol'>
               <div className='block'>
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -66,7 +70,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                     <i className='fa fa-expand'/>
                   </div>
                 </div>
-                <Chart columns={data} chartType='bar' unloadBeforeLoad={false} axis={axis} />
+                <BarChart data={data} categories={['brands']} />
               </div>
             </div>;
   }
@@ -77,26 +81,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let renderPeriods = getPeriodsFromNowTill(moment().add(-1, 'y'));
-    let chartPerios = renderPeriods.map(renderPeriod => {
-      let bagcount2 = this.props.bagCountByPeriod.find(bagcount => {
-        return bagcount.value.year === renderPeriod.year && bagcount.value.month === renderPeriod.month;
-      });
-
-      return bagcount2 === undefined ? {count: 0, value: renderPeriod} : bagcount2;
-    });
-
-    let x: c3.PrimitiveArray = ['x'];
-    let data: c3.PrimitiveArray = ['bag count'];
-    chartPerios.forEach(chartPeriod => {
-      x.push(`${chartPeriod.value.year}-${chartPeriod.value.month}-01`);
-      data.push(chartPeriod.count);
-    });
-
-    let axis = { x: { type: 'timeseries', tick: { format: '%Y-%m' } } };
     return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
               <div className='block'>
-                <div className='header'>Added</div>
-                <Chart columns={[x, data]} chartType='line' x='x' unloadBeforeLoad={false} axis={axis} />
+                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>Added</span>
+                  <span>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
+                </div>
+                <PeriodChart x={renderPeriods} data={{'bag count': this.props.bagCountByPeriod}}/>
               </div>
             </div>;
   }
