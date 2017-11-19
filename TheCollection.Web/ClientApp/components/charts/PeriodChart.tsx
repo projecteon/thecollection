@@ -45,8 +45,12 @@ export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => 
     return x;
   };
 
+  const createColumns = () => {
+    let columns = [createTimeAxis()].concat(createLineData());
+    return columns;
+  };
+
   const axis = { x: { type: 'timeseries', tick: { format: '%Y-%m' } } };
-  return  <div>
-            <Chart columns={[createTimeAxis()].concat(createLineData())} chartType='line' x='x' unloadBeforeLoad={false} axis={axis} />
-          </div>;
+
+  return <Chart columns={createColumns()} chartType='line' x='x' unloadBeforeLoad={false} axis={axis} />;
 };

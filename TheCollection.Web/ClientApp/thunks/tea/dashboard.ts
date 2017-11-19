@@ -60,9 +60,3 @@ export const requestCountByPeriod = {
    dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
  },
 };
-
-export const changeChartType = {
-  changeChartType: (charttype: ChartType, chart: string): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
-    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chartId: chart });
-  },
-};

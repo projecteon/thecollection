@@ -32,6 +32,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     super();
 
     this.onChartChanged = this.onChartChanged.bind(this);
+    this.onNextPeriod = this.onNextPeriod.bind(this);
+    this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
+
   }
 
   componentDidMount() {
@@ -42,6 +45,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
   onChartChanged(toChartType: ChartType, chart: string) {
     this.props.changeChartType(toChartType, chart);
+  }
+
+  onPerviousPeriod() {
+    this.props.changeChartPeriod(this.props.countByPeriodCharts.added.startDate.clone().add(-1, 'y'), 'added');
+  }
+  onNextPeriod() {
+    this.props.changeChartPeriod(this.props.countByPeriodCharts.added.startDate.clone().add(1, 'y'), 'added');
   }
 
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
@@ -92,9 +102,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <span>{data.description}</span>
                   <div>
-                    <i className='fa fa-chevron-left' />
+                    <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} />
                     <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
-                    <i className='fa fa-chevron-right' />
+                    <i className='fa fa-chevron-right' onClick={this.onNextPeriod} />
                   </div>
                 </div>
 

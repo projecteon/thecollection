@@ -9,6 +9,7 @@ type ChartProps = {
   unloadBeforeLoad: boolean;
   axis?: c3.Axis,
   x?: string,
+  regions?: c3.RegionOptions[],
 };
 
 // tslint:disable-next-line:variable-name
@@ -33,11 +34,7 @@ export class Chart extends React.Component<ChartProps, {}> {
   }
 
   loadNewData(data) {
-    this.chart.load(data);
-  }
-
-  unloadData() {
-    this.chart.unload();
+    return this.chart.load(data);
   }
 
   destroyChart() {
@@ -51,25 +48,33 @@ export class Chart extends React.Component<ChartProps, {}> {
 
   updateChart(props: ChartProps) {
     let config = { data: {
-      columns: this.props.columns as c3.PrimitiveArray[],
-      type: this.props.chartType,
+      columns: props.columns as c3.PrimitiveArray[],
+      type: props.chartType,
     }};
 
-    if (this.props.axis !== undefined) {
+    if (props.axis !== undefined) {
       config = Object.assign(config, {axis: props.axis});
     }
 
-    if (this.props.x !== undefined) {
+    if (props.x !== undefined) {
       config.data = Object.assign(config.data, {x: props.x});
+    }
+
+    if (props.regions !== undefined) {
+      config = Object.assign(config, {regions: props.regions});
     }
 
     if (!this.chart) {
       this.chart = this.generateChart(findDOMNode(this), config);
+    } else {
+      config = Object.assign(config, {columns: config.data.columns});
+      config.data = undefined;
     }
 
-    // if (props.unloadBeforeLoad) {
-    //     this.unloadData();
-    // }
+    if (props.unloadBeforeLoad) {
+      // this.chart.unload({ids: this.props.columns.map(column => { return column[0].toString(); })}, () => { this.loadNewData(config); return true; });
+      // config = Object.assign(config, {unload: this.props.columns.map(column => { return column[0]; })});
+    }
 
     this.loadNewData(config);
   }

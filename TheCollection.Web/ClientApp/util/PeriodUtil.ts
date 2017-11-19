@@ -14,7 +14,6 @@ export function getMonthlyPeriodsFromNowTill(startDate: moment.Moment) {
 }
 
 export function getMonthlyPeriodsFromTill(startDate: moment.Moment, endDate: moment.Moment) {
-  console.log(startDate, endDate);
   /* the first of current month */
   let startDateNormalized = startDate.clone().startOf('month').add(1, 'M');
   let months: IPeriod[] = [];
