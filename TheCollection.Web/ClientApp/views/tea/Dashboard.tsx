@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
 import { BAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
-import { getPeriodsFromNowTill } from '../../util/PeriodUtil';
+import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeriodsOneYearBackFrom } from '../../util/PeriodUtil';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from 'ClientApp/interfaces/IRefValue';
 import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
@@ -86,12 +86,16 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return undefined;
     }
 
-    let renderPeriods = getPeriodsFromNowTill(moment().add(-1, 'y'));
+    let renderPeriods = data.startDate === undefined ? getMonthlyPeriodsFromNowTill(moment().add(-1, 'y')) : getMonthlyPeriodsOneYearBackFrom(data.startDate);
     return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
               <div className='block'>
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <span>{data.description}</span>
-                  <span>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
+                  <div>
+                    <i className='fa fa-chevron-left' />
+                    <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
+                    <i className='fa fa-chevron-right' />
+                  </div>
                 </div>
 
                 {data.isLoading === true ? <Loader isInternalLoader={true} /> : <PeriodChart x={renderPeriods} data={{'bag count': data.data}}/>}

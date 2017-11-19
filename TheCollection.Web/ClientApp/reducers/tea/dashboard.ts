@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../../store';
@@ -5,8 +6,10 @@ import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { IPeriod } from '../../interfaces/IPeriod';
 import { ChartType } from '../../types/Chart';
-import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/tea/dashboard';
+import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE} from '../../constants/dashboard/chart';
+import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
+import { ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/dashboard/chart';
+import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction } from '../../actions/tea/dashboard';
 import { requestBagTypeCount, requestBrandCount, requestCountByPeriod, changeChartType } from '../../thunks/tea/dashboard';
 import { descending } from 'd3';
 
@@ -15,6 +18,7 @@ export type CountByChart<T> = {
   chartType: ChartType;
   isLoading: boolean;
   data: ICountBy<T>[];
+  startDate?: moment.Moment; // refactor out, not common for all type usages
 };
 
 export interface IDashboardState {
@@ -34,14 +38,14 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
       let s = {...state.countByRefValueCharts, ...{'bagtypes': w}};
       return {...state, ...{countByRefValueCharts: s}};
     case RECIEVE_BAGTYPECOUNT:
-      let bagtypecount = {...state.countByRefValueCharts, ...createChartState('bagtypes', action.bagtypecount, 'pie', 'Bag Types')};
+      let bagtypecount = {...state.countByRefValueCharts, ...createChartState('bagtypes', action.data, 'pie', 'Bag Types')};
       return  {...state, ...{countByRefValueCharts: bagtypecount}};
     case REQUEST_BRANDCOUNT:
       let w2 = {...state.countByRefValueCharts.brands, ...{isLoading: true, data: undefined, description: 'Brands'}};
       let s2 = {...state.countByRefValueCharts, ...{'brands': w2}};
       return {...state, ...{countByRefValueCharts: s2}};
     case RECIEVE_BRANDCOUNT:
-      let brandcount = {...state.countByRefValueCharts, ...createChartState('brands', action.brandcount, 'bar', 'Brands')};
+      let brandcount = {...state.countByRefValueCharts, ...createChartState('brands', action.data, 'bar', 'Brands')};
       return  {...state, ...{countByRefValueCharts: brandcount}};
     case REQUEST_COUNTBYPERIOD:
       let w3 = {...state.countByPeriodCharts.added, ...{isLoading: true, data: undefined, description: 'Added'}};
@@ -55,8 +59,8 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
       let periodcount = {...state.countByPeriodCharts, ...createChartState('added', action.data, 'line', 'Added')};
       return  {...state, ...{countByPeriodCharts: periodcount}};
     case CHANGE_CHARTTYPE:
-      let newChartType = {...state.countByRefValueCharts[action.chart], ...{chartType: action.charttype}};
-      let newChartTypes = {...state.countByRefValueCharts, ...{[action.chart]: newChartType}};
+      let newChartType = {...state.countByRefValueCharts[action.chartId], ...{chartType: action.charttype}};
+      let newChartTypes = {...state.countByRefValueCharts, ...{[action.chartId]: newChartType}};
       return {...state, ...{countByRefValueCharts: newChartTypes}};
     default:
       const exhaustiveCheck: never = action;
@@ -65,10 +69,6 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
   return state || unloadedState;
 };
 
-function changeToChartType(toChartType: ChartType, chart: string): {[index: string]: ChartType} {
-  return {[chart]: toChartType};
-}
-
-function createChartState<T>(chart: string, data: ICountBy<T>[], toChartType: ChartType, description: string): {[index: string]: CountByChart<T>} {
-  return {[chart]: {description: description, data: data, chartType: toChartType, isLoading: false}};
+function createChartState<T>(chart: string, data: ICountBy<T>[], toChartType: ChartType, description: string) {
+  return {[chart]: {description: description, data: data, chartType: toChartType, isLoading: false, startDate: undefined}};
 }

@@ -5,8 +5,10 @@ import { ICountBy } from '../../interfaces/ICountBy';
 import { IPeriod } from '../../interfaces/IPeriod';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
-import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/tea/dashboard';
+import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE} from '../../constants/dashboard/chart';
+import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
+import { ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/dashboard/chart';
+import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction} from '../../actions/tea/dashboard';
 
 export const requestBagTypeCount = {
    requestBagTypeCount: (): AppThunkAction<ReceiveBagTypeCountAction | RequestBagTypeCountAction> => (dispatch, getState) => {
@@ -14,11 +16,11 @@ export const requestBagTypeCount = {
       let fetchTask = fetch(`/api/tea/Dashboards/BagTypes/`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
-          dispatch({ type: RECIEVE_BAGTYPECOUNT, bagtypecount: data });
+          dispatch({ type: RECIEVE_BAGTYPECOUNT, data: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: RECIEVE_BAGTYPECOUNT, bagtypecount: undefined });
+      dispatch({ type: RECIEVE_BAGTYPECOUNT, data: undefined });
     }
 
     dispatch({ type: REQUEST_BAGTYPECOUNT });
@@ -31,11 +33,11 @@ export const requestBrandCount = {
      let fetchTask = fetch(`/api/tea/Dashboards/Brands/`, { credentials: 'same-origin' })
        .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
        .then(data => {
-         dispatch({ type: RECIEVE_BRANDCOUNT, brandcount: data });
+         dispatch({ type: RECIEVE_BRANDCOUNT, data: data });
          addTask(fetchTask); // ensure server-side prerendering waits for this to complete
      });
    } catch (err) {
-     dispatch({ type: RECIEVE_BRANDCOUNT, brandcount: undefined });
+     dispatch({ type: RECIEVE_BRANDCOUNT, data: undefined });
    }
 
    dispatch({ type: REQUEST_BRANDCOUNT });
@@ -61,6 +63,6 @@ export const requestCountByPeriod = {
 
 export const changeChartType = {
   changeChartType: (charttype: ChartType, chart: string): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
-    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chart: chart });
+    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chartId: chart });
   },
 };
