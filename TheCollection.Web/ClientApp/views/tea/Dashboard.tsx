@@ -102,9 +102,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <span>{data.description}</span>
                   <div>
-                    <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} />
+                    {data.isLoading === true ? undefined : <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} /> }
                     <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
-                    <i className='fa fa-chevron-right' onClick={this.onNextPeriod} />
+                    {data.isLoading === true ? undefined : <i className='fa fa-chevron-right' onClick={this.onNextPeriod} /> }
                   </div>
                 </div>
 
