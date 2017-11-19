@@ -12,7 +12,5 @@ type BarChartProps = {
 export const BarChart: React.StatelessComponent<BarChartProps> = props => {
   const axis = { x: { type: 'category', categories: props.categories } };
 
-  return  <div>
-            <Chart columns={props.data} chartType='bar' unloadBeforeLoad={false} axis={axis} />
-          </div>;
+  return  <Chart columns={props.data} chartType='bar' unloadBeforeLoad={false} axis={axis} />;
 };

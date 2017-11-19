@@ -4,21 +4,23 @@ import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { IPeriod } from '../../interfaces/IPeriod';
-import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction } from '../../actions/tea/dashboard';
-import { requestBagTypeCount, requestBrandCount, requestCountByPeriod } from '../../thunks/tea/dashboard';
+import { ChartType } from '../../types/Chart';
+import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE } from '../../constants/tea/dashboard';
+import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/tea/dashboard';
+import { requestBagTypeCount, requestBrandCount, requestCountByPeriod, changeChartType } from '../../thunks/tea/dashboard';
 
 export interface IDashboardState {
   bagtypecount?: ICountBy<IRefValue>[];
   brandcount?: ICountBy<IRefValue>[];
   bagCountByPeriod?: ICountBy<IPeriod>[];
   isLoading: boolean;
+  chartType: ChartType;
 }
 
-export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod};
+export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod, ...changeChartType};
 
-const unloadedState: IDashboardState = { isLoading: false };
-type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction;
+const unloadedState: IDashboardState = { isLoading: false, chartType: 'pie' };
+type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction | ChangeChartType;
 export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
   switch (action.type) {
     case REQUEST_BAGTYPECOUNT:
@@ -37,6 +39,8 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
       }
 
       return  {...state, ...{ bagCountByPeriod: action.data, isLoading: false }};
+    case CHANGE_CHARTTYPE:
+      return {...state, ...{chartType: action.charttype}};
     default:
       const exhaustiveCheck: never = action;
   }

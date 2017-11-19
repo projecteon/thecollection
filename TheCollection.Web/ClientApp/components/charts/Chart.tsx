@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import * as c3 from 'c3';
+import { ChartType } from '../../types/Chart';
 
 type ChartProps = {
   columns:  c3.PrimitiveArray[];
-  chartType: 'line' | 'spline' | 'step' | 'area' | 'area-spline' | 'area-step' | 'bar' | 'scatter' | 'pie' | 'donut' | 'gauge';
+  chartType: ChartType;
   unloadBeforeLoad: boolean;
   axis?: c3.Axis,
   x?: string,

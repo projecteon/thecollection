@@ -4,8 +4,9 @@ import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IPeriod } from '../../interfaces/IPeriod';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction } from '../../actions/tea/dashboard';
+import { ChartType } from '../../types/Chart';
+import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE } from '../../constants/tea/dashboard';
+import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/tea/dashboard';
 
 export const requestBagTypeCount = {
    requestBagTypeCount: (): AppThunkAction<ReceiveBagTypeCountAction | RequestBagTypeCountAction> => (dispatch, getState) => {
@@ -56,4 +57,10 @@ export const requestCountByPeriod = {
 
    dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
  },
+};
+
+export const changeChartType = {
+  changeChartType: (charttype: ChartType): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
+    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype });
+  },
 };

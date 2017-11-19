@@ -1,34 +1,40 @@
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { IPeriod } from '../../interfaces/IPeriod';
-import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD } from '../../constants/tea/dashboard';
+import * as dashboard from '../../constants/tea/dashboard';
+import { ChartType } from '../../types/Chart';
 
 export type ReceiveBagTypeCountAction = {
-  type: RECIEVE_BAGTYPECOUNT;
+  type: dashboard.RECIEVE_BAGTYPECOUNT;
   bagtypecount: ICountBy<IRefValue>[];
 };
 
 export type RequestBagTypeCountAction = {
-  type: REQUEST_BAGTYPECOUNT;
+  type: dashboard.REQUEST_BAGTYPECOUNT;
 };
 
 export type ReceiveBrandCountAction = {
-  type: RECIEVE_BRANDCOUNT;
+  type: dashboard.RECIEVE_BRANDCOUNT;
   brandcount: ICountBy<IRefValue>[];
 };
 
 export type RequestBrandCountAction = {
-  type: REQUEST_BRANDCOUNT;
+  type: dashboard.REQUEST_BRANDCOUNT;
 };
 
 
 export type ReceiveCountByPeriodAction = {
-  type: RECIEVE_COUNTBYPERIOD;
+  type: dashboard.RECIEVE_COUNTBYPERIOD;
   apipath: string;
   data: ICountBy<IPeriod>[];
 };
 
 export type RequesCountByPeriodAction = {
-  type: REQUEST_COUNTBYPERIOD;
+  type: dashboard.REQUEST_COUNTBYPERIOD;
   apipath: string;
+};
+
+export type ChangeChartType = {
+  type: dashboard.CHANGE_CHARTTYPE;
+  charttype: ChartType;
 };

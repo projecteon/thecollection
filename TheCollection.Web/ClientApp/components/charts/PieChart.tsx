@@ -9,7 +9,5 @@ type PieChartProps = {
 
 // tslint:disable-next-line:variable-name
 export const PieChart: React.StatelessComponent<PieChartProps> = props => {
-  return  <div>
-            <Chart columns={props.data} chartType='pie' unloadBeforeLoad={false} />
-          </div>;
+  return  <Chart columns={props.data} chartType='pie' unloadBeforeLoad={false} />;
 };

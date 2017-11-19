@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Component, ComponentClass} from 'react';
 
+// tslint:disable-next-line:variable-name
 export function PopupHOC<T>(PopupComponent: ComponentClass<T>): ComponentClass<T> {
   return class extends Component<T, {}> {
    render() {
@@ -15,5 +16,5 @@ export function PopupHOC<T>(PopupComponent: ComponentClass<T>): ComponentClass<T
         </div>
       </div>);
     }
-  }
+  };
 }

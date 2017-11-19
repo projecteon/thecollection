@@ -7,8 +7,6 @@ export function getPeriodsFromNowTill(startDate: moment.Moment) {
   let startDateNormalized = startDate.clone().startOf('month').add(1, 'M');
   let months: IPeriod[] = [];
 
-  console.log(startDate.clone().startOf('month'), nowNormalized);
-
   /* .isBefore() as it was asked for the months in between startDate and now */
   while (startDateNormalized.isBefore(nowNormalized)) {
       months.push({year: startDateNormalized.year(), month: startDateNormalized.month() + 1});
