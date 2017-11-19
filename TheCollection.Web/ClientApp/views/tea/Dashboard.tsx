@@ -1,3 +1,4 @@
+import Loader from '../../components/Loader';
 import * as React from 'react';
 import * as moment from 'moment';
 import * as c3 from 'c3';
@@ -44,6 +45,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   }
 
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
+    if (data === undefined) {
+      return [];
+    }
+
     return data.map(btc => {
       if (btc.value === undefined || btc.value === null) {
         return ['None', btc.count] as c3.PrimitiveArray;
@@ -53,34 +58,31 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     });
   }
 
-  renderBagTypeChart() {
-    if (this.props.bagtypecount === undefined) {
-      return undefined;
+  renderCountByRefValueBlock(id: string, countData: DashboardReducer.CountByChart<IRefValue>) {
+    let data = this.translate(countData.data);
+    if (countData.chartType === 'pie') {
+      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
     }
 
-    let data = this.translate(this.props.bagtypecount);
-    if (this.props.chartType['Bag Types'] === 'pie') {
-      return  <PieChartBlock description='Bag Types' validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
-    }
-
-    return <BarChartBlock description='Bag Types' validTransformations={['pie']} data={data} categories={['bag types']} onChartTypeChanged={this.onChartChanged} />;
+    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={['bag types']} onChartTypeChanged={this.onChartChanged} />;
   }
 
-  renderBrandChart() {
-    if (this.props.brandcount === undefined) {
-      return undefined;
+  renderCountByRefValueBlocks() {
+    let data = [];
+    for (let blockData in this.props.countByRefValueCharts) {
+      if (!this.props.countByRefValueCharts.hasOwnProperty(blockData)) {
+        continue;
+      }
+
+      data.push(this.renderCountByRefValueBlock(blockData, this.props.countByRefValueCharts[blockData]));
     }
 
-    let data = this.translate(this.props.brandcount);
-    if (this.props.chartType['Brands'] === 'pie') {
-      return  <PieChartBlock description='Brands' validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
-    }
-
-    return <BarChartBlock description='Brands' validTransformations={['pie']} data={data} categories={['brands']} onChartTypeChanged={this.onChartChanged} />;
+    return data;
   }
 
   renderPeriodChart() {
-    if (this.props.bagCountByPeriod === undefined) {
+    let data = this.props.countByPeriodCharts.added;
+    if (data === undefined) {
       return undefined;
     }
 
@@ -88,18 +90,18 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
               <div className='block'>
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <span>Added</span>
+                  <span>{data.description}</span>
                   <span>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
                 </div>
-                <PeriodChart x={renderPeriods} data={{'bag count': this.props.bagCountByPeriod}}/>
-              </div>
+
+                {data.isLoading === true ? <Loader isInternalLoader={true} /> : <PeriodChart x={renderPeriods} data={{'bag count': data.data}}/>}
+                </div>
             </div>;
   }
 
   render() {
     return  <div style={{display: 'flex', flexWrap: 'wrap'}} className='dashboard'>
-              {this.renderBrandChart()}
-              {this.renderBagTypeChart()}
+              {this.renderCountByRefValueBlocks()}
               {this.renderPeriodChart()}
             </div>;
   }

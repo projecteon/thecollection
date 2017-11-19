@@ -8,40 +8,56 @@ import { ChartType } from '../../types/Chart';
 import { BAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT, RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE } from '../../constants/tea/dashboard';
 import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction, ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/tea/dashboard';
 import { requestBagTypeCount, requestBrandCount, requestCountByPeriod, changeChartType } from '../../thunks/tea/dashboard';
+import { descending } from 'd3';
+
+export type CountByChart<T> = {
+  description: string;
+  chartType: ChartType;
+  isLoading: boolean;
+  data: ICountBy<T>[];
+};
 
 export interface IDashboardState {
-  bagtypecount?: ICountBy<IRefValue>[];
-  brandcount?: ICountBy<IRefValue>[];
   bagCountByPeriod?: ICountBy<IPeriod>[];
-  isLoading: boolean;
-  chartType: {[index: string]: ChartType};
+  countByRefValueCharts: {[index: string]: CountByChart<IRefValue>};
+  countByPeriodCharts: {[index: string]: CountByChart<IPeriod>};
 }
 
 export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod, ...changeChartType};
 
-const unloadedState: IDashboardState = { isLoading: false, chartType: {'Brands': 'bar', 'Bag Types': 'pie'} };
+const unloadedState: IDashboardState = { countByRefValueCharts: {}, countByPeriodCharts: {} };
 type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction | ChangeChartType;
 export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
   switch (action.type) {
     case REQUEST_BAGTYPECOUNT:
-      return  {...state, ...{ bagtypecount: undefined, isLoading: true }};
+      let w = {...state.countByRefValueCharts.bagtypes, ...{isLoading: true, data: undefined, description: 'Bag Types'}};
+      let s = {...state.countByRefValueCharts, ...{'bagtypes': w}};
+      return {...state, ...{countByRefValueCharts: s}};
     case RECIEVE_BAGTYPECOUNT:
-      return  {...state, ...{ bagtypecount: action.bagtypecount, isLoading: false }};
+      let bagtypecount = {...state.countByRefValueCharts, ...createChartState('bagtypes', action.bagtypecount, 'pie', 'Bag Types')};
+      return  {...state, ...{countByRefValueCharts: bagtypecount}};
     case REQUEST_BRANDCOUNT:
-      return  {...state, ...{ brandcount: undefined, isLoading: true }};
+      let w2 = {...state.countByRefValueCharts.brands, ...{isLoading: true, data: undefined, description: 'Brands'}};
+      let s2 = {...state.countByRefValueCharts, ...{'brands': w2}};
+      return {...state, ...{countByRefValueCharts: s2}};
     case RECIEVE_BRANDCOUNT:
-      return  {...state, ...{ brandcount: action.brandcount, isLoading: false }};
+      let brandcount = {...state.countByRefValueCharts, ...createChartState('brands', action.brandcount, 'bar', 'Brands')};
+      return  {...state, ...{countByRefValueCharts: brandcount}};
     case REQUEST_COUNTBYPERIOD:
-      return  {...state, ...{ bagCountByPeriod: undefined, isLoading: true }};
+      let w3 = {...state.countByPeriodCharts.added, ...{isLoading: true, data: undefined, description: 'Added'}};
+      let s3 = {...state.countByPeriodCharts, ...{'added': w3}};
+      return {...state, ...{countByPeriodCharts: s3}};
     case RECIEVE_COUNTBYPERIOD:
       if (action.apipath !== BAGSCOUNTBYPERIOD) {
         return state;
       }
 
-      return  {...state, ...{ bagCountByPeriod: action.data, isLoading: false }};
+      let periodcount = {...state.countByPeriodCharts, ...createChartState('added', action.data, 'line', 'Added')};
+      return  {...state, ...{countByPeriodCharts: periodcount}};
     case CHANGE_CHARTTYPE:
-      let newChartType = {...state.chartType, ...changeToChartType(action.charttype, action.chart)};
-      return {...state, ...{chartType: newChartType}};
+      let newChartType = {...state.countByRefValueCharts[action.chart], ...{chartType: action.charttype}};
+      let newChartTypes = {...state.countByRefValueCharts, ...{[action.chart]: newChartType}};
+      return {...state, ...{countByRefValueCharts: newChartTypes}};
     default:
       const exhaustiveCheck: never = action;
   }
@@ -51,4 +67,8 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
 
 function changeToChartType(toChartType: ChartType, chart: string): {[index: string]: ChartType} {
   return {[chart]: toChartType};
+}
+
+function createChartState<T>(chart: string, data: ICountBy<T>[], toChartType: ChartType, description: string): {[index: string]: CountByChart<T>} {
+  return {[chart]: {description: description, data: data, chartType: toChartType, isLoading: false}};
 }

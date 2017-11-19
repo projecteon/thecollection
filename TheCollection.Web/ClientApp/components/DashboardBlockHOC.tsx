@@ -1,9 +1,12 @@
 import * as React from 'react';
 import {Component, ComponentClass, StatelessComponent} from 'react';
 import { ChartType } from '../types/Chart';
+import Loader from './Loader';
 
 type DashboardBlockHOCProps = {
+  chartId: string;
   description: string;
+  isLoading: boolean;
   validTransformations: ChartType[];
   onChartTypeChanged(toChartType: ChartType, chart: string): void;
   onExpand?(): void;
@@ -14,7 +17,7 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
   return class extends Component<T & DashboardBlockHOCProps, {}> {
     renderConversions() {
       return this.props.validTransformations.map(transformation => {
-        return <IconButton key={transformation} charttype={transformation} chart={this.props.description} onClick={this.props.onChartTypeChanged} />;
+        return <IconButton key={transformation} charttype={transformation} chart={this.props.chartId} onClick={this.props.onChartTypeChanged} />;
       });
     }
 
@@ -24,10 +27,10 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
                 <div className='block'>
                   <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <span>{description}</span>
-                    {this.renderConversions()}
+                    {this.props.isLoading === true ? undefined : this.renderConversions()}
                     {this.props.onExpand ? <i className='fa fa-expand' onClick={this.props.onExpand}/> : undefined}
                   </div>
-                  <BlockComponent {...blockComponentProps} />
+                  {this.props.isLoading === true ? <Loader isInternalLoader={true} /> : <BlockComponent {...blockComponentProps} />}
                 </div>
               </div>;
     }
