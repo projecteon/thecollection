@@ -10,6 +10,7 @@ type ChartProps = {
   axis?: c3.Axis,
   x?: string,
   regions?: c3.RegionOptions[],
+  hideLegends?: boolean;
 };
 
 // tslint:disable-next-line:variable-name
@@ -74,6 +75,10 @@ export class Chart extends React.Component<ChartProps, {}> {
     if (props.unloadBeforeLoad) {
       // this.chart.unload({ids: this.props.columns.map(column => { return column[0].toString(); })}, () => { this.loadNewData(config); return true; });
       // config = Object.assign(config, {unload: this.props.columns.map(column => { return column[0]; })});
+    }
+
+    if (props.hideLegends === true) {
+      this.chart.legend.hide();
     }
 
     this.loadNewData(config);

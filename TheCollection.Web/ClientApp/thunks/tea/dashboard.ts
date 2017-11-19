@@ -28,9 +28,9 @@ export const requestBagTypeCount = {
  };
 
 export const requestBrandCount = {
-  requestBrandCount: (): AppThunkAction<ReceiveBrandCountAction | RequestBrandCountAction> => (dispatch, getState) => {
+  requestBrandCount: (top?: number): AppThunkAction<ReceiveBrandCountAction | RequestBrandCountAction> => (dispatch, getState) => {
    try {
-     let fetchTask = fetch(`/api/tea/Dashboards/Brands/`, { credentials: 'same-origin' })
+     let fetchTask = fetch(`/api/tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
        .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
        .then(data => {
          dispatch({ type: RECIEVE_BRANDCOUNT, data: data });

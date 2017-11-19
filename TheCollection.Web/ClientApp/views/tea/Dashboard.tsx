@@ -34,6 +34,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.onChartChanged = this.onChartChanged.bind(this);
     this.onNextPeriod = this.onNextPeriod.bind(this);
     this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
+    this.onExpandBrands = this.onExpandBrands.bind(this);
 
   }
 
@@ -54,6 +55,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.changeChartPeriod(this.props.countByPeriodCharts.added.startDate.clone().add(1, 'y'), 'added');
   }
 
+  onExpandBrands() {
+    this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
+  }
+
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
     if (data === undefined) {
       return [];
@@ -69,12 +74,17 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   }
 
   renderCountByRefValueBlock(id: string, countData: DashboardReducer.CountByChart<IRefValue>) {
-    let data = this.translate(countData.data);
-    if (countData.chartType === 'pie') {
-      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
+    let onExpand = undefined;
+    if (id === 'brands') {
+      onExpand =  {onExpand: this.onExpandBrands};
     }
 
-    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={['bag types']} onChartTypeChanged={this.onChartChanged} />;
+    let data = this.translate(countData.data);
+    if (countData.chartType === 'pie') {
+      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...onExpand}/>;
+    }
+
+    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={['bag types']} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...onExpand}/>;
   }
 
   renderCountByRefValueBlocks() {

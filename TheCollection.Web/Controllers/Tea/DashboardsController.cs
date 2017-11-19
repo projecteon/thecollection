@@ -23,7 +23,7 @@ namespace TheCollection.Web.Controllers.Tea {
             return await command.ExecuteAsync();
         }
 
-        [HttpGet("Brands")]
+        [HttpGet("Brands/{top:int?}")]
         public async Task<IActionResult> Brands(int top = 10) {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new GetBagsCountByBrandsCommand(documentDbClient, applicationUser);

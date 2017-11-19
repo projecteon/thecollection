@@ -27,8 +27,10 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
                 <div className='block'>
                   <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <span>{description}</span>
-                    {this.props.isLoading === true ? undefined : this.renderConversions()}
-                    {this.props.onExpand ? <i className='fa fa-expand' onClick={this.props.onExpand}/> : undefined}
+                    <div>
+                      {this.props.isLoading === true ? undefined : this.renderConversions()}
+                      {this.props.onExpand && this.props.isLoading !== true ? <i className='fa fa-expand' onClick={this.props.onExpand}/> : undefined}
+                    </div>
                   </div>
                   {this.props.isLoading === true ? <Loader isInternalLoader={true} /> : <BlockComponent {...blockComponentProps} />}
                 </div>

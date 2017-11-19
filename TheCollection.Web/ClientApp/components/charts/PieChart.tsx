@@ -5,9 +5,10 @@ import { IRefValue } from '../../interfaces/IRefValue';
 
 type PieChartProps = {
   data: c3.PrimitiveArray[];
+  hideLegends?: boolean;
 };
 
 // tslint:disable-next-line:variable-name
 export const PieChart: React.StatelessComponent<PieChartProps> = props => {
-  return  <Chart columns={props.data} chartType='pie' unloadBeforeLoad={false} />;
+  return  <Chart columns={props.data} chartType='pie' unloadBeforeLoad={false} hideLegends={props.hideLegends}/>;
 };
