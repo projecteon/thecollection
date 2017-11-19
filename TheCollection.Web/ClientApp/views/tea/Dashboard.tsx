@@ -39,8 +39,8 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
   }
 
-  onChartChanged(toChartType: ChartType) {
-    this.props.changeChartType(toChartType);
+  onChartChanged(toChartType: ChartType, chart: string) {
+    this.props.changeChartType(toChartType, chart);
   }
 
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
@@ -59,7 +59,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let data = this.translate(this.props.bagtypecount);
-    if (this.props.chartType === 'pie') {
+    if (this.props.chartType['Bag Types'] === 'pie') {
       return  <PieChartBlock description='Bag Types' validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
     }
 
@@ -72,7 +72,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let data = this.translate(this.props.brandcount);
-    if (this.props.chartType === 'pie') {
+    if (this.props.chartType['Brands'] === 'pie') {
       return  <PieChartBlock description='Brands' validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged}/>;
     }
 

@@ -5,7 +5,7 @@ import { ChartType } from '../types/Chart';
 type DashboardBlockHOCProps = {
   description: string;
   validTransformations: ChartType[];
-  onChartTypeChanged(toChartType: ChartType): void;
+  onChartTypeChanged(toChartType: ChartType, chart: string): void;
   onExpand?(): void;
 };
 
@@ -14,7 +14,7 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
   return class extends Component<T & DashboardBlockHOCProps, {}> {
     renderConversions() {
       return this.props.validTransformations.map(transformation => {
-        return <IconButton charttype={transformation} onClick={this.props.onChartTypeChanged} />;
+        return <IconButton key={transformation} charttype={transformation} chart={this.props.description} onClick={this.props.onChartTypeChanged} />;
       });
     }
 
@@ -35,9 +35,9 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
 }
 
 // tslint:disable-next-line:variable-name
-const IconButton: React.StatelessComponent<{charttype: ChartType, onClick(charttype: ChartType): void}> = props => {
+const IconButton: React.StatelessComponent<{charttype: ChartType, chart: string, onClick(charttype: ChartType, chart: string): void}> = props => {
   const onClick = () => {
-    props.onClick(props.charttype);
+    props.onClick(props.charttype, props.chart);
   };
 
   const iconChartType = () => {

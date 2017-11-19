@@ -14,12 +14,12 @@ export interface IDashboardState {
   brandcount?: ICountBy<IRefValue>[];
   bagCountByPeriod?: ICountBy<IPeriod>[];
   isLoading: boolean;
-  chartType: ChartType;
+  chartType: {[index: string]: ChartType};
 }
 
 export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod, ...changeChartType};
 
-const unloadedState: IDashboardState = { isLoading: false, chartType: 'pie' };
+const unloadedState: IDashboardState = { isLoading: false, chartType: {'Brands': 'bar', 'Bag Types': 'pie'} };
 type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction | ChangeChartType;
 export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
   switch (action.type) {
@@ -40,7 +40,8 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
 
       return  {...state, ...{ bagCountByPeriod: action.data, isLoading: false }};
     case CHANGE_CHARTTYPE:
-      return {...state, ...{chartType: action.charttype}};
+      let newChartType = {...state.chartType, ...changeToChartType(action.charttype, action.chart)};
+      return {...state, ...{chartType: newChartType}};
     default:
       const exhaustiveCheck: never = action;
   }
@@ -48,4 +49,6 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
   return state || unloadedState;
 };
 
-
+function changeToChartType(toChartType: ChartType, chart: string): {[index: string]: ChartType} {
+  return {[chart]: toChartType};
+}

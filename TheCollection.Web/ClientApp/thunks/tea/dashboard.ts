@@ -60,7 +60,7 @@ export const requestCountByPeriod = {
 };
 
 export const changeChartType = {
-  changeChartType: (charttype: ChartType): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
-    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype });
+  changeChartType: (charttype: ChartType, chart: string): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
+    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chart: chart });
   },
 };

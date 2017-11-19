@@ -37,4 +37,5 @@ export type RequesCountByPeriodAction = {
 export type ChangeChartType = {
   type: dashboard.CHANGE_CHARTTYPE;
   charttype: ChartType;
+  chart: string;
 };
