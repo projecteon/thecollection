@@ -1,4 +1,3 @@
-import Loader from '../../components/Loader';
 import * as React from 'react';
 import * as moment from 'moment';
 import * as c3 from 'c3';
@@ -14,6 +13,7 @@ import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
 import { PieChart } from '../../components/charts/PieChart';
+import Loader from '../../components/Loader';
 import { ChartType } from '../../types/Chart';
 
 import './Dashboard.scss';
@@ -35,13 +35,17 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.onNextPeriod = this.onNextPeriod.bind(this);
     this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
     this.onExpandBrands = this.onExpandBrands.bind(this);
-
+    this.onRefreshCountByPeriod = this.onRefreshCountByPeriod.bind(this);
   }
 
   componentDidMount() {
+    if (this.props.hasLoadedData === true) {
+      return;
+    }
+
     this.props.requestBagTypeCount();
+    this.onRefreshCountByPeriod();
     this.props.requestBrandCount();
-    this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
   }
 
   onChartChanged(toChartType: ChartType, chart: string) {
@@ -59,6 +63,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
   }
 
+  onRefreshCountByPeriod() {
+    this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
+  }
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
     if (data === undefined) {
       return [];
@@ -73,28 +80,35 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     });
   }
 
-  renderCountByRefValueBlock(id: string, countData: DashboardReducer.CountByChart<IRefValue>) {
-    let onExpand = undefined;
+  renderCountByRefValueBlock(id: DashboardReducer.CountByRefValueTypes, countData: DashboardReducer.CountByChart<IRefValue>) {
+    let blockEvents = undefined;
     if (id === 'brands') {
-      onExpand =  {onExpand: this.onExpandBrands};
+      blockEvents =  {onExpand: this.onExpandBrands, onRefresh: this.props.requestBrandCount};
+    } else if (id === 'bagtypes') {
+      blockEvents =  {onRefresh: this.props.requestBagTypeCount};
     }
 
     let data = this.translate(countData.data);
     if (countData.chartType === 'pie') {
-      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...onExpand}/>;
+      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
     }
 
-    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={['bag types']} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...onExpand}/>;
+    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={[countData.description.toLowerCase()]} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
   }
 
   renderCountByRefValueBlocks() {
     let data = [];
+    // https://blog.mariusschulz.com/2017/01/06/typescript-2-1-keyof-and-lookup-typess
+    // for (let [key, value] of Object.entries(this.props.countByRefValueCharts)) {
+    //   data.push(this.renderCountByRefValueBlock(key, this.props.countByRefValueCharts[value]));
+    // }
+
     for (let blockData in this.props.countByRefValueCharts) {
       if (!this.props.countByRefValueCharts.hasOwnProperty(blockData)) {
         continue;
       }
 
-      data.push(this.renderCountByRefValueBlock(blockData, this.props.countByRefValueCharts[blockData]));
+      data.push(this.renderCountByRefValueBlock(blockData as DashboardReducer.CountByRefValueTypes, this.props.countByRefValueCharts[blockData]));
     }
 
     return data;
@@ -106,7 +120,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return undefined;
     }
 
-    let renderPeriods = data.startDate === undefined ? getMonthlyPeriodsFromNowTill(moment().add(-1, 'y')) : getMonthlyPeriodsOneYearBackFrom(data.startDate);
+    let renderPeriods = getMonthlyPeriodsOneYearBackFrom(data.startDate);
     return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
               <div className='block'>
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -115,6 +129,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                     {data.isLoading === true ? undefined : <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} /> }
                     <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
                     {data.isLoading === true ? undefined : <i className='fa fa-chevron-right' onClick={this.onNextPeriod} /> }
+                    {data.isLoading === true ? undefined : <i className='fa fa-refresh' onClick={this.onRefreshCountByPeriod} /> }
                   </div>
                 </div>
 

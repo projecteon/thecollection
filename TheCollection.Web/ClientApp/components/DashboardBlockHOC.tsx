@@ -10,11 +10,22 @@ type DashboardBlockHOCProps = {
   validTransformations: ChartType[];
   onChartTypeChanged(toChartType: ChartType, chart: string): void;
   onExpand?(): void;
+  onRefresh?(): void;
 };
 
 // tslint:disable-next-line:variable-name
 export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | StatelessComponent<T>): ComponentClass<T & DashboardBlockHOCProps> {
   return class extends Component<T & DashboardBlockHOCProps, {}> {
+    constructor(props: T & DashboardBlockHOCProps) {
+      super(props);
+
+      this.onRefresh = this.onRefresh.bind(this);
+    }
+
+    onRefresh() {
+      this.props.onRefresh();
+    }
+
     renderConversions() {
       return this.props.validTransformations.map(transformation => {
         return <IconButton key={transformation} charttype={transformation} chart={this.props.chartId} onClick={this.props.onChartTypeChanged} />;
@@ -30,6 +41,7 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
                     <div>
                       {this.props.isLoading === true ? undefined : this.renderConversions()}
                       {this.props.onExpand && this.props.isLoading !== true ? <i className='fa fa-expand' onClick={this.props.onExpand}/> : undefined}
+                      {this.props.onRefresh && this.props.isLoading !== true ? <i className='fa fa-refresh' onClick={this.onRefresh}/> : undefined}
                     </div>
                   </div>
                   {this.props.isLoading === true ? <Loader isInternalLoader={true} /> : <BlockComponent {...blockComponentProps} />}
