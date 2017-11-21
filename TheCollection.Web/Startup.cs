@@ -5,6 +5,7 @@ namespace TheCollection_Web {
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using AspNetCore.Identity.DocumentDb;
+    using AspNetCore.Identity.DocumentDb.Tools;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ namespace TheCollection_Web {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
     using TheCollection.Web.Extensions;
@@ -145,9 +147,11 @@ namespace TheCollection_Web {
             //CreateRoles(app.ApplicationServices);
         }
 
-        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey) {
+        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
+            serializerSettings = serializerSettings ?? new JsonSerializerSettings();
+            serializerSettings.Converters.Add(new JsonClaimConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
-            var client = new DocumentClient(endpointUri, authorizationKey, new ConnectionPolicy { EnableEndpointDiscovery = false });
+            var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
             try {
                 // Does the DB exist?
                 var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId)).Result;
