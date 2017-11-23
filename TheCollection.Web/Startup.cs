@@ -150,6 +150,8 @@ namespace TheCollection_Web {
         DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
             serializerSettings = serializerSettings ?? new JsonSerializerSettings();
             serializerSettings.Converters.Add(new JsonClaimConverter());
+            serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsPrincipalConverter());
+            serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsIdentityConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
             try {
