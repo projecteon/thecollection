@@ -1,9 +1,9 @@
 import * as moment from 'moment';
 import { IPeriod } from '../interfaces/IPeriod';
 
-export function getMonthlyPeriodsOneYearBackFrom(endDate: moment.Moment) {
+export function getMonthlyPeriodsYearsBackFrom(endDate: moment.Moment, years: number) {
   /* the first of current month */
-  let startDate = endDate.clone().startOf('month').add(-1, 'y');
+  let startDate = endDate.clone().startOf('month').add(-1 * years, 'y');
   return getMonthlyPeriodsFromTill(startDate, endDate);
 }
 

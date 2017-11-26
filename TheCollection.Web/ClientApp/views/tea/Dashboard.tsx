@@ -5,10 +5,10 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
-import { BAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
-import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeriodsOneYearBackFrom } from '../../util/PeriodUtil';
+import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
+import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeriodsYearsBackFrom } from '../../util/PeriodUtil';
 import { ICountBy } from '../../interfaces/ICountBy';
-import { IRefValue } from 'ClientApp/interfaces/IRefValue';
+import { IRefValue } from '../../interfaces/IRefValue';
 import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
@@ -36,6 +36,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
     this.onExpandBrands = this.onExpandBrands.bind(this);
     this.onRefreshCountByPeriod = this.onRefreshCountByPeriod.bind(this);
+    this.onRefreshTotalCountByPeriod = this.onRefreshTotalCountByPeriod.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +46,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
     this.props.requestBagTypeCount();
     this.onRefreshCountByPeriod();
+    this.onRefreshTotalCountByPeriod();
     this.props.requestBrandCount();
   }
 
@@ -66,6 +68,11 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   onRefreshCountByPeriod() {
     this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
   }
+
+  onRefreshTotalCountByPeriod() {
+    this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+  }
+
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
     if (data === undefined) {
       return [];
@@ -120,7 +127,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return undefined;
     }
 
-    let renderPeriods = getMonthlyPeriodsOneYearBackFrom(data.startDate);
+    let renderPeriods = getMonthlyPeriodsYearsBackFrom(data.startDate, 1);
     return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
               <div className='block'>
                 <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -138,10 +145,34 @@ class Dashboard extends React.Component<DashboardProps, {}> {
             </div>;
   }
 
+
+  renderTotalPeriodChart() {
+    let data = this.props.countByPeriodCharts.totalcount;
+    if (data === undefined) {
+      return undefined;
+    }
+
+    let renderPeriods = getMonthlyPeriodsYearsBackFrom(data.startDate, 2);
+    return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
+              <div className='block'>
+                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>{data.description}</span>
+                  <div>
+                    <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
+                    {data.isLoading === true ? undefined : <i className='fa fa-refresh' onClick={this.onRefreshTotalCountByPeriod} /> }
+                  </div>
+                </div>
+
+                {data.isLoading === true ? <Loader isInternalLoader={true} /> : <PeriodChart x={renderPeriods} data={{'bag count': data.data}} continuePreviousPeriodCount={true} />}
+                </div>
+            </div>;
+  }
+
   render() {
     return  <div style={{display: 'flex', flexWrap: 'wrap'}} className='dashboard'>
               {this.renderCountByRefValueBlocks()}
               {this.renderPeriodChart()}
+              {this.renderTotalPeriodChart()}
             </div>;
   }
 }

@@ -36,5 +36,12 @@ namespace TheCollection.Web.Controllers.Tea {
             var command = new GetBagsCountByPeriodsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
+
+        [HttpGet("TotalCountPeriod")]
+        public async Task<IActionResult> TotalCountPeriod() {
+            var applicationUser = await applicationUserAccessor.GetUser();
+            var command = new GetTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync();
+        }
     }
 }
