@@ -19,8 +19,8 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
-            var totalBagsCountByPeriods = await dashboardRepository.GetItemAsync("f08db9e3-2675-4973-a1fe-f5cd62f3dc20");
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var totalBagsCountByPeriods = await dashboardRepository.GetItemAsync(DashBoardTypes.TotalBagsCountByPeriod.Key.ToString());
             if (totalBagsCountByPeriods == null) {
                 return new NotFoundResult();
             }

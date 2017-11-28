@@ -30,8 +30,8 @@ namespace TheCollection.Web.Commands.Tea
                                                        .OrderByDescending(x => x.Value.Year)
                                                        .ThenByDescending(x => x.Value.Month);
 
-            var dashboard = new Dashboard<IEnumerable<CountBy<Period>>>() { Id = "10250ca5-cff3-4149-8613-c9c2068b81ac", UserId = ApplicationUser.Id, Data = bagsCountByPeriods };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var dashboard = new Dashboard<IEnumerable<CountBy<Period>>>() { Id = DashBoardTypes.BagsCountByPeriod.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.BagsCountByPeriod, Data = bagsCountByPeriods };
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
 
             return new OkObjectResult(bagsCountByPeriods);

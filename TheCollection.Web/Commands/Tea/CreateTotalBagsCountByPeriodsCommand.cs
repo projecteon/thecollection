@@ -37,8 +37,8 @@ namespace TheCollection.Web.Commands.Tea {
                 return new CountBy<Period>(item.Value, item.Count + state.Count);
             }, new CountBy<Period>(new Period(firstPeriod.Year, firstPeriod.Month), 0));
 
-            var dashboard = new Dashboard<IEnumerable<CountBy<Period>>>() { Id = "f08db9e3-2675-4973-a1fe-f5cd62f3dc20", UserId = ApplicationUser.Id, Data=totalBagsCountByPeriods };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var dashboard = new Dashboard<IEnumerable<CountBy<Period>>>() { Id = DashBoardTypes.TotalBagsCountByPeriod.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.TotalBagsCountByPeriod, Data=totalBagsCountByPeriods };
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
 
             return new OkObjectResult(totalBagsCountByPeriods);

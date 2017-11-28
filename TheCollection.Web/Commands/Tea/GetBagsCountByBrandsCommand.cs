@@ -20,8 +20,8 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync(int top = 10) {
-            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
-            var bagsCountByBrand = await dashboardRepository.GetItemAsync("00ac062d-68f4-4c6e-9a60-044bf8c9077c");
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var bagsCountByBrand = await dashboardRepository.GetItemAsync(DashBoardTypes.BagsCountByBrands.Key.ToString());
             if (bagsCountByBrand == null) {
                 return new NotFoundResult();
             }

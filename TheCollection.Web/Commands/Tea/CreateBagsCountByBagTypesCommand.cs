@@ -26,8 +26,8 @@ namespace TheCollection.Web.Commands.Tea {
             var queryablebags = bags.AsQueryable();
             var countGroupByIRef = new CountGroupBy<Bag, Business.RefValue, RefValueComparer>(queryablebags);
             var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.BagType);
-            var dashboard = new Dashboard<IEnumerable<CountBy<Business.RefValue>>>() { Id = "37a3592f-e614-45e8-9903-45135aea9dd4", UserId = ApplicationUser.Id, Data = bagsCountByBrand };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var dashboard = new Dashboard<IEnumerable<CountBy<Business.RefValue>>>() { Id = DashBoardTypes.BagsCountByBagTypes.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.BagsCountByBagTypes, Data = bagsCountByBrand };
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
             return new OkObjectResult(bagsCountByBrand);
         }
