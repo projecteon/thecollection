@@ -1,4 +1,5 @@
 namespace TheCollection.Web.Commands.Tea {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
@@ -19,15 +20,13 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync(int top = 10) {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
-            var bags = await bagsRepository.SearchItemsAsync();
-            var queryablebags = bags.AsQueryable();
-            var countGroupByIRef = new CountGroupBy<Bag, Business.RefValue, RefValueComparer>(queryablebags);
-            var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.Brand)
-                                                   .OrderByDescending(x => x.Count)
-                                                   .Take(top)
-                                                   .OrderBy(x => x.Value.Name);
-            return new OkObjectResult(bagsCountByBrand);
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var bagsCountByBrand = await dashboardRepository.GetItemAsync("00ac062d-68f4-4c6e-9a60-044bf8c9077c");
+            if (bagsCountByBrand == null) {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(bagsCountByBrand.Data.Take(top).OrderBy(x => x.Value?.Name));
         }
     }
 }

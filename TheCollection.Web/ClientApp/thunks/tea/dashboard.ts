@@ -30,12 +30,12 @@ export const requestBagTypeCount = {
 export const requestBrandCount = {
   requestBrandCount: (top?: number): AppThunkAction<ReceiveBrandCountAction | RequestBrandCountAction> => (dispatch, getState) => {
    try {
-     let fetchTask = fetch(`/api/tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
-       .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
-       .then(data => {
-         dispatch({ type: RECIEVE_BRANDCOUNT, data: data });
-         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
-     });
+      let fetchTask = fetch(`/api/tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
+        .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
+        .then(data => {
+          dispatch({ type: RECIEVE_BRANDCOUNT, data: data });
+          addTask(fetchTask); // ensure server-side prerendering waits for this to complete
+        });
    } catch (err) {
      dispatch({ type: RECIEVE_BRANDCOUNT, data: undefined });
    }
@@ -47,12 +47,13 @@ export const requestBrandCount = {
 export const requestCountByPeriod = {
   requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequesCountByPeriodAction> => (dispatch, getState) => {
    try {
-     let fetchTask = fetch(apipath, { credentials: 'same-origin' })
-       .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
-       .then(data => {
-         dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
-         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
-     });
+      let fetchTask = fetch(apipath, { credentials: 'same-origin' })
+        .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
+        .then(data => {
+          dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
+          addTask(fetchTask); // ensure server-side prerendering waits for this to complete
+        })
+        .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath }));
    } catch (err) {
      dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath });
    }

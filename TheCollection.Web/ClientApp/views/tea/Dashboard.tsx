@@ -10,7 +10,7 @@ import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeri
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
-import { DashboardPeriodBlockHOC } from '../../components/DashboardPeriodBlockHOC';
+import { DashboardPeriodBlockHOC } from '../../components/dashboard/DashboardPeriodBlockHOC';
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
 import { PieChart } from '../../components/charts/PieChart';

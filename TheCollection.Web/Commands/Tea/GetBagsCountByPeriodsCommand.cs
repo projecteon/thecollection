@@ -1,5 +1,5 @@
 namespace TheCollection.Web.Commands.Tea {
-    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
@@ -19,14 +19,13 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
-            var bags = await bagsRepository.SearchItemsAsync();
-            var queryablebags = bags.AsQueryable();
-            var countGroupByPeriod = new CountGroupBy<Bag, Period, PeriodComparer>(queryablebags);
-            var bagsCountByPeriods = countGroupByPeriod.GroupAndCountBy(x => new Period(x.InsertDate))
-                                                       .OrderByDescending(x => x.Value.Year)
-                                                       .ThenByDescending(x => x.Value.Month);
-            return new OkObjectResult(bagsCountByPeriods);
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var bagsCountByPeriods = await dashboardRepository.GetItemAsync("10250ca5-cff3-4149-8613-c9c2068b81ac");
+            if (bagsCountByPeriods == null) {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(bagsCountByPeriods.Data);
         }
     }
 }

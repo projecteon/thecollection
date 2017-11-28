@@ -1,11 +1,9 @@
 namespace TheCollection.Web.Commands.Tea {
-    using System;
-    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Business;
-    using TheCollection.Business.Extensions;
     using TheCollection.Business.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
@@ -21,21 +19,13 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
-            var bags = await bagsRepository.SearchItemsAsync();
-            var queryablebags = bags.AsQueryable();
-            var countGroupByPeriod = new CountGroupBy<Bag, Period, PeriodComparer>(queryablebags);
-            var bagsCountByPeriods = countGroupByPeriod.GroupAndCountBy(x => new Period(x.InsertDate))
-                                                       .OrderBy(x => x.Value.Year)
-                                                       .ThenBy(x => x.Value.Month);
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, "DashboardCountBy");
+            var totalBagsCountByPeriods = await dashboardRepository.GetItemAsync("f08db9e3-2675-4973-a1fe-f5cd62f3dc20");
+            if (totalBagsCountByPeriods == null) {
+                return new NotFoundResult();
+            }
 
-            var firstCountByPeriod = bagsCountByPeriods.First();
-            var firstPeriod = (new DateTime(firstCountByPeriod.Value.Year, firstCountByPeriod.Value.Month, 0)).AddMonths(-1);
-            var totalBagsCountByPeriods = bagsCountByPeriods.ToList().Scan((state, item) => {
-                return new CountGroupBy<Bag, Period, PeriodComparer>.CountBy(item.Value, item.Count + state.Count);
-            }, new CountGroupBy<Bag, Period, PeriodComparer>.CountBy(new Period(firstPeriod.Year, firstPeriod.Month), 0));
-
-            return new OkObjectResult(totalBagsCountByPeriods);
+            return new OkObjectResult(totalBagsCountByPeriods.Data);
         }
     }
 }

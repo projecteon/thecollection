@@ -12,24 +12,14 @@ namespace TheCollection.Business
 
         public IQueryable<T> Queryable { get; }
 
-        public IEnumerable<CountBy> GroupAndCountBy(Expression<Func<T, G>> predicate) {
+        public IEnumerable<CountBy<G>> GroupAndCountBy(Expression<Func<T, G>> predicate) {
             if (predicate == null) {
                 throw new ArgumentNullException(nameof(predicate));
             }
 
             return Queryable
                     .GroupBy(predicate, new GC())
-                    .Select(x => new CountBy(x.Key, x.Count()));
-        }
-
-        public class CountBy {
-            public CountBy(G value, int count) {
-                Value = value;
-                Count = count;
-            }
-
-            public G Value { get; }
-            public int Count { get; }
+                    .Select(x => new CountBy<G>(x.Key, x.Count()));
         }
     }
 }
