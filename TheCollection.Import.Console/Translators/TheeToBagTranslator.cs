@@ -24,7 +24,7 @@ namespace TheCollection.Import.Console.Translators {
             var teacountry = Countries.FirstOrDefault(country => country.Name == source.TheeLandvanherkomst.Trim());
 
             destination.MainID = source.MainID;
-            destination.Brand = teabrand != null ? new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name } : null;
+            destination.Brand = new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name };
             destination.Serie = source.TheeSerie.Trim();
             destination.Flavour = source.TheeSmaak.Trim();
             destination.Hallmark = source.TheeKenmerken.Trim();
