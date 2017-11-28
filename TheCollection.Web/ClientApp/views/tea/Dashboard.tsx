@@ -10,6 +10,7 @@ import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeri
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
+import { DashboardPeriodBlockHOC } from '../../components/DashboardPeriodBlockHOC';
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
 import { PieChart } from '../../components/charts/PieChart';
@@ -22,6 +23,8 @@ import './Dashboard.scss';
 const PieChartBlock = DashboardBlockHOC(PieChart);
 // tslint:disable-next-line:variable-name
 const BarChartBlock = DashboardBlockHOC(BarChart);
+// tslint:disable-next-line:variable-name
+const PeriodChartBlock = DashboardPeriodBlockHOC(PeriodChart);
 
 type DashboardProps =
   DashboardReducer.IDashboardState            // ... state we've requested from the Redux store
@@ -36,7 +39,6 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
     this.onExpandBrands = this.onExpandBrands.bind(this);
     this.onRefreshCountByPeriod = this.onRefreshCountByPeriod.bind(this);
-    this.onRefreshTotalCountByPeriod = this.onRefreshTotalCountByPeriod.bind(this);
   }
 
   componentDidMount() {
@@ -45,8 +47,8 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     this.props.requestBagTypeCount();
-    this.onRefreshCountByPeriod();
-    this.onRefreshTotalCountByPeriod();
+    this.onRefreshCountByPeriod('added');
+    this.onRefreshCountByPeriod('totalcount');
     this.props.requestBrandCount();
   }
 
@@ -54,23 +56,23 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.changeChartType(toChartType, chart);
   }
 
-  onPerviousPeriod() {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts.added.startDate.clone().add(-1, 'y'), 'added');
+  onPerviousPeriod(chartId: string) {
+    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(-1, 'y'), chartId);
   }
-  onNextPeriod() {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts.added.startDate.clone().add(1, 'y'), 'added');
+  onNextPeriod(chartId: string) {
+    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(1, 'y'), chartId);
   }
 
   onExpandBrands() {
     this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
   }
 
-  onRefreshCountByPeriod() {
-    this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
-  }
-
-  onRefreshTotalCountByPeriod() {
-    this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+  onRefreshCountByPeriod(chartId: string) {
+    if (chartId === 'added') {
+      this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
+    } else if (chartId === 'totalcount') {
+      this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+    }
   }
 
   translate(data: ICountBy<IRefValue>[]): c3.PrimitiveArray[] {
@@ -128,21 +130,14 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let renderPeriods = getMonthlyPeriodsYearsBackFrom(data.startDate, 1);
-    return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
-              <div className='block'>
-                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <span>{data.description}</span>
-                  <div>
-                    {data.isLoading === true ? undefined : <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} /> }
-                    <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
-                    {data.isLoading === true ? undefined : <i className='fa fa-chevron-right' onClick={this.onNextPeriod} /> }
-                    {data.isLoading === true ? undefined : <i className='fa fa-refresh' onClick={this.onRefreshCountByPeriod} /> }
-                  </div>
-                </div>
-
-                {data.isLoading === true ? <Loader isInternalLoader={true} /> : <PeriodChart x={renderPeriods} data={{'bag count': data.data}}/>}
-                </div>
-            </div>;
+    return <PeriodChartBlock  chartId={'added'}
+                              isLoading={data.isLoading}
+                              description={data.description}
+                              x={renderPeriods}
+                              data={{'bag count': data.data}}
+                              onNextPeriod={this.onNextPeriod}
+                              onPerviousPeriod={this.onPerviousPeriod}
+                              onRefresh={this.onRefreshCountByPeriod} />;
   }
 
 
@@ -153,19 +148,15 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     }
 
     let renderPeriods = getMonthlyPeriodsYearsBackFrom(data.startDate, 2);
-    return  <div className='col-xs-12 col-sm-12 col-md-6 col-lg-6 blockcol'>
-              <div className='block'>
-                <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <span>{data.description}</span>
-                  <div>
-                    <span style={{marginLeft: 7}}>{`${renderPeriods[0].year}/${renderPeriods[0].month} - ${renderPeriods[renderPeriods.length - 1].year}/${renderPeriods[renderPeriods.length - 1].month}`}</span>
-                    {data.isLoading === true ? undefined : <i className='fa fa-refresh' onClick={this.onRefreshTotalCountByPeriod} /> }
-                  </div>
-                </div>
-
-                {data.isLoading === true ? <Loader isInternalLoader={true} /> : <PeriodChart x={renderPeriods} data={{'bag count': data.data}} continuePreviousPeriodCount={true} />}
-                </div>
-            </div>;
+    return <PeriodChartBlock  chartId={'totalcount'}
+                              isLoading={data.isLoading}
+                              description={data.description}
+                              x={renderPeriods}
+                              data={{'bag count': data.data}}
+                              continuePreviousPeriodCount={true}
+                              onNextPeriod={this.onNextPeriod}
+                              onPerviousPeriod={this.onPerviousPeriod}
+                              onRefresh={this.onRefreshCountByPeriod} />;
   }
 
   render() {

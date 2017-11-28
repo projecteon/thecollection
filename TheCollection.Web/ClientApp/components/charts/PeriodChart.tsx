@@ -1,5 +1,5 @@
-import { Chart } from './Chart';
 import * as React from 'react';
+import { Chart } from './Chart';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IPeriod } from '../../interfaces/IPeriod';
 
@@ -11,18 +11,43 @@ type PeriodChartProps = {
 
 // tslint:disable-next-line:variable-name
 export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => {
-  const createData = (title: string, data: ICountBy<IPeriod>[]) => {
+  const startCount = (data: ICountBy<IPeriod>[]) => {
     let previousCount = 0;
+    if (props.continuePreviousPeriodCount !== true) {
+      return previousCount;
+    }
+
+    for (let _data of data) {
+      if (_data.value.year > props.x[0].year) {
+        break;
+      }
+
+      if (_data.value.year === props.x[0].year && _data.value.month >= props.x[0].month) {
+        break;
+      }
+
+      previousCount = _data.count;
+    }
+
+    return previousCount;
+  };
+
+  const createData = (title: string, data: ICountBy<IPeriod>[]) => {
+    let previousCount = startCount(data);
     let xPeriods = props.x.map(x => {
       let periodData = data.find(xdata => {
-        if (props.continuePreviousPeriodCount === true) {
-          previousCount = xdata.count;
-        }
-
         return xdata.value.year === x.year && xdata.value.month === x.month;
       });
 
-      return periodData === undefined ? {count: previousCount, value: x} : periodData;
+      if (periodData === undefined) {
+        return {count: previousCount, value: x};
+      }
+
+      if (props.continuePreviousPeriodCount === true) {
+        previousCount = periodData.count;
+      }
+
+      return periodData;
     });
 
     let chartData: c3.PrimitiveArray = [title];

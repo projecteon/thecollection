@@ -1,4 +1,5 @@
 namespace TheCollection.Web.Commands.Tea {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,11 @@ namespace TheCollection.Web.Commands.Tea {
                                                        .OrderBy(x => x.Value.Year)
                                                        .ThenBy(x => x.Value.Month);
 
+            var firstCountByPeriod = bagsCountByPeriods.First();
+            var firstPeriod = (new DateTime(firstCountByPeriod.Value.Year, firstCountByPeriod.Value.Month, 0)).AddMonths(-1);
             var totalBagsCountByPeriods = bagsCountByPeriods.ToList().Scan((state, item) => {
                 return new CountGroupBy<Bag, Period, PeriodComparer>.CountBy(item.Value, item.Count + state.Count);
-            }, new CountGroupBy<Bag, Period, PeriodComparer>.CountBy(null, 0)).Skip(1);
+            }, new CountGroupBy<Bag, Period, PeriodComparer>.CountBy(new Period(firstPeriod.Year, firstPeriod.Month), 0));
 
             return new OkObjectResult(totalBagsCountByPeriods);
         }
