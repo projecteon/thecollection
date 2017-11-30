@@ -37,8 +37,9 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.onChartChanged = this.onChartChanged.bind(this);
     this.onNextPeriod = this.onNextPeriod.bind(this);
     this.onPerviousPeriod = this.onPerviousPeriod.bind(this);
-    this.onExpandBrands = this.onExpandBrands.bind(this);
-    this.onRefreshCountByPeriod = this.onRefreshCountByPeriod.bind(this);
+    this.onExpandChart = this.onExpandChart.bind(this);
+    this.onCompressChart = this.onCompressChart.bind(this);
+    this.onRefreshChart = this.onRefreshChart.bind(this);
   }
 
   componentDidMount() {
@@ -46,10 +47,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return;
     }
 
-    this.props.requestBagTypeCount();
-    this.onRefreshCountByPeriod('added');
-    this.onRefreshCountByPeriod('totalcount');
-    this.props.requestBrandCount();
+    this.onRefreshChart('brands');
+    this.onRefreshChart('added');
+    this.onRefreshChart('totalcount');
+    this.onRefreshChart('bagtypes');
   }
 
   onChartChanged(toChartType: ChartType, chart: string) {
@@ -63,15 +64,27 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(1, 'y'), chartId);
   }
 
-  onExpandBrands() {
-    this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
+  onExpandChart(chartId: string) {
+    if (chartId === 'brands') {
+      this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
+    }
   }
 
-  onRefreshCountByPeriod(chartId: string) {
+  onCompressChart(chartId: string) {
+    if (chartId === 'brands') {
+      this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length - 10);
+    }
+  }
+
+  onRefreshChart(chartId: string) {
     if (chartId === 'added') {
       this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
     } else if (chartId === 'totalcount') {
       this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+    } else if (chartId === 'brands') {
+      this.props.requestBrandCount();
+    } else if (chartId === 'bagtypes') {
+      this.props.requestBagTypeCount();
     }
   }
 
@@ -90,19 +103,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   }
 
   renderCountByRefValueBlock(id: DashboardReducer.CountByRefValueTypes, countData: DashboardReducer.CountByChart<IRefValue>) {
-    let blockEvents = undefined;
-    if (id === 'brands') {
-      blockEvents =  {onExpand: this.onExpandBrands, onRefresh: this.props.requestBrandCount};
-    } else if (id === 'bagtypes') {
-      blockEvents =  {onRefresh: this.props.requestBagTypeCount};
-    }
-
+    let blockEvents = {onExpand: this.onExpandChart, onCompressBrands: this.onCompressChart, onRefresh: this.onRefreshChart};
     let data = this.translate(countData.data);
     if (countData.chartType === 'pie') {
-      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
+      return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} dataCount={data.length} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
     }
 
-    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} description={countData.description} validTransformations={['pie']} data={data} categories={[countData.description.toLowerCase()]} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
+    return <BarChartBlock key={id} chartId={id} isLoading={countData.isLoading} dataCount={data.length} description={countData.description} validTransformations={['pie']} data={data} categories={[countData.description.toLowerCase()]} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
   }
 
   renderCountByRefValueBlocks() {
@@ -137,7 +144,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                               data={{'bag count': data.data}}
                               onNextPeriod={this.onNextPeriod}
                               onPerviousPeriod={this.onPerviousPeriod}
-                              onRefresh={this.onRefreshCountByPeriod} />;
+                              onRefresh={this.onRefreshChart} />;
   }
 
 
@@ -156,7 +163,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
                               continuePreviousPeriodCount={true}
                               onNextPeriod={this.onNextPeriod}
                               onPerviousPeriod={this.onPerviousPeriod}
-                              onRefresh={this.onRefreshCountByPeriod} />;
+                              onRefresh={this.onRefreshChart} />;
   }
 
   render() {

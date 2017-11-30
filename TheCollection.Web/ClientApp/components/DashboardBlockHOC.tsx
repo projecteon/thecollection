@@ -7,10 +7,12 @@ type DashboardBlockHOCProps = {
   chartId: string;
   description: string;
   isLoading: boolean;
+  dataCount: number;
   validTransformations: ChartType[];
   onChartTypeChanged(toChartType: ChartType, chart: string): void;
-  onExpand?(): void;
-  onRefresh?(): void;
+  onExpand?(chartId: string): void;
+  onCompress?(chartId: string): void;
+  onRefresh?(chartId: string): void;
 };
 
 // tslint:disable-next-line:variable-name
@@ -19,17 +21,55 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
     constructor(props: T & DashboardBlockHOCProps) {
       super(props);
 
+      this.onCompress = this.onCompress.bind(this);
+      this.onExpand = this.onExpand.bind(this);
       this.onRefresh = this.onRefresh.bind(this);
     }
 
     onRefresh() {
-      this.props.onRefresh();
+      this.props.onRefresh(this.props.chartId);
+    }
+
+    onExpand() {
+      this.props.onExpand(this.props.chartId);
+    }
+
+    onCompress() {
+      this.props.onCompress(this.props.chartId);
     }
 
     renderConversions() {
+      if (this.props.isLoading === true) {
+        return undefined;
+      }
+
       return this.props.validTransformations.map(transformation => {
         return <IconButton key={transformation} charttype={transformation} chart={this.props.chartId} onClick={this.props.onChartTypeChanged} />;
       });
+    }
+
+    renderExpandButton() {
+      if (this.props.onExpand === undefined || this.props.isLoading === true || this.props.dataCount >= 30 || ((this.props.dataCount as number) % 10) !== 0) {
+        return undefined;
+      }
+
+      return <i className='fa fa-expand' onClick={this.onExpand} />;
+    }
+
+    renderCompressButton() {
+      if (this.props.onCompress === undefined || this.props.isLoading === true || this.props.dataCount <= 10) {
+        return undefined;
+      }
+
+      return <i className='fa fa-compress' onClick={this.onCompress} />;
+    }
+
+    renderRefreshButton() {
+      if (this.props.onRefresh === undefined || this.props.isLoading === true) {
+        return undefined;
+      }
+
+      return <i className='fa fa-refresh' onClick={this.onRefresh} />;
     }
 
     render() {
@@ -39,9 +79,10 @@ export function DashboardBlockHOC<T>(BlockComponent: ComponentClass<T> | Statele
                   <div className='header' style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <span>{description}</span>
                     <div>
-                      {this.props.isLoading === true ? undefined : this.renderConversions()}
-                      {this.props.onExpand && this.props.isLoading !== true ? <i className='fa fa-expand' onClick={this.props.onExpand}/> : undefined}
-                      {this.props.onRefresh && this.props.isLoading !== true ? <i className='fa fa-refresh' onClick={this.onRefresh}/> : undefined}
+                      {this.renderConversions()}
+                      {this.renderExpandButton()}
+                      {this.renderCompressButton()}
+                      {this.renderRefreshButton()}
                     </div>
                   </div>
                   {this.props.isLoading === true ? <Loader isInternalLoader={true} /> : <BlockComponent {...blockComponentProps} />}
