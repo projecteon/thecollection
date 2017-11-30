@@ -3,6 +3,7 @@ namespace TheCollection.Business.Tea
     using System;
     using System.ComponentModel.DataAnnotations;
     using Constant;
+    using Constant.JsonConverter;
     using Newtonsoft.Json;
 
     [JsonConverter(typeof(ConstantConverter<Guid, DashBoardTypes>))]
