@@ -2,7 +2,7 @@ namespace TheCollection.Business.Tests.Unit {
     using TheCollection.Business;
     using Xunit;
 
-    [Trait("PeriodComparerTests", "PeriodComparerTests equality tests")]
+    [Trait("PeriodComparerTests", "PeriodComparer equality tests")]
     public class PeriodComparerTests {
         [Fact(DisplayName = "When periods are same object then return true")]
         public void WhenPeriodsAreSameObjectThenReturnTrue() {
