@@ -7,7 +7,7 @@ import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
 import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE} from '../../constants/dashboard/chart';
 import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
-import { ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType } from '../../actions/dashboard/chart';
+import { ReceiveCountByPeriodAction, RequestCountByPeriodAction, ChangeChartType } from '../../actions/dashboard/chart';
 import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction} from '../../actions/tea/dashboard';
 
 export const requestBagTypeCount = {
@@ -57,7 +57,7 @@ export const requestBrandCount = {
 };
 
 export const requestCountByPeriod = {
-  requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequesCountByPeriodAction> => (dispatch, getState) => {
+  requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequestCountByPeriodAction> => (dispatch, getState) => {
    try {
     // fetch(apipath, {
     //   credentials: 'same-origin',

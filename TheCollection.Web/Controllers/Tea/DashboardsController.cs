@@ -16,15 +16,15 @@ namespace TheCollection.Web.Controllers.Tea {
             this.applicationUserAccessor = applicationUserAccessor;
         }
 
-        [HttpGet("BagTypes")]
-        public async Task<IActionResult> BagTypes() {
+        [HttpGet("BagTypes/{top:int?}")]
+        public async Task<IActionResult> BagTypes(int top = 10) {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new GetBagsCountByBagTypesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
-        [HttpPost("BagTypes")]
-        public async Task<IActionResult> CreateBagTypes() {
+        [HttpPut("BagTypes/{top:int?}")]
+        public async Task<IActionResult> CreateBagTypes(int top = 10) {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new CreateBagsCountByBagTypesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
@@ -37,11 +37,11 @@ namespace TheCollection.Web.Controllers.Tea {
             return await command.ExecuteAsync(top);
         }
 
-        [HttpPost("Brands")]
-        public async Task<IActionResult> CreateBrands() {
+        [HttpPut("Brands/{top:int?}")]
+        public async Task<IActionResult> CreateBrands(int top = 10) {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new CreateBagsCountByBrandsCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync();
+            return await command.ExecuteAsync(top);
         }
 
         [HttpGet("Periods")]
@@ -51,7 +51,7 @@ namespace TheCollection.Web.Controllers.Tea {
             return await command.ExecuteAsync();
         }
 
-        [HttpPost("Periods")]
+        [HttpPut("Periods")]
         public async Task<IActionResult> CreatePeriods() {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new CreateBagsCountByPeriodsCommand(documentDbClient, applicationUser);
@@ -65,7 +65,7 @@ namespace TheCollection.Web.Controllers.Tea {
             return await command.ExecuteAsync();
         }
 
-        [HttpPost("TotalCountPeriod")]
+        [HttpPut("TotalCountPeriod")]
         public async Task<IActionResult> CreateTotalCountPeriod() {
             var applicationUser = await applicationUserAccessor.GetUser();
             var command = new CreateTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);

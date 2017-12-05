@@ -11,7 +11,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
 
-    public class CreateBagsCountByBrandsCommand : IAsyncCommand {
+    public class CreateBagsCountByBrandsCommand : IAsyncCommand<int> {
         public CreateBagsCountByBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
@@ -20,7 +20,7 @@ namespace TheCollection.Web.Commands.Tea {
         public IDocumentClient DocumentDbClient { get; }
         public IApplicationUser ApplicationUser { get; }
 
-        public async Task<IActionResult> ExecuteAsync() {
+        public async Task<IActionResult> ExecuteAsync(int top) {
             var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var bags = await bagsRepository.SearchItemsAsync();
             var queryablebags = bags.AsQueryable();
@@ -33,7 +33,7 @@ namespace TheCollection.Web.Commands.Tea {
             var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Business.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
 
-            return new OkObjectResult(bagsCountByBrand);
+            return new OkObjectResult(bagsCountByBrand.Take(top).OrderBy(x => x.Value?.Name));
         }
     }
 }

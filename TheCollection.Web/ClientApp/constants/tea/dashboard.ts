@@ -10,5 +10,7 @@ export const REQUEST_BRANDCOUNT: REQUEST_BRANDCOUNT = 'REQUEST_BRANDCOUNT';
 export type RECIEVE_BRANDCOUNT = 'RECIEVE_BRANDCOUNT';
 export const RECIEVE_BRANDCOUNT: RECIEVE_BRANDCOUNT = 'RECIEVE_BRANDCOUNT';
 
+export const BAGSCOUNTBYBRAND = `/api/tea/Dashboards/Brands/`;
+export const BAGSCOUNTBYBAGTYPES = `/api/tea/Dashboards/BagTypes/`;
 export const BAGSCOUNTBYPERIOD = `/api/tea/Dashboards/Periods/`;
 export const TOTALBAGSCOUNTBYPERIOD = `/api/tea/Dashboards/TotalCountPeriod/`;

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
-import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD } from '../../constants/tea/dashboard';
+import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD, BAGSCOUNTBYBRAND, BAGSCOUNTBYBAGTYPES } from '../../constants/tea/dashboard';
 import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeriodsYearsBackFrom } from '../../util/PeriodUtil';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
@@ -47,10 +47,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return;
     }
 
-    this.onRefreshChart('brands');
-    this.onRefreshChart('added');
-    this.onRefreshChart('totalcount');
-    this.onRefreshChart('bagtypes');
+    this.props.requestBrandCount();
+    this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
+    this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+    this.props.requestBagTypeCount();
   }
 
   onChartChanged(toChartType: ChartType, chart: string) {
@@ -78,13 +78,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
   onRefreshChart(chartId: string) {
     if (chartId === 'added') {
-      this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
+      this.props.updateCountByPeriod(BAGSCOUNTBYPERIOD);
     } else if (chartId === 'totalcount') {
-      this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+      this.props.updateCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
     } else if (chartId === 'brands') {
-      this.props.requestBrandCount();
+      this.props.updateCountByRefValue(BAGSCOUNTBYBRAND);
     } else if (chartId === 'bagtypes') {
-      this.props.requestBagTypeCount();
+      this.props.updateCountByRefValue(BAGSCOUNTBYBAGTYPES);
     }
   }
 

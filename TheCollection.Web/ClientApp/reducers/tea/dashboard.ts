@@ -6,12 +6,21 @@ import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { IPeriod } from '../../interfaces/IPeriod';
 import { ChartType } from '../../types/Chart';
-import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE, CHANGE_CHARTPERIOD} from '../../constants/dashboard/chart';
-import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD, RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
-import { ReceiveCountByPeriodAction, RequesCountByPeriodAction, ChangeChartType, ChangeChartPeriod } from '../../actions/dashboard/chart';
+import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE, CHANGE_CHARTPERIOD, RECIEVE_COUNTBYREFVALUE, REQUEST_COUNTBYREFVALUE, UPDATE_COUNTBYPERIOD, UPDATE_COUNTBYREFVALUE} from '../../constants/dashboard/chart';
+import {
+  BAGSCOUNTBYBAGTYPES,
+  BAGSCOUNTBYBRAND,
+  BAGSCOUNTBYPERIOD,
+  RECIEVE_BAGTYPECOUNT,
+  RECIEVE_BRANDCOUNT,
+  REQUEST_BAGTYPECOUNT,
+  REQUEST_BRANDCOUNT,
+  TOTALBAGSCOUNTBYPERIOD,
+} from '../../constants/tea/dashboard';
+import { ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, ChangeChartType, ChangeChartPeriod, UpdateCountByPeriodAction, UpdateCountByRefValueAction } from '../../actions/dashboard/chart';
 import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction } from '../../actions/tea/dashboard';
 import { requestBagTypeCount, requestBrandCount, requestCountByPeriod } from '../../thunks/tea/dashboard';
-import { changeChartType, changeChartPeriod } from '../../thunks/dashboard/chart';
+import { changeChartType, changeChartPeriod, updateCountByRefValue, updateCountByPeriod } from '../../thunks/dashboard/chart';
 
 export type CountByRefValueTypes = 'brands' | 'bagtypes';
 export type CountByPeriodTypes = 'added' | 'totalcount';
@@ -36,9 +45,9 @@ const countbyperiods: CountByChart<IPeriod> = {description: 'Added', data: [], c
 const totalCountbyperiods: CountByChart<IPeriod> = {description: 'Total', data: [], chartType: 'line', isLoading: false, startDate: moment()};
 const unloadedState: IDashboardState = { countByRefValueCharts: {bagtypes: countbybagtypes, brands: countbybrands}, countByPeriodCharts: {added: countbyperiods, totalcount: totalCountbyperiods} };
 
-export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod, ...changeChartType, ...changeChartPeriod};
+export const actionCreators = {...requestBagTypeCount, ...requestBrandCount, ...requestCountByPeriod, ...changeChartType, ...changeChartPeriod, ...updateCountByRefValue, ...updateCountByPeriod};
 
-type DashboardActions = ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequesCountByPeriodAction | ChangeChartType | ChangeChartPeriod;
+type DashboardActions = ReceiveCountByRefValueAction | ReceiveBagTypeCountAction | RequestBagTypeCountAction | ReceiveBrandCountAction | RequestBrandCountAction | ReceiveCountByPeriodAction | RequestCountByPeriodAction | ChangeChartType | ChangeChartPeriod | UpdateCountByPeriodAction | UpdateCountByRefValueAction;
 
 export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
   switch (action.type) {
@@ -77,7 +86,6 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
         return  {...state, ...{countByPeriodCharts: periodCount}, ...{hasLoadedData: true}};
       }
 
-
       return state;
     case CHANGE_CHARTTYPE:
       let newChartType = {...state.countByRefValueCharts[action.chartId], ...{chartType: action.charttype}};
@@ -87,6 +95,30 @@ export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action
       let newStartPeriod = {...state.countByPeriodCharts[action.chartId], ...{startDate: action.startPeriod}};
       let newStartPeriods = {...state.countByPeriodCharts, ...{[action.chartId]: newStartPeriod}};
       return {...state, ...{countByPeriodCharts: newStartPeriods}};
+    case RECIEVE_COUNTBYREFVALUE:
+      if (action.apipath === BAGSCOUNTBYBRAND) {
+        let refValueCount = {...state.countByRefValueCharts, ...mapChartDatas('brands', state.countByRefValueCharts.brands, action.data)};
+        return  {...state, ...{countByRefValueCharts: refValueCount}, ...{hasLoadedData: true}};
+      }
+
+      if (action.apipath === BAGSCOUNTBYBAGTYPES) {
+        let refValueCount = {...state.countByRefValueCharts, ...mapChartDatas('bagtypes', state.countByRefValueCharts.bagtypes, action.data)};
+        return  {...state, ...{countByRefValueCharts: refValueCount}, ...{hasLoadedData: true}};
+      }
+
+      return state;
+    case REQUEST_COUNTBYREFVALUE:
+      if (action.apipath === BAGSCOUNTBYBRAND) {
+        let unloadRefValueCount = {...state.countByRefValueCharts, ...unMapChartDatas('brands', state.countByRefValueCharts.brands)};
+        return {...state, ...{countByRefValueCharts: unloadRefValueCount}};
+      }
+
+      if (action.apipath === BAGSCOUNTBYBAGTYPES) {
+        let unloadRefValueCount = {...state.countByRefValueCharts, ...unMapChartDatas('bagtypes', state.countByRefValueCharts.bagtypes)};
+        return {...state, ...{countByRefValueCharts: unloadRefValueCount}};
+      }
+
+      return state;
     default:
       const exhaustiveCheck: never = action;
   }
