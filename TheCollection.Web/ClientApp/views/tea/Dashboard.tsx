@@ -47,10 +47,10 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return;
     }
 
-    this.props.requestBrandCount();
+    this.props.requestCountByRefValue(BAGSCOUNTBYBRAND);
     this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
     this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
-    this.props.requestBagTypeCount();
+    this.props.requestCountByRefValue(BAGSCOUNTBYBAGTYPES);
   }
 
   onChartChanged(toChartType: ChartType, chart: string) {
@@ -66,13 +66,13 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
   onExpandChart(chartId: string) {
     if (chartId === 'brands') {
-      this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length + 10);
+      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length + 10);
     }
   }
 
   onCompressChart(chartId: string) {
     if (chartId === 'brands') {
-      this.props.requestBrandCount(this.props.countByRefValueCharts.brands.data.length - 10);
+      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length - 10);
     }
   }
 

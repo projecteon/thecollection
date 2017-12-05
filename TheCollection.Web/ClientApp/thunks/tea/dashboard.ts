@@ -55,26 +55,3 @@ export const requestBrandCount = {
    dispatch({ type: REQUEST_BRANDCOUNT });
  },
 };
-
-export const requestCountByPeriod = {
-  requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequestCountByPeriodAction> => (dispatch, getState) => {
-   try {
-    // fetch(apipath, {
-    //   credentials: 'same-origin',
-    //   method: 'post',
-    //   body: JSON.stringify(''),
-    // });
-    let fetchTask = fetch(apipath, { credentials: 'same-origin' })
-      .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
-      .then(data => {
-        dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
-        addTask(fetchTask); // ensure server-side prerendering waits for this to complete
-      })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath }));
-   } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath });
-   }
-
-   dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
- },
-};

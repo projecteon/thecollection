@@ -16,7 +16,7 @@ import {
   UPDATE_COUNTBYPERIOD,
   UPDATE_COUNTBYREFVALUE,
 } from '../../constants/dashboard/chart';
-import { ChangeChartType, ChangeChartPeriod, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, UpdateCountByPeriodAction, UpdateCountByRefValueAction } from '../../actions/dashboard/chart';
+import { ChangeChartType, ChangeChartPeriod, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, RequestCountByRefValueAction, UpdateCountByPeriodAction, UpdateCountByRefValueAction } from '../../actions/dashboard/chart';
 
 export const updateCountByRefValue = {
   updateCountByRefValue: (apipath: string, top?: number): AppThunkAction<ReceiveCountByRefValueAction | UpdateCountByRefValueAction> => (dispatch, getState) => {
@@ -61,6 +61,43 @@ export const updateCountByPeriod = {
    }
 
    dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
+ },
+};
+
+export const requestCountByPeriod = {
+  requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequestCountByPeriodAction> => (dispatch, getState) => {
+   try {
+    let fetchTask = fetch(apipath, { credentials: 'same-origin' })
+      .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
+      .then(data => {
+        dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
+        addTask(fetchTask); // ensure server-side prerendering waits for this to complete
+      })
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath }));
+   } catch (err) {
+     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath });
+   }
+
+   dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
+ },
+};
+
+export const requestCountByRefValue = {
+  requestCountByRefValue: (apipath: string, top?: number): AppThunkAction<ReceiveCountByRefValueAction | RequestCountByRefValueAction> => (dispatch, getState) => {
+   try {
+    let path = top === undefined ? apipath : apipath + top;
+    let fetchTask = fetch(path, { credentials: 'same-origin' })
+      .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
+      .then(data => {
+        dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: data, apipath: apipath });
+        addTask(fetchTask); // ensure server-side prerendering waits for this to complete
+      })
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath }));
+   } catch (err) {
+     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath });
+   }
+
+   dispatch({ type: REQUEST_COUNTBYREFVALUE, apipath: apipath });
  },
 };
 
