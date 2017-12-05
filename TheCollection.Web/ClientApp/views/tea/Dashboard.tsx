@@ -103,7 +103,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   }
 
   renderCountByRefValueBlock(id: DashboardReducer.CountByRefValueTypes, countData: DashboardReducer.CountByChart<IRefValue>) {
-    let blockEvents = {onExpand: this.onExpandChart, onCompressBrands: this.onCompressChart, onRefresh: this.onRefreshChart};
+    let blockEvents = {onExpand: this.onExpandChart, onCompress: this.onCompressChart, onRefresh: this.onRefreshChart};
     let data = this.translate(countData.data);
     if (countData.chartType === 'pie') {
       return  <PieChartBlock key={id} chartId={id} isLoading={countData.isLoading} dataCount={data.length} description={countData.description} validTransformations={['bar']} data={data} onChartTypeChanged={this.onChartChanged} hideLegends={data.length > 10} {...blockEvents}/>;
