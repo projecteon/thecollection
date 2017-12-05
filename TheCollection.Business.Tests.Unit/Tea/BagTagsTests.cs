@@ -2,6 +2,7 @@ namespace TheCollection.Business.Tests.Unit.Tea {
 
     using System;
     using System.Linq;
+    using TheCollection.Business.Extensions;
     using TheCollection.Business.Tea;
     using Xunit;
 

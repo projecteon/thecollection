@@ -65,14 +65,20 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   }
 
   renderSuccessTag(brand: string, index: number) {
-    return <span key={index} className='col-xs-6 col-sm-4 col-md-2 labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>{brand} <span className='badge badge-default'>{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span></span>;
+    return  <span key={index} className='labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>
+              <span>{brand}</span>
+              <span className='badge badge-default'>{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span>
+            </span>;
   }
 
   renderSearchSuccesses() {
     let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
     let tags = brands.map((brand, index) => { return this.renderSuccessTag(brand, index); });
     return  <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5}}>
-              <span key={-1} className='col-xs-6 col-sm-4 col-md-2 labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>Total <span className='badge badge-default'>{this.props.resultCount}</span></span>
+              <span key={-1} className='labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>
+                <span>Total</span>
+                <span className='badge badge-default'>{this.props.resultCount}</span>
+              </span>
               {tags}
             </div>;
   }

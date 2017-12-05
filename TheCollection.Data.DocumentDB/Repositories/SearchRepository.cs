@@ -60,7 +60,7 @@ namespace TheCollection.Data.DocumentDB {
         public async Task<IEnumerable<T>> SearchItemsAsync(Expression<Func<T, bool>> predicate = null, int pageSize = 0, int page = 0) {
             var query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                new FeedOptions { MaxItemCount = -1 }).AsQueryable();
+                new FeedOptions { MaxItemCount = predicate == null ? 1000 : - 1 }).AsQueryable();
 
             if (predicate != null) {
                 query = query.Where(predicate);

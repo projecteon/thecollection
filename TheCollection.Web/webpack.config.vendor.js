@@ -21,6 +21,8 @@ module.exports = (env) => {
                 'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
                 'domain-task',
+                'c3',
+                'c3/c3.css',
                 'event-source-polyfill',
                 'popper.js',
                 'react',
@@ -51,11 +53,6 @@ module.exports = (env) => {
       webpackCommon.loadSass(isDevBuild, 'vendor.css'),
       {
         output: { path: path.join(__dirname, 'wwwroot', 'dist') },
-        // module: {
-        //     rules: [
-        //         { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
-        //     ]
-        // },
         plugins: [
             // extractCSS,
             new webpack.DllPlugin({
@@ -75,9 +72,6 @@ module.exports = (env) => {
             path: path.join(__dirname, 'ClientApp', 'dist'),
             libraryTarget: 'commonjs2',
         },
-        // module: {
-        //     rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
-        // },
         entry: { vendor: ['aspnet-prerendering', 'react-dom/server'] },
         plugins: [
             new webpack.DllPlugin({
@@ -87,5 +81,6 @@ module.exports = (env) => {
         ]
     });
 
-    return [clientBundleConfig, serverBundleConfig];
+    return [clientBundleConfig];
+    // return [clientBundleConfig, serverBundleConfig];
 };

@@ -6,24 +6,24 @@ import { createHistory } from 'history';
 import * as Store from './store';
 
 export default function configureStore(initialState?: Store.IApplicationState) {
-  // Create a history of your choosing (we're using a browser history in this case)
+  // create a history of your choosing (we're using a browser history in this case)
   // const history = createHistory();
 
-  // Build middleware. These are functions that can process the actions before they reach the store.
+  // build middleware. These are functions that can process the actions before they reach the store.
   const windowIfDefined = typeof window === 'undefined' ? null : window as any;
-  // If devTools is installed, connect to it
+  // if devTools is installed, connect to it
   const devToolsExtension = windowIfDefined && windowIfDefined.devToolsExtension as () => GenericStoreEnhancer;
   const createStoreWithMiddleware = compose(
     applyMiddleware(thunk),
     applyMiddleware(thunk, routerMiddleware(browserHistory)),
-    devToolsExtension ? devToolsExtension() : f => f
+    devToolsExtension ? devToolsExtension() : f => f,
   )(createStore);
 
-  // Combine all reducers and instantiate the app-wide store instance
+  // combine all reducers and instantiate the app-wide store instance
   const allReducers = buildRootReducer(Store.reducers);
   const store = createStoreWithMiddleware(allReducers, initialState) as Redux.Store<Store.IApplicationState>;
 
-  // Enable Webpack hot module replacement for reducers
+  // enable Webpack hot module replacement for reducers
   if (module.hot) {
     module.hot.accept('./store', () => {
       const nextRootReducer = require<typeof Store>('./store');
