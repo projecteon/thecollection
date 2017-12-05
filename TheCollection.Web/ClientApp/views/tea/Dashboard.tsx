@@ -53,30 +53,30 @@ class Dashboard extends React.Component<DashboardProps, {}> {
     this.props.requestCountByRefValue(BAGSCOUNTBYBAGTYPES);
   }
 
-  onChartChanged(toChartType: ChartType, chart: string) {
-    this.props.changeChartType(toChartType, chart);
+  onChartChanged(toChartType: ChartType, chartId: DashboardReducer.CountByRefValueTypes) {
+    this.props.changeChartType(toChartType, chartId);
   }
 
-  onPerviousPeriod(chartId: string) {
+  onPerviousPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
     this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(-1, 'y'), chartId);
   }
-  onNextPeriod(chartId: string) {
+  onNextPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
     this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(1, 'y'), chartId);
   }
 
-  onExpandChart(chartId: string) {
+  onExpandChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
       this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length + 10);
     }
   }
 
-  onCompressChart(chartId: string) {
+  onCompressChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
       this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length - 10);
     }
   }
 
-  onRefreshChart(chartId: string) {
+  onRefreshChart(chartId: DashboardReducer.CountByPeriodTypes | DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'added') {
       this.props.updateCountByPeriod(BAGSCOUNTBYPERIOD);
     } else if (chartId === 'totalcount') {
