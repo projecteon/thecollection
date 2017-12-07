@@ -6,7 +6,7 @@ namespace TheCollection.Domain {
 
     public class CountGroupBy<T, G, GC> where GC: IEqualityComparer<G>, new() {
         public CountGroupBy(IQueryable<T> queryable) {
-            Queryable = queryable;
+            Queryable = queryable ?? throw new ArgumentNullException(nameof(queryable));
         }
 
         public IQueryable<T> Queryable { get; }
