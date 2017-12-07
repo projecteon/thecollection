@@ -3,7 +3,7 @@ namespace TheCollection.Web.Commands {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;

@@ -4,7 +4,7 @@ namespace TheCollection.Web.Commands {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business;
+    using TheCollection.Domain;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Lib.Extensions;
     using TheCollection.Web.Constants;

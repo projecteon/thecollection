@@ -1,5 +1,5 @@
 namespace TheCollection.Import.Console.Translators {
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Models;
     using TheCollection.Web.Translators;
 

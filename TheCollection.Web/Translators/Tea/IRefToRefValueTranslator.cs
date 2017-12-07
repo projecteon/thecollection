@@ -1,6 +1,6 @@
 namespace TheCollection.Web.Translators.Tea {
 
-    using TheCollection.Business;
+    using TheCollection.Domain;
 
     public class IRefToRefValueTranslator : ITranslator<IRef, Models.RefValue> {
 

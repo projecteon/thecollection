@@ -3,7 +3,7 @@ namespace TheCollection.Import.Console {
     using System.IO;
     using System.Linq;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;

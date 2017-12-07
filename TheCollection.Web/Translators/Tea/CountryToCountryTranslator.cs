@@ -1,7 +1,7 @@
 namespace TheCollection.Web.Translators.Tea {
 
     using System.Linq;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Models;
 
     public class CountryToCountryTranslator : ITranslator<Country, Models.Tea.Country> {

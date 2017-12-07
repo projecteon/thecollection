@@ -4,7 +4,7 @@ namespace TheCollection.Import.Console.Repositories {
     using System.IO;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
-    using TheCollection.Business;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Import.Console.Models;
 
     public class MerkJsonRepository : ILinqSearchRepository<Merk> {

@@ -2,7 +2,7 @@ namespace TheCollection.Data.DocumentDB.Repositories {
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Business;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
 
     public class UpsertRepository<T> : IUpsertRepository<T> where T : class {

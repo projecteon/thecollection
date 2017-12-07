@@ -3,7 +3,7 @@ namespace TheCollection.Web.Translators {
     using System.Linq;
     using TheCollection.Web.Models;
 
-    public class RefValueToRefValueTranslator : ITranslator<Business.RefValue, Models.RefValue> {
+    public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, Models.RefValue> {
 
         public RefValueToRefValueTranslator(IApplicationUser applicationUser) {
             ApplicationUser = applicationUser;
@@ -11,7 +11,7 @@ namespace TheCollection.Web.Translators {
 
         IApplicationUser ApplicationUser { get; }
 
-        public void Translate(Business.RefValue source, Models.RefValue destination) {
+        public void Translate(Domain.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;
             destination.name = source?.Name;
             destination.canaddnew = ApplicationUser.Roles.Any(x => x.Name == "sysadmin");

@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using System.Threading.Tasks;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Services;
 

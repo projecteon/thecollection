@@ -3,7 +3,7 @@ namespace TheCollection.Data.DocumentDB {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business;
+    using TheCollection.Domain.Contracts;
 
     public class SearchableQuery<T> {
 

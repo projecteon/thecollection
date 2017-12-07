@@ -4,7 +4,7 @@ namespace TheCollection.Web.Controllers {
 
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Services;
