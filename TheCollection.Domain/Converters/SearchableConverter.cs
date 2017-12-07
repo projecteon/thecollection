@@ -1,4 +1,4 @@
-namespace TheCollection.Domain {
+namespace TheCollection.Domain.Converters {
     using System;
     using System.Linq;
     using System.Reflection;
