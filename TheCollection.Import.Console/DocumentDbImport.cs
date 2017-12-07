@@ -3,14 +3,14 @@ namespace TheCollection.Import.Console {
     using System.IO;
     using System.Linq;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
     using TheCollection.Import.Console.Translators;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Services;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Web.Repositories;
 
     public class DocumentDbImport {
         public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, string collection, List<Merk> meerken) {

@@ -21,7 +21,7 @@ namespace TheCollection_Web {
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Handlers;
     using TheCollection.Web.Models;
-    using TheCollection.Web.Services;
+    using TheCollection.Web.Repositories;
 
     public class Startup {
 
@@ -38,7 +38,7 @@ namespace TheCollection_Web {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<IApplicationUserAccessor, ApplicationUserAccessor>();
+            services.AddScoped<IGetRepository<ApplicationUser>, ApplicationUserRepository>();
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),

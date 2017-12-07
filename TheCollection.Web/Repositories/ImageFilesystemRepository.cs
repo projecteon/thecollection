@@ -1,4 +1,4 @@
-namespace TheCollection.Web.Services {
+namespace TheCollection.Web.Repositories {
     using System;
     using System.Drawing;
     using System.IO;

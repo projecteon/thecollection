@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using TheCollection.Web.Services;
+using TheCollection.Web.Repositories;
 using TheCollection.Import.Console.Repositories;
 
 namespace TheCollection.Import.Console

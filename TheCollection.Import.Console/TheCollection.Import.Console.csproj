@@ -103,10 +103,10 @@
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\ImageAzureBlobRepository.cs">
+    <Compile Include="..\TheCollection.Web\Repositories\ImageAzureBlobRepository.cs">
       <Link>Repositories\ImageAzureBlobRepository.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\ImageFilesystemRepository.cs">
+    <Compile Include="..\TheCollection.Web\Repositories\ImageFilesystemRepository.cs">
       <Link>Repositories\ImageFilesystemRepository.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Web\Translators\ITranslator.cs">

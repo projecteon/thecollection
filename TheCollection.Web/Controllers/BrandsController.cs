@@ -1,34 +1,33 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace TheCollection.Web.Controllers {
-
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Services;
+    using TheCollection.Web.Models;
 
     [Route("api/[controller]")]
     public class BrandsController : Controller {
         private readonly IDocumentClient documentDbClient;
-        private readonly IApplicationUserAccessor applicationUserAccessor;
+        private readonly IGetRepository<ApplicationUser> applicationUserRepository;
 
-        public BrandsController(IDocumentClient documentDbClient, IApplicationUserAccessor applicationUserAccessor) {
+        public BrandsController(IDocumentClient documentDbClient, IGetRepository<ApplicationUser> applicationUserRepository) {
             this.documentDbClient = documentDbClient;
-            this.applicationUserAccessor = applicationUserAccessor;
+            this.applicationUserRepository = applicationUserRepository;
         }
 
         [HttpGet()]
         public async Task<IActionResult> Brands([FromQuery] string searchterm = "") {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchBrandsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
 
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] Brand brand) {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new CreateBrandCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(brand);
         }
@@ -40,7 +39,7 @@ namespace TheCollection.Web.Controllers {
 
         [HttpGet, Route("refvalues/{searchterm:alpha}")]
         public async Task<IActionResult> RefValues([FromQuery] string searchterm = "") {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchRefValuesCommand<Brand>(documentDbClient, applicationUser, DocumentDB.BrandsCollectionId);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
