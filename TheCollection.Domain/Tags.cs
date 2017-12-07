@@ -17,8 +17,8 @@ namespace TheCollection.Domain {
         }
 
         public static string StripAccents(string s) {
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in s.ToCharArray()) {
+            var sb = new StringBuilder();
+            foreach (var c in s.ToCharArray()) {
                 var index = Array.IndexOf(accents, c);
                 if (index > 0) {
                     sb.Append(replacement[index]);
