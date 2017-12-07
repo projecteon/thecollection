@@ -79,7 +79,7 @@ namespace TheCollection_Web {
             });
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
+            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Name"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Key"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Endpoints"))

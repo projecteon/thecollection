@@ -89,7 +89,7 @@ namespace TheCollection.Import.Console {
         }
 
         private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees) {
-            var images = thees.Where(thee => File.Exists($"{ImageFilesystemService.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var images = thees.Where(thee => File.Exists($"{ImageFilesystemRepository.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image => {
@@ -105,11 +105,11 @@ namespace TheCollection.Import.Console {
         }
 
         private static async System.Threading.Tasks.Task<List<Image>> ImportImages2Async(DocumentClient client, string collection, IEnumerable<Bag> bags, IImageRepository imageservice) {
-            var images = bags.Where(bag => File.Exists($"{ImageFilesystemService.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var images = bags.Where(bag => File.Exists($"{ImageFilesystemRepository.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image => {
-                var fileImageService = new ImageFilesystemService();
+                var fileImageService = new ImageFilesystemRepository();
                 using (var bitmap = await fileImageService.Get(image.Filename)) {
                     using (var imageStream = new MemoryStream()) {
                         bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);

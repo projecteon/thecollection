@@ -14,17 +14,17 @@ namespace TheCollection.Web.Services {
     // http://dotnetthoughts.net/working-with-azure-blob-storage-in-aspnet-core/
     // http://www.dotnetcurry.com/visualstudio/1328/visual-studio-connected-services-aspnet-core-azure-storage
 
-    public class ImageAzureBlobService : IImageRepository {
+    public class ImageAzureBlobRepository : IImageRepository {
         public CloudBlobContainer Container { get; }
 
-        public ImageAzureBlobService(string connectionString) {
+        public ImageAzureBlobRepository(string connectionString) {
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             Container = blobClient.GetContainerReference("images");
             CreateContainerIfNotExistsAsync().Wait();
         }
 
-        public ImageAzureBlobService(string scheme, string name, string key, string endpoints) {
+        public ImageAzureBlobRepository(string scheme, string name, string key, string endpoints) {
             var connectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endpoints}";
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
