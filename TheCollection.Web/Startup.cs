@@ -1,9 +1,7 @@
 namespace TheCollection_Web {
-
     using System;
     using System.Net;
     using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
     using AspNetCore.Identity.DocumentDb;
     using AspNetCore.Identity.DocumentDb.Tools;
     using Microsoft.AspNetCore.Builder;
@@ -17,6 +15,7 @@ namespace TheCollection_Web {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
     using TheCollection.Web.Extensions;
@@ -80,7 +79,7 @@ namespace TheCollection_Web {
             });
 
             //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageService>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
+            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobService(Configuration.GetValue<string>("StorageAccount:Scheme"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Name"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Key"),
                                                                                 Configuration.GetValue<string>("StorageAccount:Endpoints"))

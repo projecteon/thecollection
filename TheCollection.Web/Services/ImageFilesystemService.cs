@@ -1,11 +1,11 @@
-using System;
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
-
 namespace TheCollection.Web.Services {
+    using System;
+    using System.Drawing;
+    using System.IO;
+    using System.Threading.Tasks;
+    using TheCollection.Domain.Contracts.Repository;
 
-    public class ImageFilesystemService : IImageService {
+    public class ImageFilesystemService : IImageRepository {
         public const string Path = @"C:\src\projecteon\Theedatabase\Afbeeldingen Zakjes\";
 
         public Task<bool> Delete(string filename) {

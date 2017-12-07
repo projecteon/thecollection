@@ -103,9 +103,6 @@
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\IImageService.cs">
-      <Link>Services\IImageService.cs</Link>
-    </Compile>
     <Compile Include="..\TheCollection.Web\Services\ImageAzureBlobService.cs">
       <Link>Services\ImageAzureBlobService.cs</Link>
     </Compile>

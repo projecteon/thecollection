@@ -1,10 +1,11 @@
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-
 namespace TheCollection.Web.Services {
+    using System.Drawing;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using TheCollection.Domain.Contracts.Repository;
+
     // https://blogs.msdn.microsoft.com/premier_developer/2017/03/14/building-a-simple-photo-album-using-azure-blob-storage-with-net-core/
     // https://docs.microsoft.com/en-us/azure/storage/storage-samples-dotnet
     // https://docs.microsoft.com/en-us/azure/storage/storage-use-emulator
@@ -13,7 +14,7 @@ namespace TheCollection.Web.Services {
     // http://dotnetthoughts.net/working-with-azure-blob-storage-in-aspnet-core/
     // http://www.dotnetcurry.com/visualstudio/1328/visual-studio-connected-services-aspnet-core-azure-storage
 
-    public class ImageAzureBlobService : IImageService {
+    public class ImageAzureBlobService : IImageRepository {
         public CloudBlobContainer Container { get; }
 
         public ImageAzureBlobService(string connectionString) {
