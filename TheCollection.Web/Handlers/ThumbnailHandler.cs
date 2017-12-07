@@ -1,5 +1,4 @@
 namespace TheCollection.Web.Handlers {
-
     using System;
     using System.Drawing;
     using System.Text.RegularExpressions;
@@ -7,11 +6,11 @@ namespace TheCollection.Web.Handlers {
     using Microsoft.AspNetCore.Http;
     using Microsoft.Azure.Documents;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Contracts.Repository;
-    using TheCollection.Lib.Converters;
-    using TheCollection.Lib.Extensions;
+    using TheCollection.Domain.Converters;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Services;
 
     public class ThumbnailHandler {
         // https://docs.microsoft.com/en-us/azure/storage/storage-use-emulator

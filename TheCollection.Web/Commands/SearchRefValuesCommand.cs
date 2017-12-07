@@ -5,8 +5,8 @@ namespace TheCollection.Web.Commands {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Domain;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Data.DocumentDB;
-    using TheCollection.Lib.Extensions;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;

@@ -4,7 +4,7 @@ namespace TheCollection.Domain {
     using System.Linq;
     using System.Reflection;
     using TheCollection.Domain.Contracts;
-    using TheCollection.Lib.Extensions;
+    using TheCollection.Domain.Extensions;
 
     public class Searchable : ISearchable {
         private object SearchableObject { get; }

@@ -1,12 +1,10 @@
-namespace TheCollection.Lib.Extensions {
-
+namespace TheCollection.Domain.Extensions {
     using System;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
 
     public static class ImageExtensions {
-
         public static byte[] GetBytes(this Image imgSrc, ImageCodecInfo enc, EncoderParameters encParams) {
             var abRet = new ArraySegment<byte>();
             using (var ms = new MemoryStream()) {

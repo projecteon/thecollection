@@ -153,10 +153,6 @@
       <Project>{adeab4e0-7278-4fa5-ae85-29a9d7e9b632}</Project>
       <Name>TheCollection.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TheCollection.Lib\TheCollection.Lib.csproj">
-      <Project>{1ee522b3-c22c-45e8-8629-af962b6221b4}</Project>
-      <Name>TheCollection.Lib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.18.0\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.18.0\build\Microsoft.Azure.DocumentDB.targets')" />

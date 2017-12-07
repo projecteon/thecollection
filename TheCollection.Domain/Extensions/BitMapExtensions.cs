@@ -1,6 +1,6 @@
-namespace TheCollection.Lib.Extensions {
+namespace TheCollection.Domain.Extensions {
     using System.Drawing;
-    using TheCollection.Lib.Converters;
+    using TheCollection.Domain.Contracts;
 
     public static class BitMapExtensions {
         public const int THUMB_DEFAULT_WIDTH_PARAM = 200;

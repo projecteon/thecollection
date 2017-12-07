@@ -1,7 +1,7 @@
 namespace TheCollection.Domain {
     using System;
     using Newtonsoft.Json;
-    using TheCollection.Lib.Extensions;
+    using TheCollection.Domain.Extensions;
 
     public class Period {
         private static DateTime DefaultDate = DateTime.MinValue;

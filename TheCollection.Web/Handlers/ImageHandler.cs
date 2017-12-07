@@ -7,9 +7,10 @@ namespace TheCollection.Web.Handlers {
     using Microsoft.AspNetCore.Http;
     using Microsoft.Azure.Documents;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Contracts.Repository;
-    using TheCollection.Lib.Converters;
-    using TheCollection.Lib.Extensions;
+    using TheCollection.Domain.Converters;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
 
     public class ImageHandler {

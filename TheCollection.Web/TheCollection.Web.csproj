@@ -32,7 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TheCollection.Data.DocumentDB\TheCollection.Data.DocumentDB.csproj" />
     <ProjectReference Include="..\TheCollection.Domain\TheCollection.Domain.csproj" />
-    <ProjectReference Include="..\TheCollection.Lib\TheCollection.Lib.csproj" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
