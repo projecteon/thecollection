@@ -16,7 +16,7 @@ export const requestBrand = {
     }
 
     try {
-      let fetchTask = fetch(`/api/Brands/${brandid}`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/Brands/${brandid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBrand>)
         .then(data => {
           dispatch({ type: RECIEVE_BRAND, brand: data });
@@ -33,7 +33,7 @@ export const requestBrand = {
  export const addBrand = {
   addBrand: (brand: IBrand): AppThunkAction<ChangeBrandAction | RouterAction> => (dispatch, getState) => {
     try {
-      let addBrandTask = fetch(`/api/Brands/`, {
+      let addBrandTask = fetch(`/api/Tea/Brands/`, {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

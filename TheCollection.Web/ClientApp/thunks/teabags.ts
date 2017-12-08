@@ -17,7 +17,7 @@ export const requestTeabag = {
     dispatch({ type: Constants.REQUEST_TEABAG, teabagid: teabagid });
 
     try {
-      let fetchTask = fetch(`/api/Bags/${teabagid}`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/Bags/${teabagid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ITeabag>)
         .then(data => {
           dispatch({ type: Constants.RECEIVE_TEABAG, teabag: data });
@@ -97,7 +97,7 @@ export const requestTeabags = {
     }
 
     dispatch({ type: Constants.REQUEST_TEABAGS, searchTerms: searchTerms });
-    let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
+    let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Tea/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
     try {
       let fetchTask = fetch(uri, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ISearchResult<ITeabag>>)
@@ -132,7 +132,7 @@ export const saveTeabag = {
     let teabag = getState().teabag.teabag;
     let method = teabag.id === undefined || teabag.id.length > 0 ? 'put' : 'post';
     try {
-    let addTeabag = fetch(`/api/Bags/`, {
+    let addTeabag = fetch(`/api/Tea/Bags/`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

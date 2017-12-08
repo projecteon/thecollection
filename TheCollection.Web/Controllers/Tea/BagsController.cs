@@ -7,7 +7,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Web.Commands;
     using TheCollection.Web.Models;
 
-    [Route("api/[controller]")]
+    [Route("api/Tea/[controller]")]
     public class BagsController : Controller {
         private readonly IDocumentClient documentDbClient;
         private readonly IGetRepository<ApplicationUser> applicationUserRepository;

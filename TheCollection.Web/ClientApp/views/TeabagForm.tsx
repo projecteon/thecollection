@@ -67,7 +67,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   }
 
   onSearchBrand(searchTerm: string) {
-    let uri = `/api/Brands/?searchterm=${encodeURIComponent(searchTerm)}`;
+    let uri = `/api/Tea/Brands/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
             .then(response => response.json() as Promise<IBrand[]>);
   }
@@ -77,7 +77,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   }
 
   onSearchCountry(searchTerm: string) {
-    let uri = `/api/Countries/?searchterm=${encodeURIComponent(searchTerm)}`;
+    let uri = `/api/Tea/Countries/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
             .then(response => response.json() as Promise<ICountry[]>);
   }
@@ -87,7 +87,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   }
 
   onSearchType(searchTerm: string) {
-    let uri = `/api/BagTypes/?searchterm=${encodeURIComponent(searchTerm)}`;
+    let uri = `/api/Tea/BagTypes/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
             .then(response => response.json() as Promise<IBagType[]>);
   }

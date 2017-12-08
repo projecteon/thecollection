@@ -16,7 +16,7 @@ export const requestCountry = {
     }
 
     try {
-      let fetchTask = fetch(`/api/Countries/${countryid}`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/Countries/${countryid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountry>)
         .then(data => {
           dispatch({ type: RECIEVE_COUNTRY, country: data });
@@ -33,7 +33,7 @@ export const requestCountry = {
  export const addCountry = {
   addCountry: (country: ICountry): AppThunkAction<ChangeCountryAction | RouterAction> => (dispatch, getState) => {
     try {
-      let addBrandTask = fetch(`/api/Countries/`, {
+      let addBrandTask = fetch(`/api/Tea/Countries/`, {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

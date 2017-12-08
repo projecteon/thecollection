@@ -16,7 +16,7 @@ export const requestBagtype = {
     }
 
     try {
-      let fetchTask = fetch(`/api/BagTypes/${bagtypeid}`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/BagTypes/${bagtypeid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBagType>)
         .then(data => {
           dispatch({ type: RECIEVE_BAGTYPE, bagtype: data });
@@ -33,7 +33,7 @@ export const requestBagtype = {
  export const addBagtype = {
   addBagtype: (bagtype: IBagType): AppThunkAction<ChangeBagTypeAction | RouterAction> => (dispatch, getState) => {
     try {
-      let addBrandTask = fetch(`/api/BagTypes/`, {
+      let addBrandTask = fetch(`/api/Tea/BagTypes/`, {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

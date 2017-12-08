@@ -6,7 +6,7 @@ namespace TheCollection.Web.Controllers.Tea {
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Models;
 
-    [Route("api/tea/[controller]")]
+    [Route("api/Tea/[controller]")]
     public class DashboardsController : Controller {
         private readonly IDocumentClient documentDbClient;
         private readonly IGetRepository<ApplicationUser> applicationUserRepository;
