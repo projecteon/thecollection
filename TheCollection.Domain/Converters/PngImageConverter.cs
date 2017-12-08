@@ -2,12 +2,13 @@ namespace TheCollection.Domain.Converters {
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Linq;
     using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Extensions;
 
     public class PngImageConverter : IImageConverter {
         public Stream GetStream(Image pngImage) {
-            var memoryStream = new System.IO.MemoryStream();
+            var memoryStream = new MemoryStream();
             pngImage.Save(memoryStream, GetPngEncoder, GetPngEncoderParams);
             return memoryStream;
         }
@@ -21,25 +22,19 @@ namespace TheCollection.Domain.Converters {
         }
 
         public byte[] GetBytesScaled(Image imgSrc, int iWidth, int iHeight, bool bTransparent = false, bool bCenterAlign = false) {
-            return BitmapConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight, bTransparent, bCenterAlign).GetBytes(GetPngEncoder, GetPngEncoderParams);
+            return imgSrc.GetBytesScaledBitmap(iWidth, iHeight, bTransparent, bCenterAlign).GetBytes(GetPngEncoder, GetPngEncoderParams);
         }
 
-        private static ImageCodecInfo GetPngEncoder {
+        static ImageCodecInfo GetPngEncoder {
             get {
-                ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
-
-                for (int i = 0; i < infos.Length; i++) {
-                    if (ImageFormat.Png.Guid.Equals(infos[i].FormatID))
-                        return infos[i];
-                }
-
-                return null;
+                var infos = ImageCodecInfo.GetImageEncoders();
+                return infos.FirstOrDefault(info => ImageFormat.Png.Guid.Equals(info.FormatID));
             }
         }
 
-        private static EncoderParameters GetPngEncoderParams {
+        static EncoderParameters GetPngEncoderParams {
             get {
-                EncoderParameters encParams = new EncoderParameters(1);
+                var encParams = new EncoderParameters(1);
                 encParams.Param[0] = new EncoderParameter(Encoder.ColorDepth, 8L);
                 return encParams;
             }

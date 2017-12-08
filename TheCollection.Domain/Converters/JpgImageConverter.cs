@@ -2,6 +2,7 @@ namespace TheCollection.Domain.Converters {
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Linq;
     using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Extensions;
 
@@ -17,25 +18,19 @@ namespace TheCollection.Domain.Converters {
         }
 
         public byte[] GetBytesScaled(Image imgSrc, int iWidth, int iHeight) {
-            return BitmapConverter.GetBytesScaledBitmap(imgSrc, iWidth, iHeight).GetBytes(GetJpegEncoder, GetJPegEncoderParams);
+            return imgSrc.GetBytesScaledBitmap(iWidth, iHeight).GetBytes(GetJpegEncoder, GetJPegEncoderParams);
         }
 
-        private static ImageCodecInfo GetJpegEncoder {
+        static ImageCodecInfo GetJpegEncoder {
             get {
-                ImageCodecInfo[] infos = ImageCodecInfo.GetImageEncoders();
-
-                for (int i = 0; i < infos.Length; i++) {
-                    if (ImageFormat.Jpeg.Guid.Equals(infos[i].FormatID))
-                        return infos[i];
-                }
-
-                return null;
+                var infos = ImageCodecInfo.GetImageEncoders();
+                return infos.FirstOrDefault(info => ImageFormat.Jpeg.Guid.Equals(info.FormatID));
             }
         }
 
-        private static EncoderParameters GetJPegEncoderParams {
+        static EncoderParameters GetJPegEncoderParams {
             get {
-                EncoderParameters encParams = new EncoderParameters(1);
+                var encParams = new EncoderParameters(1);
                 encParams.Param[0] = new EncoderParameter(Encoder.Quality, 80L);
                 return encParams;
             }
