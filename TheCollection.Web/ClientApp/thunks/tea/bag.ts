@@ -1,11 +1,11 @@
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
-import { AppThunkAction } from '../store';
-import { ITeabag } from '../interfaces/ITeaBag';
-import { IRefValue } from '../interfaces/IRefValue';
-import { ISearchResult } from '../interfaces/ISearchResult';
-import * as Constants from '../constants/teabags';
-import * as Actions from '../actions/teabags';
+import { AppThunkAction } from '../../store';
+import { ITeabag } from '../../interfaces/tea/IBag';
+import { IRefValue } from '../../interfaces/IRefValue';
+import { ISearchResult } from '../../interfaces/ISearchResult';
+import * as Constants from '../../constants/tea/bag';
+import * as Actions from '../../actions/tea/bag';
 
 export const requestTeabag = {
   requestTeabag: (teabagid?: string): AppThunkAction<Actions.ReceiveTeabagAction | Actions.RequestTeabagAction> => (dispatch, getState) => {

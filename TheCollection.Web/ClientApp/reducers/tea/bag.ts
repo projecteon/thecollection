@@ -1,7 +1,7 @@
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
-import { AppThunkAction } from '../store';
-import { ITeabag } from '../interfaces/ITeaBag';
+import { AppThunkAction } from '../../store';
+import { ITeabag } from '../../interfaces/tea/IBag';
 import {
     CHANGE_BAGTYPE,
     CHANGE_BRAND,
@@ -16,9 +16,9 @@ import {
     RECEIVE_TEABAG,
     REQUEST_TEABAG,
     SAVE_TEABAG,
-} from '../constants/teabags';
-import { ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTypeAction, ClearBrandAction, ClearCountryAction, ChangeFlavourAction, ChangeHallmarkAction, ChangeSerialNumberAction, ChangeSerieAction, ReceiveTeabagAction, RequestTeabagAction, SaveTeabag } from '../actions/teabags';
-import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, changeFlavour, changeHallmark, changeSerialNumber, changeSerie, requestTeabag, saveTeabag } from '../thunks/teabags';
+} from '../../constants/tea/bag';
+import { ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTypeAction, ClearBrandAction, ClearCountryAction, ChangeFlavourAction, ChangeHallmarkAction, ChangeSerialNumberAction, ChangeSerieAction, ReceiveTeabagAction, RequestTeabagAction, SaveTeabag } from '../../actions/tea/bag';
+import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, changeFlavour, changeHallmark, changeSerialNumber, changeSerie, requestTeabag, saveTeabag } from '../../thunks/tea/bag';
 
 export interface ITeabagState {
   teabag?: ITeabag;

@@ -1,6 +1,6 @@
-import { ITeabag } from '../interfaces/ITeaBag';
-import { IRefValue } from '../interfaces/IRefValue';
-import * as Constant from '../constants/teabags';
+import { ITeabag } from '../../interfaces/tea/IBag';
+import { IRefValue } from '../../interfaces/IRefValue';
+import * as Constant from '../../constants/tea/bag';
 
 export type ReceiveTeabagsAction = {
   type: Constant.RECEIVE_TEABAGS,

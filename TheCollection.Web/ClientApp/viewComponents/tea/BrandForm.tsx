@@ -2,20 +2,20 @@ import * as React from 'react';
 import { Link, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { History } from 'history';
-import { IApplicationState }  from '../store';
-import * as BagtypeReducer from '../reducers/bagtype';
-import Loader from '../components/Loader';
-import {IBagType} from '../interfaces/IBagType';
+import { IApplicationState }  from '../../store';
+import * as BrandReducer from '../../reducers/tea/brand';
+import Loader from '../../components/Loader';
+import {IBrand} from '../../interfaces/tea/IBrand';
 
-type BagtypeProps =
-    BagtypeReducer.IBagTypeState     // ... state we've requested from the Redux store
-    & typeof BagtypeReducer.actionCreators   // ... plus action creators we've requested
+type BrandProps =
+    BrandReducer.IBrandState     // ... state we've requested from the Redux store
+    & typeof BrandReducer.actionCreators   // ... plus action creators we've requested
     & { params?: { id?: string } }        // ... plus incoming routing parameters
     & { history: History; };              // ... plus naviation through react router
 
-class BagtypeForm extends React.Component<BagtypeProps, {}> {
+class BrandForm extends React.Component<BrandProps, {}> {
 
-  constructor(props: BagtypeProps) {
+  constructor(props: BrandProps) {
     super();
 
     this.onNameChanged = this.onNameChanged.bind(this);
@@ -25,13 +25,13 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
 
   componentWillMount() {
     if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      this.props.requestBagtype(this.props.params.id);
+      this.props.requestBrand(this.props.params.id);
     }
   }
 
-  componentWillReceiveProps(nextProps: BagtypeProps) {
-    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.bagtype.id !== this.props.params.id) {
-      this.props.requestBagtype(this.props.params.id);
+  componentWillReceiveProps(nextProps: BrandProps) {
+    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.brand.id !== this.props.params.id) {
+      this.props.requestBrand(this.props.params.id);
     }
   }
 
@@ -42,19 +42,19 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
   onAdd(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.addBagtype(this.props.bagtype);
+    this.props.addBrand(this.props.brand);
     // this.props.history.goBack();
   }
 
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    // this.props.addBagtype(this.props.bagtype);
+    // this.props.addBrand(this.props.brand);
     // this.props.history.goBack();
   }
 
   renderSaveButton() {
-    if (this.props.bagtype.id) {
+    if (this.props.brand.id) {
       return  <button className='btn btn-default' onClick={this.onUpdate}>
                 <span className='fa fa-floppy-o' aria-hidden='true'></span> Update
               </button>;
@@ -70,7 +70,7 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
               <div className='form-group'>
                 <label htmlFor='inputName' className='col-sm-2 control-label'>Name</label>
                 <div className='col-sm-6'>
-                  <input type='text' className='form-control' id='inputName' placeholder='Name' value={this.props.bagtype.name} onChange={this.onNameChanged} />
+                  <input type='text' className='form-control' id='inputName' placeholder='Name' value={this.props.brand.name} onChange={this.onNameChanged} />
                 </div>
               </div>
               <div className='form-group'>
@@ -90,7 +90,7 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState) => state.bagtype, // selects which state properties are merged into the component's props
-    BagtypeReducer.actionCreators,               // selects which action creators are merged into the component's props
-)(BagtypeForm));
+    (state: IApplicationState) => state.brand, // selects which state properties are merged into the component's props
+    BrandReducer.actionCreators,               // selects which action creators are merged into the component's props
+)(BrandForm));
 

@@ -1,23 +1,23 @@
 import { Action, Reducer, ActionCreator } from 'redux';
 import { fetch, addTask } from 'domain-task';
-import { AppThunkAction } from '../store';
-import { ISearchResult } from '../interfaces/ISearchResult';
-import { ITeabag } from '../interfaces/ITeaBag';
+import { AppThunkAction } from '../../store';
+import { ISearchResult } from '../../interfaces/ISearchResult';
+import { ITeabag } from '../../interfaces/tea/IBag';
 import {
   RECEIVE_TEABAGS,
   REQUEST_TEABAGS,
   SEARCH_TERMS_CHANGED,
   SEARCH_TERMS_ERROR,
   ZOOM_IMAGE_TOGGLE,
-} from '../constants/teabags';
+} from '../../constants/tea/bag';
 import {
   ReceiveTeabagsAction,
   RequestTeabagsAction,
   SearchTermsChanged,
   SearchTermsError,
   ZoomImage,
-} from '../actions/teabags';
-import { requestTeabags, validateSearchTerms, zoomImage } from '../thunks/teabags';
+} from '../../actions/tea/bag';
+import { requestTeabags, validateSearchTerms, zoomImage } from '../../thunks/tea/bag';
 
 export interface ITeabagsState {
   teabags: ITeabag[];

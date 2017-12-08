@@ -2,20 +2,20 @@ import * as React from 'react';
 import { Link, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { History } from 'history';
-import { IApplicationState }  from '../store';
-import * as TeabagReducer from '../reducers/teabag';
-import * as BrandReducer from '../reducers/brand';
+import { IApplicationState }  from '../../store';
+import * as TeabagReducer from '../../reducers/tea/bag';
+import * as BrandReducer from '../../reducers/tea/brand';
 
-import {ComboBox} from '../components/ComboBox/ComboBox';
-import Loader from '../components/Loader';
-import {FormGroupItem} from '../components/FormGroupItem';
-import TextInput from '../components/TextInput';
-import Textarea from '../components/Textarea';
-import {Image} from '../components/Image';
+import {ComboBox} from '../../components/ComboBox/ComboBox';
+import Loader from '../../components/Loader';
+import {FormGroupItem} from '../../components/FormGroupItem';
+import TextInput from '../../components/TextInput';
+import Textarea from '../../components/Textarea';
+import {Image} from '../../components/Image';
 
-import {IBrand} from '../interfaces/IBrand';
-import {ICountry} from '../interfaces/ICountry';
-import {IBagType} from '../interfaces/IBagType';
+import {IBrand} from '../../interfaces/tea/IBrand';
+import {ICountry} from '../../interfaces/ICountry';
+import {IBagType} from '../../interfaces/tea/IBagType';
 
 const CountryComboBox = ComboBox<ICountry>(); // tslint:disable-line:variable-name
 const TypeComboBox = ComboBox<IBagType>(); // tslint:disable-line:variable-name
@@ -63,7 +63,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   }
 
   onAddNewBrand() {
-    this.props.history.push('/brandform');
+    this.props.history.push('/tea/brandform');
   }
 
   onSearchBrand(searchTerm: string) {
@@ -83,7 +83,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   }
 
   onAddNewBagType() {
-    this.props.history.push('/bagtypeform');
+    this.props.history.push('/tea/bagtypeform');
   }
 
   onSearchType(searchTerm: string) {

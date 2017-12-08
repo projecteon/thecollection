@@ -1,10 +1,10 @@
 import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
-import { AppThunkAction } from '../store';
-import { IBagType } from '../interfaces/IBagType';
-import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../constants/bagtype';
-import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../actions/bagtype';
-import { addBagtype, changeName, requestBagtype } from '../thunks/bagtype';
+import { AppThunkAction } from '../../store';
+import { IBagType } from '../../interfaces/tea/IBagType';
+import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
+import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
+import { addBagtype, changeName, requestBagtype } from '../../thunks/tea/bagtype';
 
 export interface IBagTypeState {
   bagtype?: IBagType;

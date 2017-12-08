@@ -1,6 +1,6 @@
-import { IRefValue } from './IRefValue';
+import { IRefValue } from '../IRefValue';
 import { IBrand } from './IBrand';
-import { ICountry } from './ICountry';
+import { ICountry } from '../ICountry';
 import { IBagType } from './IBagType';
 
 export interface ITeabag {

@@ -2,11 +2,11 @@ import * as React from 'react';
 import * as Mousetrap from 'mousetrap';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { IApplicationState }  from '../store';
-import * as TeaBagsReducer from '../reducers/teabags';
-import { ImageZoom } from '../components/ImageZoom';
-import TeabagCard from '../components/TeabagCard';
-import { ITeabag } from '../interfaces/ITeaBag';
+import { IApplicationState }  from '../../store';
+import * as TeaBagsReducer from '../../reducers/tea/bags';
+import { ImageZoom } from '../../components/ImageZoom';
+import TeabagCard from '../../components/TeabagCard';
+import { ITeabag } from '../../interfaces/tea/IBag';
 
 import './Teabags.scss';
 

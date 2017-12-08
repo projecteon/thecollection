@@ -1,12 +1,12 @@
 import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
-import { AppThunkAction } from '../store';
-import { IBrand } from '../interfaces/IBrand';
-import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../constants/brand';
-import { AddBrandAction, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../actions/brand';
+import { AppThunkAction } from '../../store';
+import { IBrand } from '../../interfaces/tea/IBrand';
+import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../../constants/tea/brand';
+import { AddBrandAction, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
 
-import { CHANGE_BRAND } from '../constants/teabags';
-import { ChangeBrandAction } from '../actions/teabags';
+import { CHANGE_BRAND } from '../../constants/tea/bag';
+import { ChangeBrandAction } from '../../actions/tea/bag';
 
 export const requestBrand = {
    requestBrand: (brandid?: string): AppThunkAction<ReceiveBrandAction | RequestBrandAction> => (dispatch, getState) => {

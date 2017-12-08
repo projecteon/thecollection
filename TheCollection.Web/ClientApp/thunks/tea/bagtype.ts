@@ -1,12 +1,12 @@
 import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
-import { AppThunkAction } from '../store';
-import { IBagType } from '../interfaces/IBagtype';
-import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../constants/bagtype';
-import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../actions/bagtype';
+import { AppThunkAction } from '../../store';
+import { IBagType } from '../../interfaces/tea/IBagtype';
+import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
+import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
 
-import { CHANGE_BAGTYPE } from '../constants/teabags';
-import { ChangeBagTypeAction } from '../actions/teabags';
+import { CHANGE_BAGTYPE } from '../../constants/tea/bag';
+import { ChangeBagTypeAction } from '../../actions/tea/bag';
 
 export const requestBagtype = {
    requestBagtype: (bagtypeid?: string): AppThunkAction<ReceiveBagtypeAction | RequestBagtypeAction> => (dispatch, getState) => {

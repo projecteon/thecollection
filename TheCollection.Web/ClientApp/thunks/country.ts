@@ -5,8 +5,8 @@ import { ICountry } from '../interfaces/ICountry';
 import { ADD_COUNTRY, CHANGE_NAME, RECIEVE_COUNTRY, REQUEST_COUNTRY } from '../constants/country';
 import { AddCountryAction, ChangeNameAction, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
 
-import { CHANGE_COUNTRY } from '../constants/teabags';
-import { ChangeCountryAction } from '../actions/teabags';
+import { CHANGE_COUNTRY } from '../constants/tea/bag';
+import { ChangeCountryAction } from '../actions/tea/bag';
 
 export const requestCountry = {
    requestCountry: (countryid?: string): AppThunkAction<ReceiveCountryAction | RequestCountryAction> => (dispatch, getState) => {
@@ -30,7 +30,7 @@ export const requestCountry = {
   },
  };
 
- export const addCountry = {
+export const addCountry = {
   addCountry: (country: ICountry): AppThunkAction<ChangeCountryAction | RouterAction> => (dispatch, getState) => {
     try {
       let addBrandTask = fetch(`/api/Tea/Countries/`, {
@@ -54,7 +54,7 @@ export const requestCountry = {
   },
  };
 
- export const changeName = {
+export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
     dispatch({type: CHANGE_NAME, name: name});
   },
