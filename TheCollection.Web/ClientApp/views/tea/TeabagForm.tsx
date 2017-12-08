@@ -49,6 +49,8 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
       if (this.props.teabag !== undefined && this.props.teabag.id !== this.props.params.id) {
         this.props.requestTeabag(this.props.params.id);
       }
+    } else if (this.props.params.id === undefined && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
+      this.props.requestTeabag();
     }
   }
 
@@ -57,7 +59,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
       if (nextProps.teabag !== undefined && nextProps.teabag.id !== nextProps.params.id) {
         this.props.requestTeabag(nextProps.params.id);
       }
-    } else if (nextProps.params.id === undefined && this.props.teabag.id === undefined && this.props.teabag.id.length > 0) {
+    } else if (nextProps.params.id === undefined && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
       this.props.requestTeabag();
     }
   }
