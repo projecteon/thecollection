@@ -15,6 +15,8 @@ namespace TheCollection_Web {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using NodaTime;
+    using NodaTime.Serialization.JsonNet;
     using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
@@ -94,7 +96,10 @@ namespace TheCollection_Web {
                     options.SslPort = 44330;
                     options.Filters.Add(new RequireHttpsAttribute());
                 }
-            );
+            ).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            }); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -148,6 +153,7 @@ namespace TheCollection_Web {
 
         DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
             serializerSettings = serializerSettings ?? new JsonSerializerSettings();
+            serializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
             serializerSettings.Converters.Add(new JsonClaimConverter());
             serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsPrincipalConverter());
             serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsIdentityConverter());

@@ -1,6 +1,7 @@
 namespace TheCollection.Domain.Tea {
     using System.ComponentModel.DataAnnotations;
     using Newtonsoft.Json;
+    using NodaTime;
     using TheCollection.Domain.Converters;
 
     [JsonConverter(typeof(SearchableConverter))]
@@ -45,7 +46,7 @@ namespace TheCollection.Domain.Tea {
         public string SerialNumber { get; set; }
 
         [JsonProperty(PropertyName = "insertdate")]
-        public string InsertDate { get; set; }
+        public LocalDate InsertDate { get; set; }
 
         [JsonProperty(PropertyName = "imageid")]
         public string ImageId { get; set; }

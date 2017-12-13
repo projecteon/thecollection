@@ -1,7 +1,7 @@
 namespace TheCollection.Domain {
     using System;
     using Newtonsoft.Json;
-    using TheCollection.Domain.Extensions;
+    using NodaTime;
 
     public class Period {
         private static DateTime DefaultDate = DateTime.MinValue;
@@ -12,14 +12,9 @@ namespace TheCollection.Domain {
             Month = month;
         }
 
-        public Period(string datestring) {
-            var date = DateTime.MinValue;
-            if (datestring.IsNotNullOrWhiteSpace()) {
-                date = DateTime.Parse(datestring);
-            }
-
-            Year = date.Year;
-            Month = date.Month;
+        public Period(LocalDate localDate) {
+            Year = localDate.Year;
+            Month = localDate.Month;
         }
 
         public int Year { get; }

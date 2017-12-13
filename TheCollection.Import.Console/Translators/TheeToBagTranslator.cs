@@ -1,6 +1,8 @@
 namespace TheCollection.Import.Console.Translators {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using NodaTime;
     using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Models;
     using TheCollection.Web.Translators;
@@ -31,8 +33,16 @@ namespace TheCollection.Import.Console.Translators {
             destination.BagType = teabagType != null ? new Domain.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null;
             destination.Country = teacountry != null ? new Domain.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null;
             destination.SerialNumber = source.TheeSerienummer.Trim();
-            destination.InsertDate = source.Theeinvoerdatum.Trim();
+            destination.InsertDate = ParseInvoerDatum(source);
             destination.ImageId = Images.FirstOrDefault(image => image.Filename == $"{source.MainID}.jpg")?.Id;
+        }
+
+        static LocalDate ParseInvoerDatum(Thee source) {
+            if (DateTime.TryParse(source.Theeinvoerdatum.Trim(), out var dateTime)) {
+                return LocalDate.FromDateTime(dateTime);
+            }
+
+            return LocalDate.MinIsoValue;
         }
     }
 }

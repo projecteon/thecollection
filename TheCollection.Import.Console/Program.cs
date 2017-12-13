@@ -5,6 +5,9 @@ using System.Configuration;
 using System.Linq;
 using TheCollection.Web.Repositories;
 using TheCollection.Import.Console.Repositories;
+using Newtonsoft.Json;
+using NodaTime;
+using NodaTime.Serialization.JsonNet;
 
 namespace TheCollection.Import.Console
 {
@@ -41,9 +44,14 @@ namespace TheCollection.Import.Console
                 }
             }
 
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
             var documentDbClient = new DocumentClient(
                 uri,
-                authkey
+                authkey,
+                serializerSettings,
+                new ConnectionPolicy { EnableEndpointDiscovery = false },
+                null
             );
 
             var imageUploadConnectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endPoints}";
@@ -62,12 +70,12 @@ namespace TheCollection.Import.Console
 
         static void CopyMissingFilesToTempUploadDir(AzureStorageClient azureClient)
         {
-            var import = ImportFromAccess();
+            var (meerkens, thees) = ImportFromAccess();
             var list = azureClient.GetList();
-            var missingImageImports = import.thees.Where(thee => !list.Contains($"{thee.MainID}.jpg"));
+            var missingImageImports = thees.Where(thee => !list.Contains($"{thee.MainID}.jpg"));
             var missingImageImportsNames = missingImageImports.Select(thee => $"{thee.MainID}.jpg").ToList();
             var missingFiles = missingImageImportsNames.Where(missing => !System.IO.File.Exists($"{ImageFilesystemRepository.Path}{missing}"));
-            var troubleTeaBags = import.thees.Where(thee => !missingFiles.Contains($"{thee.MainID}.jpg"))
+            var troubleTeaBags = thees.Where(thee => !missingFiles.Contains($"{thee.MainID}.jpg"))
                 .ToList()
                 .Select(thee => $"{thee.TheeMerk} - {thee.TheeSmaak} - {thee.TheeSerienummer}");
             var uploadDir = @"C:\src\projecteon\missingthees\";
