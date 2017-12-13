@@ -1,4 +1,4 @@
-namespace TheCollection.Web.Commands {
+namespace TheCollection.Web.Commands.Tea {
 
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,26 +13,26 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
-    public class SearchBrandsCommand : IAsyncCommand<Search> {
+    public class SearchBagTypesCommand {
 
-        public SearchBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public SearchBagTypesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
-            BrandTranslator = new BrandToBrandTranslator(applicationUser);
+            BagTypeTranslator = new BagTypeToBagTypeTranslator(applicationUser);
         }
 
         IDocumentClient DocumentDbClient { get; }
-        ITranslator<Brand, Models.Tea.Brand> BrandTranslator { get; }
+        ITranslator<BagType, Models.Tea.BagType> BagTypeTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
             if (search.searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
-            var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
-            var brands = await brandsRepository.SearchAsync(search.searchterm);
-            var sortedbrands = brands.OrderBy(brand => brand.Name);
+            var bagTypesRepository = new SearchRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagTypesCollectionId);
+            var bagTypes = await bagTypesRepository.SearchAsync(search.searchterm);
+            var sortedbagtypes = bagTypes.OrderBy(bagType => bagType.Name);
 
-            return new OkObjectResult(BrandTranslator.Translate(sortedbrands));
+            return new OkObjectResult(BagTypeTranslator.Translate(sortedbagtypes));
         }
     }
 }

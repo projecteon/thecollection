@@ -1,5 +1,4 @@
-namespace TheCollection.Web.Commands
-{
+namespace TheCollection.Web.Commands.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;

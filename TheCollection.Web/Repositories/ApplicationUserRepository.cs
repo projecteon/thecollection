@@ -14,7 +14,7 @@ namespace TheCollection.Web.Repositories {
             _context = context;
         }
 
-        public Task<ApplicationUser> GetItemAsync(string id) {
+        public Task<ApplicationUser> GetItemAsync(string id = null) {
             return _userManager.GetUserAsync(_context.HttpContext.User);
         }
     }

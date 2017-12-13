@@ -5,6 +5,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
+    using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
 

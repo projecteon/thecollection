@@ -1,4 +1,4 @@
-namespace TheCollection.Web.Commands {
+namespace TheCollection.Web.Commands.Tea {
 
     using System.Linq;
     using System.Threading.Tasks;

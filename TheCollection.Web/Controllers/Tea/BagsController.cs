@@ -4,7 +4,7 @@ namespace TheCollection.Web.Controllers {
     using Microsoft.Azure.Documents;
     using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Domain.Tea;
-    using TheCollection.Web.Commands;
+    using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Models;
 
     [Route("api/Tea/[controller]")]
