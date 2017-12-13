@@ -4,17 +4,7 @@ If you’re using PowerShell in Windows, execute $Env:ASPNETCORE_ENVIRONMENT = "
 
 https://blogs.msdn.microsoft.com/webdev/2017/02/14/building-single-page-applications-on-asp-net-core-with-javascriptservices/
 
-https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#example-a-simple-webpack-setup-that-builds-less
-
 https://github.com/FabianGosebrink/ASPNETCore-WebAPI-Sample
-
-http://www.c-sharpcorner.com/UploadFile/b69ed7/getting-started-with-bootstrap/
-
-https://github.com/webpack/docs/wiki/list-of-plugins
-
-https://www.documentdb.com/sql/tutorial
-
-https://www.documentdb.com/sql/demo
 
 Search
 http://stackoverflow.com/questions/32333952/linq-statement-instead-of-sql-with-join-and-array
