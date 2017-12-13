@@ -1,7 +1,7 @@
-import * as TeaBags from '../reducers/teabags';
-import * as Teabag from '../reducers/teabag';
-import * as Brand from '../reducers/brand';
-import * as Bagtype from '../reducers/bagtype';
+import * as TeaBags from '../reducers/tea/bags';
+import * as Teabag from '../reducers/tea/bag';
+import * as Brand from '../reducers/tea/brand';
+import * as Bagtype from '../reducers/tea/bagtype';
 import * as Country from '../reducers/country';
 import * as TeaDashboard from '../reducers/tea/dashboard';
 

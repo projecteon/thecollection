@@ -5,9 +5,9 @@ namespace TheCollection.Web.Commands.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business;
-    using TheCollection.Business.Extensions;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain;
+    using TheCollection.Domain.Extensions;
+    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Data.DocumentDB.Repositories;
     using TheCollection.Web.Constants;

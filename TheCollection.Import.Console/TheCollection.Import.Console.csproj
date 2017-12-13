@@ -103,14 +103,11 @@
     <Compile Include="..\TheCollection.Web\Constants\DocumentDB.cs">
       <Link>Constants\DocumentDB.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\IImageService.cs">
-      <Link>Services\IImageService.cs</Link>
+    <Compile Include="..\TheCollection.Web\Repositories\ImageAzureBlobRepository.cs">
+      <Link>Repositories\ImageAzureBlobRepository.cs</Link>
     </Compile>
-    <Compile Include="..\TheCollection.Web\Services\ImageAzureBlobService.cs">
-      <Link>Services\ImageAzureBlobService.cs</Link>
-    </Compile>
-    <Compile Include="..\TheCollection.Web\Services\ImageFilesystemService.cs">
-      <Link>Services\ImageFilesystemService.cs</Link>
+    <Compile Include="..\TheCollection.Web\Repositories\ImageFilesystemRepository.cs">
+      <Link>Repositories\ImageFilesystemRepository.cs</Link>
     </Compile>
     <Compile Include="..\TheCollection.Web\Translators\ITranslator.cs">
       <Link>Translators\ITranslator.cs</Link>
@@ -152,13 +149,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TheCollection.Business\TheCollection.Business.csproj">
-      <Project>{3ab18d92-85df-46ae-8618-57fda17afa81}</Project>
-      <Name>TheCollection.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TheCollection.Lib\TheCollection.Lib.csproj">
-      <Project>{1ee522b3-c22c-45e8-8629-af962b6221b4}</Project>
-      <Name>TheCollection.Lib</Name>
+    <ProjectReference Include="..\TheCollection.Domain\TheCollection.Domain.csproj">
+      <Project>{adeab4e0-7278-4fa5-ae85-29a9d7e9b632}</Project>
+      <Name>TheCollection.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

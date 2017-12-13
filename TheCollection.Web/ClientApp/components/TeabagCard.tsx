@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router';
-import { ITeabag } from '../interfaces/ITeaBag';
+import { ITeabag } from '../interfaces/tea/IBag';
 
 import './TeabagCard.scss';
 
@@ -22,7 +22,7 @@ const TeabagCard: React.StatelessComponent<TeabagCardProps> = props => {
                 <div style={{color: '#959595'}}><small>{props.teabag.bagtype ? props.teabag.bagtype.name : ''}</small></div>
                 <div style={{color: '#959595'}}><small>{props.teabag.country ? props.teabag.country.name : ''}</small></div>
                 <p className='edit'>
-                  <Link to={ `/teabagform/${props.teabag.id}` } activeClassName='active' className='text-info'>
+                  <Link to={ `/tea/teabagform/${props.teabag.id}` } activeClassName='active' className='text-info'>
                     <span className='fa fa-pencil-square-o'></span>
                   </Link>
                 </p>

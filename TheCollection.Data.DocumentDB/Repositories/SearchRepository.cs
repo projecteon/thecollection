@@ -13,7 +13,7 @@ namespace TheCollection.Data.DocumentDB {
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.Azure.Documents.Linq;
-    using TheCollection.Business;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
 
     public class SearchRepository<T> : ISearchRepository<T>, ILinqSearchRepository<T> where T : class {

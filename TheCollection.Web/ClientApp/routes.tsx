@@ -3,10 +3,10 @@ import { Redirect, Router, Route, HistoryBase } from 'react-router';
 import Layout from './components/Layout';
 import Home from './views/Home';
 import TeaDashboard from './views/tea/Dashboard';
-import Teabags from './views/Teabags';
-import TeabagForm from './views/TeabagForm';
-import BrandForm from './viewComponents/BrandForm';
-import BagtypeForm from './viewComponents/BagtypeForm';
+import Teabags from './views/tea/Teabags';
+import TeabagForm from './views/tea/TeabagForm';
+import BrandForm from './viewComponents/tea/BrandForm';
+import BagtypeForm from './viewComponents/tea/BagtypeForm';
 import CountryForm from './viewComponents/CountryForm';
 
 // http://stackoverflow.com/questions/32128978/react-router-no-not-found-route
@@ -18,15 +18,15 @@ import CountryForm from './viewComponents/CountryForm';
 export default <Route component={ Layout }>
     <Route path='/' components={{ body: Home }} />
     <Route path='/tea/dashboard' components={{ body: TeaDashboard }} />
-    <Route path='/teabags' components={{ body: Teabags }} />
-    <Route path='/teabagform' components={{ body: TeabagForm }}>
-        <Route path='/teabagform/:id' components={{ body: TeabagForm }} />
+    <Route path='/tea/teabags' components={{ body: Teabags }} />
+    <Route path='/tea/teabagform' components={{ body: TeabagForm }}>
+        <Route path='/tea/teabagform/:id' components={{ body: TeabagForm }} />
     </Route>
-    <Route path='/brandform' components={{ body: BrandForm }}>
-        <Route path='/brandform/:id' components={{ body: BrandForm }} />
+    <Route path='/tea/brandform' components={{ body: BrandForm }}>
+        <Route path='/tea/brandform/:id' components={{ body: BrandForm }} />
     </Route>
-    <Route path='/bagtypeform' components={{ body: BagtypeForm }}>
-        <Route path='/bagtypeform/:id' components={{ body: BagtypeForm }} />
+    <Route path='/tea/bagtypeform' components={{ body: BagtypeForm }}>
+        <Route path='/tea/bagtypeform/:id' components={{ body: BagtypeForm }} />
     </Route>
     <Route path='/countryform' components={{ body: CountryForm }}>
         <Route path='/countryform/:id' components={{ body: CountryForm }} />

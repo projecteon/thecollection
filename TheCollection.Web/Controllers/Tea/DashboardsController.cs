@@ -1,73 +1,73 @@
 namespace TheCollection.Web.Controllers.Tea {
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using System.Threading.Tasks;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Web.Commands.Tea;
-    using TheCollection.Web.Services;
+    using TheCollection.Web.Models;
 
-    [Route("api/tea/[controller]")]
+    [Route("api/Tea/[controller]")]
     public class DashboardsController : Controller {
-
         private readonly IDocumentClient documentDbClient;
-        private readonly IApplicationUserAccessor applicationUserAccessor;
+        private readonly IGetRepository<ApplicationUser> applicationUserRepository;
 
-        public DashboardsController(IDocumentClient documentDbClient, IApplicationUserAccessor applicationUserAccessor) {
+        public DashboardsController(IDocumentClient documentDbClient, IGetRepository<ApplicationUser> applicationUserRepository) {
             this.documentDbClient = documentDbClient;
-            this.applicationUserAccessor = applicationUserAccessor;
+            this.applicationUserRepository = applicationUserRepository;
         }
 
         [HttpGet("BagTypes/{top:int?}")]
         public async Task<IActionResult> BagTypes(int top = 10) {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new GetBagsCountByBagTypesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpPut("BagTypes/{top:int?}")]
         public async Task<IActionResult> CreateBagTypes(int top = 10) {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new CreateBagsCountByBagTypesCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpGet("Brands/{top:int?}")]
         public async Task<IActionResult> Brands(int top = 10) {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new GetBagsCountByBrandsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(top);
         }
 
         [HttpPut("Brands/{top:int?}")]
         public async Task<IActionResult> CreateBrands(int top = 10) {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new CreateBagsCountByBrandsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync(top);
         }
 
         [HttpGet("Periods")]
         public async Task<IActionResult> Periods() {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new GetBagsCountByPeriodsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpPut("Periods")]
         public async Task<IActionResult> CreatePeriods() {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new CreateBagsCountByPeriodsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpGet("TotalCountPeriod")]
         public async Task<IActionResult> TotalCountPeriod() {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new GetTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpPut("TotalCountPeriod")]
         public async Task<IActionResult> CreateTotalCountPeriod() {
-            var applicationUser = await applicationUserAccessor.GetUser();
+            var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new CreateTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }

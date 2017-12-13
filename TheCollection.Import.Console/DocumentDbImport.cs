@@ -3,13 +3,14 @@ namespace TheCollection.Import.Console {
     using System.IO;
     using System.Linq;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Business.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
     using TheCollection.Import.Console.Translators;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Services;
+    using TheCollection.Web.Repositories;
 
     public class DocumentDbImport {
         public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, string collection, List<Merk> meerken) {
@@ -88,7 +89,7 @@ namespace TheCollection.Import.Console {
         }
 
         private static async System.Threading.Tasks.Task<List<Image>> ImportImagesAsync(DocumentClient client, string collection, List<Thee> thees) {
-            var images = thees.Where(thee => File.Exists($"{ImageFilesystemService.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+            var images = thees.Where(thee => File.Exists($"{ImageFilesystemRepository.Path}{thee.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image => {
@@ -103,12 +104,12 @@ namespace TheCollection.Import.Console {
             return images;
         }
 
-        private static async System.Threading.Tasks.Task<List<Image>> ImportImages2Async(DocumentClient client, string collection, IEnumerable<Bag> bags, IImageService imageservice) {
-            var images = bags.Where(bag => File.Exists($"{ImageFilesystemService.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
+        private static async System.Threading.Tasks.Task<List<Image>> ImportImages2Async(DocumentClient client, string collection, IEnumerable<Bag> bags, IImageRepository imageservice) {
+            var images = bags.Where(bag => File.Exists($"{ImageFilesystemRepository.Path}{bag.MainID}.jpg")).Select(thee => { return new Image { Filename = $"{thee.MainID}.jpg" }; }).ToList();
             var imageRepository = new CreateRepository<Image>(client, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
             var insertCounter = 0;
             await images.ForEachAsync(async image => {
-                var fileImageService = new ImageFilesystemService();
+                var fileImageService = new ImageFilesystemRepository();
                 using (var bitmap = await fileImageService.Get(image.Filename)) {
                     using (var imageStream = new MemoryStream()) {
                         bitmap.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -126,7 +127,7 @@ namespace TheCollection.Import.Console {
             return images;
         }
 
-        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> UpdateBagsAsync(DocumentClient client, string collection, IImageService imageservice) {
+        public static async System.Threading.Tasks.Task<IEnumerable<Bag>> UpdateBagsAsync(DocumentClient client, string collection, IImageRepository imageservice) {
             var bagsRepository = new SearchRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var updateBagsRepository = new UpdateRepository<Bag>(client, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
             var bags = await bagsRepository.SearchItemsAsync(bag => bag.ImageId == null && bag.MainID != 165 && bag.MainID != 1193, 50);

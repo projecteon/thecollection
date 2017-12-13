@@ -3,17 +3,17 @@ namespace TheCollection.Web.Translators.Tea {
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
 
-    public class BagToBagTranslator : ITranslator<Business.Tea.Bag, Models.Tea.Bag> {
+    public class BagToBagTranslator : ITranslator<Domain.Tea.Bag, Models.Tea.Bag> {
 
         public BagToBagTranslator(IApplicationUser applicationUser) {
             RefValueTranslator = new RefValueToRefValueTranslator(applicationUser);
             ApplicationUser = applicationUser;
         }
 
-        ITranslator<Business.RefValue, Models.RefValue> RefValueTranslator { get; }
+        ITranslator<Domain.RefValue, Models.RefValue> RefValueTranslator { get; }
         IApplicationUser ApplicationUser { get; }
 
-        public void Translate(Business.Tea.Bag source, Models.Tea.Bag destination) {
+        public void Translate(Domain.Tea.Bag source, Models.Tea.Bag destination) {
             destination.id = source.Id;
             destination.mainid = source.MainID;
             destination.brand = RefValueTranslator.Translate(source.Brand);

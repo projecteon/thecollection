@@ -10,4 +10,4 @@ export type Teabag = {
   country: RefValue;
   serialnumber: string;
   imageid: string;
-}
+};

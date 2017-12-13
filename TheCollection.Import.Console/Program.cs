@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using TheCollection.Web.Services;
+using TheCollection.Web.Repositories;
 using TheCollection.Import.Console.Repositories;
 
 namespace TheCollection.Import.Console
@@ -66,15 +66,15 @@ namespace TheCollection.Import.Console
             var list = azureClient.GetList();
             var missingImageImports = import.thees.Where(thee => !list.Contains($"{thee.MainID}.jpg"));
             var missingImageImportsNames = missingImageImports.Select(thee => $"{thee.MainID}.jpg").ToList();
-            var missingFiles = missingImageImportsNames.Where(missing => !System.IO.File.Exists($"{ImageFilesystemService.Path}{missing}"));
+            var missingFiles = missingImageImportsNames.Where(missing => !System.IO.File.Exists($"{ImageFilesystemRepository.Path}{missing}"));
             var troubleTeaBags = import.thees.Where(thee => !missingFiles.Contains($"{thee.MainID}.jpg"))
                 .ToList()
                 .Select(thee => $"{thee.TheeMerk} - {thee.TheeSmaak} - {thee.TheeSerienummer}");
             var uploadDir = @"C:\src\projecteon\missingthees\";
             missingImageImportsNames.ForEach(missingFile =>
             {
-                if (System.IO.File.Exists($"{ImageFilesystemService.Path}{missingFile}"))
-                    System.IO.File.Copy($"{ImageFilesystemService.Path}{missingFile}", $"{uploadDir}{missingFile}", true);
+                if (System.IO.File.Exists($"{ImageFilesystemRepository.Path}{missingFile}"))
+                    System.IO.File.Copy($"{ImageFilesystemRepository.Path}{missingFile}", $"{uploadDir}{missingFile}", true);
             });
         }
 
@@ -99,7 +99,7 @@ namespace TheCollection.Import.Console
             var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, collectionName, theesToImport, brands).Result;
         }
 
-        private static void ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobService imageUploadService)
+        private static void ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobRepository imageUploadService)
         {
             var collectionName = "TheCollection";
             var updateBags = DocumentDbImport.UpdateBagsAsync(documentDbClient, collectionName, imageUploadService).Result;

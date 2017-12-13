@@ -1,7 +1,7 @@
 namespace TheCollection.Import.Console.Translators {
     using System.Collections.Generic;
     using System.Linq;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Models;
     using TheCollection.Web.Translators;
 
@@ -24,12 +24,12 @@ namespace TheCollection.Import.Console.Translators {
             var teacountry = Countries.FirstOrDefault(country => country.Name == source.TheeLandvanherkomst.Trim());
 
             destination.MainID = source.MainID;
-            destination.Brand = new Business.RefValue { Id = teabrand.Id, Name = teabrand.Name };
+            destination.Brand = new Domain.RefValue { Id = teabrand.Id, Name = teabrand.Name };
             destination.Serie = source.TheeSerie.Trim();
             destination.Flavour = source.TheeSmaak.Trim();
             destination.Hallmark = source.TheeKenmerken.Trim();
-            destination.BagType = teabagType != null ? new Business.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null;
-            destination.Country = teacountry != null ? new Business.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null;
+            destination.BagType = teabagType != null ? new Domain.RefValue { Id = teabagType.Id, Name = teabagType.Name } : null;
+            destination.Country = teacountry != null ? new Domain.RefValue { Id = teacountry.Id, Name = teacountry.Name } : null;
             destination.SerialNumber = source.TheeSerienummer.Trim();
             destination.InsertDate = source.Theeinvoerdatum.Trim();
             destination.ImageId = Images.FirstOrDefault(image => image.Filename == $"{source.MainID}.jpg")?.Id;

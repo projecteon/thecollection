@@ -5,19 +5,19 @@ namespace TheCollection.Web.Controllers {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Business.Tea;
+    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Services;
+    using TheCollection.Domain.Contracts.Repository;
 
     [Route("api/FileUploads")]
     public class FileUploadsController : Controller {
         private readonly IDocumentClient documentDbClient;
-        private readonly IImageService imageService;
+        private readonly IImageRepository imageRepository;
 
-        public FileUploadsController(IDocumentClient documentDbClient, IImageService imageService) {
+        public FileUploadsController(IDocumentClient documentDbClient, IImageRepository imageRepository) {
             this.documentDbClient = documentDbClient;
-            this.imageService = imageService;
+            this.imageRepository = imageRepository;
         }
 
         [Route("")]
@@ -30,7 +30,7 @@ namespace TheCollection.Web.Controllers {
                 var bagsRepository = new SearchRepository<Bag>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
                 var bagsCount = bagsRepository.SearchRowCountAsync("");
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
-                var uri = await imageService.Upload(file.OpenReadStream(), $"{bagsCount}.{fileExtension}");
+                var uri = await imageRepository.Upload(file.OpenReadStream(), $"{bagsCount}.{fileExtension}");
 
                 var imagesRepository = new CreateRepository<Image>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
                 var newImage = new Image { Filename = file.FileName, Uri = uri };

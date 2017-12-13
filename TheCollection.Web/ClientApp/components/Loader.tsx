@@ -16,12 +16,12 @@ const Loader : React.StatelessComponent<{isInternalLoader?: boolean}> = props =>
     };
 
     return  <div style={style()} onClick={event => event.stopPropagation()}>
-              <div className="loader">
-                <div className="inner one" />
-                <div className="inner two" />
-                <div className="inner three" />
+              <div className='loader'>
+                <div className='inner one' />
+                <div className='inner two' />
+                <div className='inner three' />
               </div>
             </div>;
-}
+};
 
 export default Loader;

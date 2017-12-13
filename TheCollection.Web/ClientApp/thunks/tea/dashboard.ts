@@ -13,12 +13,7 @@ import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCount
 export const requestBagTypeCount = {
    requestBagTypeCount: (): AppThunkAction<ReceiveBagTypeCountAction | RequestBagTypeCountAction> => (dispatch, getState) => {
     try {
-      // fetch(`/api/tea/Dashboards/BagTypes/`, {
-      //   credentials: 'same-origin',
-      //   method: 'post',
-      //   body: JSON.stringify(''),
-      // });
-      let fetchTask = fetch(`/api/tea/Dashboards/BagTypes/`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/Dashboards/BagTypes/`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
           dispatch({ type: RECIEVE_BAGTYPECOUNT, data: data });
@@ -36,12 +31,7 @@ export const requestBagTypeCount = {
 export const requestBrandCount = {
   requestBrandCount: (top?: number): AppThunkAction<ReceiveBrandCountAction | RequestBrandCountAction> => (dispatch, getState) => {
    try {
-      // fetch(`/api/tea/Dashboards/Brands/`, {
-      //   credentials: 'same-origin',
-      //   method: 'post',
-      //   body: JSON.stringify(''),
-      // });
-      let fetchTask = fetch(`/api/tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
+      let fetchTask = fetch(`/api/Tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
           dispatch({ type: RECIEVE_BRANDCOUNT, data: data });

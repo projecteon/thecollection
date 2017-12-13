@@ -3,7 +3,7 @@ namespace TheCollection.Import.Console.Repositories {
     using System.Data;
     using System.Data.OleDb;
     using System.Threading.Tasks;
-    using TheCollection.Business;
+    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
 
