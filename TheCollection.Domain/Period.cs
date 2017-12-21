@@ -3,7 +3,7 @@ namespace TheCollection.Domain {
     using Newtonsoft.Json;
     using NodaTime;
 
-    public class Period {
+    public class Period : IComparable<Period> {
         private static DateTime DefaultDate = DateTime.MinValue;
 
         [JsonConstructor]
@@ -19,5 +19,15 @@ namespace TheCollection.Domain {
 
         public int Year { get; }
         public int Month { get; }
+        
+        public int CompareTo(Period other) {
+            if (Year > other.Year) return -1;
+            if (Year == other.Year) {
+                if (Month > other.Month) return -1;
+                if (Month == other.Month) return 0;
+                return 1;
+            }
+            return 1;
+        }
     }
 }
