@@ -35,6 +35,7 @@ namespace TheCollection.Import.Console.Translators {
             destination.SerialNumber = source.TheeSerienummer.Trim();
             destination.InsertDate = ParseInvoerDatum(source);
             destination.ImageId = Images.FirstOrDefault(image => image.Filename == $"{source.MainID}.jpg")?.Id;
+            //destination.UserId = "36544cc9-36ae-42c0-b614-a5a2010d4258";
         }
 
         static LocalDate ParseInvoerDatum(Thee source) {

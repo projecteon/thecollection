@@ -3,12 +3,11 @@ import * as moment from 'moment';
 import {Component, ComponentClass, StatelessComponent} from 'react';
 import { ChartType } from '../../types/Chart';
 import Loader from '../Loader';
-import { IPeriod } from '../../interfaces/IPeriod';
 
 type DashboardPeriodBlockHOCProps = {
   chartId: string;
   description: string;
-  x: IPeriod[];
+  x: moment.Moment[];
   isLoading: boolean;
   onRefresh?(chartId: string): void;
   onPerviousPeriod(chartId: string): void;
@@ -48,7 +47,7 @@ export function DashboardPeriodBlockHOC<T>(BlockComponent: ComponentClass<T> | S
                   <span>{description}</span>
                   <div>
                     {this.props.isLoading === true ? undefined : <i className='fa fa-chevron-left' onClick={this.onPerviousPeriod} /> }
-                    <span style={{marginLeft: 7}}>{`${startDate.year}/${startDate.month} - ${endDate.year}/${endDate.month}`}</span>
+                    <span style={{marginLeft: 7}}>{`${startDate.year()}/${startDate.month()} - ${endDate.year()}/${endDate.month()}`}</span>
                     {this.props.isLoading === true ? undefined : <i className='fa fa-chevron-right' onClick={this.onNextPeriod} /> }
                     {this.props.isLoading === true ? undefined : <i className='fa fa-refresh' onClick={this.onRefresh} /> }
                   </div>

@@ -2,6 +2,7 @@ namespace TheCollection.Import.Console.Repositories {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using TheCollection.Domain.Contracts.Repository;
@@ -14,7 +15,7 @@ namespace TheCollection.Import.Console.Repositories {
 
         public string Filepath { get; }
 
-        public async Task<IEnumerable<Merk>> SearchItemsAsync(System.Linq.Expressions.Expression<Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
+        public async Task<IEnumerable<Merk>> SearchItemsAsync(Expression<Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
             return await Task.Run(() => { return GetMeerken(); });
         }
 

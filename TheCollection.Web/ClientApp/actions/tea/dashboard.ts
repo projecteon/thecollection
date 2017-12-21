@@ -1,7 +1,6 @@
 import * as dashboard from '../../constants/tea/dashboard';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { IPeriod } from '../../interfaces/IPeriod';
 import { ChartType } from '../../types/Chart';
 
 export type ReceiveBagTypeCountAction = {

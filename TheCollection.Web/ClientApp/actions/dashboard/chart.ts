@@ -1,9 +1,8 @@
-import * as moment from 'moment';
 import * as chart from '../../constants/dashboard/chart';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { IPeriod } from '../../interfaces/IPeriod';
 import { ChartType } from '../../types/Chart';
+import { Moment } from 'moment';
 
 export type UpdateCountByRefValueAction = {
   type: chart.REQUEST_COUNTBYREFVALUE;
@@ -29,7 +28,7 @@ export type UpdateCountByPeriodAction = {
 export type ReceiveCountByPeriodAction = {
   type: chart.RECIEVE_COUNTBYPERIOD;
   apipath: string;
-  data: ICountBy<IPeriod>[];
+  data: ICountBy<Moment>[];
 };
 
 export type RequestCountByPeriodAction = {
@@ -45,6 +44,6 @@ export type ChangeChartType = {
 
 export type ChangeChartPeriod = {
   type: chart.CHANGE_CHARTPERIOD;
-  startPeriod: moment.Moment;
+  startPeriod: Moment;
   chartId: string;
 };

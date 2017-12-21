@@ -47,28 +47,28 @@ namespace TheCollection.Web.Controllers.Tea {
         [HttpGet("Periods")]
         public async Task<IActionResult> Periods() {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new GetBagsCountByPeriodsCommand(documentDbClient, applicationUser);
+            var command = new GetBagsCountByInsertDateCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpPut("Periods")]
         public async Task<IActionResult> CreatePeriods() {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new CreateBagsCountByPeriodsCommand(documentDbClient, applicationUser);
+            var command = new CreateBagsCountByInsertDateCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpGet("TotalCountPeriod")]
         public async Task<IActionResult> TotalCountPeriod() {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new GetTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);
+            var command = new GetTotalBagsCountByInsertDateCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
 
         [HttpPut("TotalCountPeriod")]
         public async Task<IActionResult> CreateTotalCountPeriod() {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new CreateTotalBagsCountByPeriodsCommand(documentDbClient, applicationUser);
+            var command = new CreateTotalBagsCountByInsertDateCommand(documentDbClient, applicationUser);
             return await command.ExecuteAsync();
         }
     }

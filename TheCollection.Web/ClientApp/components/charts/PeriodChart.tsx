@@ -1,28 +1,28 @@
 import * as React from 'react';
 import { Chart } from './Chart';
 import { ICountBy } from '../../interfaces/ICountBy';
-import { IPeriod } from '../../interfaces/IPeriod';
+import { Moment } from 'moment';
 
 type PeriodChartProps = {
-  x: IPeriod[];
-  data: { [index: string]: ICountBy<IPeriod>[]};
+  x: Moment[];
+  data: { [index: string]: ICountBy<Moment>[]};
   continuePreviousPeriodCount?: boolean;
 };
 
 // tslint:disable-next-line:variable-name
 export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => {
-  const startCount = (data: ICountBy<IPeriod>[]) => {
+  const startCount = (data: ICountBy<Moment>[]) => {
     let previousCount = 0;
     if (props.continuePreviousPeriodCount !== true) {
       return previousCount;
     }
 
     for (let _data of data) {
-      if (_data.value.year > props.x[0].year) {
+      if (_data.value.isAfter(props.x[0])) {
         break;
       }
 
-      if (_data.value.year === props.x[0].year && _data.value.month >= props.x[0].month) {
+      if (_data.value.isSame(props.x[0])) {
         break;
       }
 
@@ -32,11 +32,11 @@ export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => 
     return previousCount;
   };
 
-  const createData = (title: string, data: ICountBy<IPeriod>[]) => {
+  const createData = (title: string, data: ICountBy<Moment>[]) => {
     let previousCount = startCount(data);
     let xPeriods = props.x.map(x => {
       let periodData = data.find(xdata => {
-        return xdata.value.year === x.year && xdata.value.month === x.month;
+        return xdata.value.isSame(x);
       });
 
       if (periodData === undefined) {
@@ -70,7 +70,7 @@ export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => 
   const createTimeAxis = () => {
     let x: c3.PrimitiveArray = ['x'];
     props.x.forEach(chartPeriod => {
-      x.push(`${chartPeriod.year}-${chartPeriod.month}-01`);
+      x.push(chartPeriod.format('YYYY-MM-DD'));
     });
 
     return x;
@@ -78,6 +78,7 @@ export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => 
 
   const createColumns = () => {
     let columns = [createTimeAxis()].concat(createLineData());
+    console.log(props);
     return columns;
   };
 

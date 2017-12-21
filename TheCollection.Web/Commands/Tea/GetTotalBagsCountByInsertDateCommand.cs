@@ -3,14 +3,14 @@ namespace TheCollection.Web.Commands.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
+    using TheCollection.Data.DocumentDB;
     using TheCollection.Domain;
     using TheCollection.Domain.Tea;
-    using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
 
-    public class GetBagsCountByPeriodsCommand : IAsyncCommand {
-        public GetBagsCountByPeriodsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+    public class GetTotalBagsCountByInsertDateCommand : IAsyncCommand {
+        public GetTotalBagsCountByInsertDateCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
         }
@@ -19,13 +19,13 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Period>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
-            var bagsCountByPeriods = await dashboardRepository.GetItemAsync(DashBoardTypes.BagsCountByPeriod.Key.ToString());
-            if (bagsCountByPeriods == null) {
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var totalBagsCountByPeriods = await dashboardRepository.GetItemAsync(DashBoardTypes.TotalBagsCountByPeriod.Key.ToString());
+            if (totalBagsCountByPeriods == null) {
                 return new NotFoundResult();
             }
 
-            return new OkObjectResult(bagsCountByPeriods.Data);
+            return new OkObjectResult(totalBagsCountByPeriods.Data);
         }
     }
 }

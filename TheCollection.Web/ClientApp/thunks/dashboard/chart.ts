@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
-import {IPeriod} from '../../interfaces/IPeriod';
 import {IRefValue} from '../../interfaces/IRefValue';
 import {ICountBy} from '../../interfaces/ICountBy';
 import { AppThunkAction } from '../../store';
@@ -50,7 +49,8 @@ export const updateCountByPeriod = {
         method: 'put',
         body: JSON.stringify(''),
       })
-      .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
+      .then(response => response.json() as Promise<ICountBy<string>[]>)
+      .then(data => data.map(x => { return {count: x.count, value: moment(x.value)}; }))
       .then(data => {
         dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
@@ -68,7 +68,8 @@ export const requestCountByPeriod = {
   requestCountByPeriod: (apipath: string): AppThunkAction<ReceiveCountByPeriodAction | RequestCountByPeriodAction> => (dispatch, getState) => {
    try {
     let fetchTask = fetch(apipath, { credentials: 'same-origin' })
-      .then(response => response.json() as Promise<ICountBy<IPeriod>[]>)
+      .then(response => response.json() as Promise<ICountBy<string>[]>)
+      .then(data => data.map(x => { return {count: x.count, value: moment(x.value)}; }))
       .then(data => {
         dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete

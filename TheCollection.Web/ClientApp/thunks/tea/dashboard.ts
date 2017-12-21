@@ -2,7 +2,6 @@ import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
-import { IPeriod } from '../../interfaces/IPeriod';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
 import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE} from '../../constants/dashboard/chart';
