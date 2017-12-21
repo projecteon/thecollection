@@ -1,8 +1,10 @@
 namespace TheCollection.Domain.Contracts.Repository {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
 
     public interface ILinqSearchRepository<T> where T : class {
-        Task<IEnumerable<T>> SearchItemsAsync(System.Linq.Expressions.Expression<System.Func<T, bool>> predicate = null, int pageSize = 0, int page = 0);
+        Task<IEnumerable<T>> SearchItemsAsync(Expression<Func<T, bool>> predicate = null, int pageSize = 0, int page = 0);
     }
 }
