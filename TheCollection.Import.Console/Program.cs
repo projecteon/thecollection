@@ -102,15 +102,13 @@ namespace TheCollection.Import.Console
             var theesToImport = import.thees.OrderBy(thee => thee.MainID).ToList();
             var meerkensToImport = import.meerkens.Where(meerk => theesToImport.Any(thee => thee.TheeMerk.Trim() == meerk.TheeMerk.Trim())).ToList();
 
-            var collectionName = "TheCollection";
-            var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, collectionName, meerkensToImport).Result;
-            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, collectionName, theesToImport, brands).Result;
+            var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, meerkensToImport).Result;
+            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, theesToImport, brands).Result;
         }
 
         private static void ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobRepository imageUploadService)
         {
-            var collectionName = "TheCollection";
-            var updateBags = DocumentDbImport.UpdateBagsAsync(documentDbClient, collectionName, imageUploadService).Result;
+            var updateBags = DocumentDbImport.UpdateBagsAsync(documentDbClient, imageUploadService).Result;
         }
     }
 }
