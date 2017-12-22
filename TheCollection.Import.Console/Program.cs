@@ -98,9 +98,9 @@ namespace TheCollection.Import.Console
 
         private static void ImportTeabags(DocumentClient documentDbClient)
         {
-            var import = ImportFromAccess();
-            var theesToImport = import.thees.OrderBy(thee => thee.MainID).ToList();
-            var meerkensToImport = import.meerkens.Where(meerk => theesToImport.Any(thee => thee.TheeMerk.Trim() == meerk.TheeMerk.Trim())).ToList();
+            var (meerkens, thees) = ImportFromAccess();
+            var theesToImport = thees.OrderBy(thee => thee.MainID).ToList();
+            var meerkensToImport = meerkens.ToList();
 
             var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, meerkensToImport).Result;
             var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, theesToImport, brands).Result;

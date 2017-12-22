@@ -11,7 +11,7 @@ namespace TheCollection.Import.Console.Extensions {
             try {
                 var properties = typeof(T).GetProperties().Where(property => property.CanWrite).ToList();
                 var list = new List<T>(table.Rows.Count);
-                foreach (var row in table.AsEnumerable().Skip(1)) {
+                foreach (var row in table.AsEnumerable().Skip(0)) {
                     var obj = new T();
                     foreach (var prop in properties) {
                         try {
