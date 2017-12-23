@@ -1,6 +1,7 @@
 namespace TheCollection.Domain.Tests.Unit.Tea {
     using System;
     using System.Linq;
+    using NodaTime;
     using TheCollection.Domain.Extensions;
     using TheCollection.Domain.Tea;
     using Xunit;
@@ -27,7 +28,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
                 BagType = BagTypeRef,
                 Brand = BrandRef,
                 Country = CountryRef,
-                InsertDate = "1985-08-22",
+                InsertDate = new LocalDate(1985, 08, 22),
                 ImageId = "imageid",
                 UserId = Guid.NewGuid().ToString()
             };
@@ -67,8 +68,8 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
 
         [Fact(DisplayName = "Tag does not contain insert date")]
         public void NotContainsInsertDate() {
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.InsertDate));
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.InsertDate.ToLower()));
+            var localDateTags = Tags.Generate(Bag.InsertDate.ToString());
+            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => localDateTags.Any(localDateTag => tag == localDateTag)));
         }
 
         [Fact(DisplayName = "Tag does not contain image id")]

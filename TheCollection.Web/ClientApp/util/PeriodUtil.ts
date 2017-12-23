@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import { IPeriod } from '../interfaces/IPeriod';
 
 export function getMonthlyPeriodsYearsBackFrom(endDate: moment.Moment, years: number) {
   /* the first of current month */
@@ -16,12 +15,12 @@ export function getMonthlyPeriodsFromNowTill(startDate: moment.Moment) {
 export function getMonthlyPeriodsFromTill(startDate: moment.Moment, endDate: moment.Moment) {
   /* the first of current month */
   let startDateNormalized = startDate.clone().startOf('month').add(1, 'M');
-  let months: IPeriod[] = [];
+  let months: moment.Moment[] = [];
 
   /* .isBefore() as it was asked for the months in between startDate and now */
   while (startDateNormalized.isBefore(endDate)) {
-      months.push({year: startDateNormalized.year(), month: startDateNormalized.month() + 1});
       startDateNormalized.add(1, 'M');
+      months.push(startDateNormalized.clone());
   }
 
   return months;

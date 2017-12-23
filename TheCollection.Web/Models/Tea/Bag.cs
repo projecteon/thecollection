@@ -1,3 +1,5 @@
+using NodaTime;
+
 namespace TheCollection.Web.Models.Tea {
 
     public class Bag {
@@ -19,7 +21,7 @@ namespace TheCollection.Web.Models.Tea {
 
         public string serialnumber { get; set; }
 
-        public string insertdate { get; set; }
+        public LocalDate insertdate { get; set; }
 
         public string imageid { get; set; }
 

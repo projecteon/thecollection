@@ -13,7 +13,11 @@ namespace TheCollection.Domain {
         public Searchable(object searchableObject) {
             SearchableObject = searchableObject;
             tags = new Lazy<IEnumerable<string>>(() =>
-                TheCollection.Domain.Tags.Generate(GetSearchableValues(SearchableObject).Distinct().Where(value => value != null).Select(value => value.ToString()).Aggregate((current, next) => current + " " + next))
+                TheCollection.Domain.Tags.Generate(
+                    GetSearchableValues(SearchableObject)
+                        .Distinct().Where(value => value != null)
+                        .Select(value => value.ToString())
+                        .Aggregate((current, next) => current + " " + next))
             );
         }
 
@@ -32,11 +36,19 @@ namespace TheCollection.Domain {
         }
 
         private static IEnumerable<PropertyInfo> GetSearchableProperties<Q>(Q objectValue) {
-            return objectValue.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => p.GetCustomAttributes(typeof(SearchableAttribute), true).Count() == 1);
+            return objectValue
+                    .GetType()
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+                    .Where(p => p.GetCustomAttributes(typeof(SearchableAttribute), true).Count() == 1);
         }
 
         private static IEnumerable<string> GetSearchablePrimitiveValues<Q>(Q objectValue) {
-            return GetSearchableProperties(objectValue).Where(prop => prop.PropertyType.IsSimpleType()).ToDictionary(prop => prop.Name, prop => prop.GetValue(objectValue) ?? null).Values.Where(value => value != null).Select(value => value.ToString());
+            return GetSearchableProperties(objectValue)
+                    .Where(prop => prop.PropertyType.IsSimpleType())
+                    .ToDictionary(prop => prop.Name, prop => prop.GetValue(objectValue) ?? null)
+                    .Values
+                    .Where(value => value != null)
+                    .Select(value => value.ToString());
         }
 
         private static IEnumerable<string> GetSearchableNonPrimitiveValues<Q>(Q objectValue) {

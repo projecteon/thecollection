@@ -4,7 +4,6 @@ import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { IPeriod } from '../../interfaces/IPeriod';
 import { ChartType } from '../../types/Chart';
 import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE, CHANGE_CHARTPERIOD, RECIEVE_COUNTBYREFVALUE, REQUEST_COUNTBYREFVALUE, UPDATE_COUNTBYPERIOD, UPDATE_COUNTBYREFVALUE} from '../../constants/dashboard/chart';
 import {
@@ -35,13 +34,13 @@ export type CountByChart<T> = {
 export interface IDashboardState {
   hasLoadedData?: boolean;
   countByRefValueCharts: {[k in CountByRefValueTypes]?: CountByChart<IRefValue>};
-  countByPeriodCharts: {[k in CountByPeriodTypes]?: CountByChart<IPeriod>};
+  countByPeriodCharts: {[k in CountByPeriodTypes]?: CountByChart<moment.Moment>};
 }
 
 const countbybagtypes: CountByChart<IRefValue> = {description: 'Bag Types', data: [], chartType: 'pie', isLoading: false, startDate: undefined};
 const countbybrands: CountByChart<IRefValue> = {description: 'Brands', data: [], chartType: 'bar', isLoading: false, startDate: undefined};
-const countbyperiods: CountByChart<IPeriod> = {description: 'Added', data: [], chartType: 'line', isLoading: false, startDate: moment()};
-const totalCountbyperiods: CountByChart<IPeriod> = {description: 'Total', data: [], chartType: 'line', isLoading: false, startDate: moment()};
+const countbyperiods: CountByChart<moment.Moment> = {description: 'Added', data: [], chartType: 'line', isLoading: false, startDate: moment()};
+const totalCountbyperiods: CountByChart<moment.Moment> = {description: 'Total', data: [], chartType: 'line', isLoading: false, startDate: moment()};
 const unloadedState: IDashboardState = { countByRefValueCharts: {bagtypes: countbybagtypes, brands: countbybrands}, countByPeriodCharts: {added: countbyperiods, totalcount: totalCountbyperiods} };
 
 export const actionCreators = {...requestCountByPeriod, ...changeChartType, ...changeChartPeriod, ...updateCountByRefValue, ...updateCountByPeriod, ...requestCountByRefValue};

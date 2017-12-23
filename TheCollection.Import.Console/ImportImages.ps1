@@ -1,4 +1,4 @@
-$Source='/Source:C:\src\projecteon\Theedatabase\Afbeeldingen Zakjes'
+$Source='/Source:C:\src\Theedatabase\Afbeeldingen Zakjes'
 $MissingSource='/Source:C:\src\projecteon\missingthees'
 $Destination='/Dest:http://127.0.0.1:10000/devstoreaccount1/images'
 $DestinationKey='Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=='

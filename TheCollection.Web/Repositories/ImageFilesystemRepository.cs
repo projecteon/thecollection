@@ -6,7 +6,7 @@ namespace TheCollection.Web.Repositories {
     using TheCollection.Domain.Contracts.Repository;
 
     public class ImageFilesystemRepository : IImageRepository {
-        public const string Path = @"C:\src\projecteon\Theedatabase\Afbeeldingen Zakjes\";
+        public const string Path = @"C:\src\Theedatabase\Afbeeldingen Zakjes\";
 
         public Task<bool> Delete(string filename) {
             throw new NotImplementedException();
