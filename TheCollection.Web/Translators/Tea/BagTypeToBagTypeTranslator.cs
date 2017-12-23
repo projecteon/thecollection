@@ -2,7 +2,7 @@ namespace TheCollection.Web.Translators.Tea {
 
     using System.Linq;
     using TheCollection.Domain.Tea;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class BagTypeToBagTypeTranslator : ITranslator<BagType, Models.Tea.BagType> {
 

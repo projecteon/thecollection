@@ -12,6 +12,7 @@ namespace TheCollection.Web.Commands {
     using TheCollection.Web.Models;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
+    using TheCollection.Web.Contracts;
 
     public class SearchRefValuesCommand<T> where T : class, IRef {
 

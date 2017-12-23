@@ -8,7 +8,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class GetBagsCountByBrandsCommand : IAsyncCommand<int> {
         public GetBagsCountByBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {

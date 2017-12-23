@@ -1,5 +1,4 @@
 namespace TheCollection.Web.Commands.Tea {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,7 +10,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Domain.Extensions;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class CreateTotalBagsCountByInsertDateCommand {
         public CreateTotalBagsCountByInsertDateCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {

@@ -1,7 +1,6 @@
 namespace TheCollection.Web.Translators.Tea {
-
+    using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
-    using TheCollection.Web.Models;
 
     public class BagToBagTranslator : ITranslator<Domain.Tea.Bag, Models.Tea.Bag> {
 

@@ -1,6 +1,5 @@
 namespace TheCollection.Web.Commands.Tea {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
@@ -8,7 +7,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class GetBagsCountByBagTypesCommand : IAsyncCommand {
         public GetBagsCountByBagTypesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {

@@ -7,9 +7,9 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Extensions;
-    using TheCollection.Web.Models;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
+    using TheCollection.Web.Contracts;
 
     public class CreateBagCommand : IAsyncCommand<Bag> {
 

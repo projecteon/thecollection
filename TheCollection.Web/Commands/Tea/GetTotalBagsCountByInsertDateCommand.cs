@@ -7,7 +7,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Domain;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class GetTotalBagsCountByInsertDateCommand : IAsyncCommand {
         public GetTotalBagsCountByInsertDateCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {

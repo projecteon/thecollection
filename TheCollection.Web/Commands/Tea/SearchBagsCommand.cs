@@ -12,6 +12,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Models;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
+    using TheCollection.Web.Contracts;
 
     public class SearchBagsCommand : IAsyncCommand<Search> {
 

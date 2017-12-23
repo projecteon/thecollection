@@ -1,5 +1,4 @@
-namespace TheCollection.Web.Commands.Tea
-{
+namespace TheCollection.Web.Commands.Tea {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ namespace TheCollection.Web.Commands.Tea
     using TheCollection.Domain;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class GetBagsCountByInsertDateCommand : IAsyncCommand {
         public GetBagsCountByInsertDateCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {

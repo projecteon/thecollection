@@ -1,7 +1,7 @@
 namespace TheCollection.Web.Translators {
 
     using System.Linq;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, Models.RefValue> {
 

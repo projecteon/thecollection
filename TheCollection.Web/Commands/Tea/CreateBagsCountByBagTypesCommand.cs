@@ -9,7 +9,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Data.DocumentDB;
     using TheCollection.Data.DocumentDB.Repositories;
     using TheCollection.Web.Constants;
-    using TheCollection.Web.Models;
+    using TheCollection.Web.Contracts;
 
     public class CreateBagsCountByBagTypesCommand : IAsyncCommand {
         public CreateBagsCountByBagTypesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
