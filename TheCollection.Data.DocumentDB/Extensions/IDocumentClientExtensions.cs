@@ -1,5 +1,5 @@
 namespace TheCollection.Data.DocumentDB.Extensions {
-
+    using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;

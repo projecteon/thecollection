@@ -17,6 +17,7 @@ namespace TheCollection_Web {
     using Newtonsoft.Json;
     using NodaTime;
     using NodaTime.Serialization.JsonNet;
+    using TheCollection.Data.DocumentDB.Extensions;
     using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
@@ -159,56 +160,8 @@ namespace TheCollection_Web {
             serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsIdentityConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
-            try {
-                // Does the DB exist?
-                var db = client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId)).Result;
-            }
-            catch (AggregateException ae) {
-                ae.Handle(ex => {
-                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
-                        // Create DB
-                        var db = client.CreateDatabaseAsync(new Database() { Id = DocumentDB.DatabaseId }).Result;
-                        return true;
-                    }
-
-                    return false;
-                });
-            }
-
-            try {
-                // Does the Collection exist?
-                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, DocumentDB.AspNetIdentity)).Result;
-            }
-            catch (AggregateException ae) {
-                ae.Handle(ex => {
-                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
-                        var collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentity };
-                        collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
-
-                        return true;
-                    }
-
-                    return false;
-                });
-            }
-
-            try {
-                // Does the Collection exist?
-                var collection = client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(DocumentDB.DatabaseId, DocumentDB.AspNetIdentityRoles)).Result;
-            }
-            catch (AggregateException ae) {
-                ae.Handle(ex => {
-                    if (ex.GetType() == typeof(DocumentClientException) && ((DocumentClientException)ex).StatusCode == HttpStatusCode.NotFound) {
-                        var collection = new DocumentCollection() { Id = DocumentDB.AspNetIdentityRoles };
-                        collection = client.CreateDocumentCollectionAsync(UriFactory.CreateDatabaseUri(DocumentDB.DatabaseId), collection).Result;
-
-                        return true;
-                    }
-
-                    return false;
-                });
-            }
-
+            client.CreateCollectionIfNotExistsAsync(DocumentDB.DatabaseId, DocumentDB.AspNetIdentity).Wait();
+            client.CreateCollectionIfNotExistsAsync(DocumentDB.DatabaseId, DocumentDB.AspNetIdentityRoles).Wait();
             return client;
         }
 
