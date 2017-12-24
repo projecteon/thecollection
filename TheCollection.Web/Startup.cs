@@ -24,7 +24,6 @@ namespace TheCollection_Web {
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Handlers;
     using TheCollection.Web.Models;
-    using TheCollection.Web.Policies.Tea;
     using TheCollection.Web.Repositories;
 
     public class Startup {
