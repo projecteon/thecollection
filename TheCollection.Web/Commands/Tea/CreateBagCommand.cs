@@ -25,7 +25,7 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<Models.Tea.Bag, Bag> BagDtoTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Models.Tea.Bag bag) {
-            if (ApplicationUser.Roles.None(x => x.NormalizedName == "sysadmin" || x.NormalizedName == "TeaManager")) {
+            if (ApplicationUser.Roles.None(x => x.Name == Roles.SystemAdministrator || x.Name == Roles.TeaManager)) {
                 return new ForbidResult();
             }
 

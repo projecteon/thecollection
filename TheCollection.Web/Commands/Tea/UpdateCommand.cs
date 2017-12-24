@@ -27,7 +27,7 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<TDto, TEntity> DtoTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(TDto dto) {
-            if (ApplicationUser.Roles.None(x => x.NormalizedName == "sysadmin" || x.NormalizedName == "TeaManager")) {
+            if (ApplicationUser.Roles.None(x => x.Name == Roles.SystemAdministrator || x.Name == Roles.TeaManager)) {
                 return new ForbidResult();
             }
 

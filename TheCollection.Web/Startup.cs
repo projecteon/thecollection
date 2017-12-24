@@ -24,6 +24,7 @@ namespace TheCollection_Web {
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Handlers;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Policies.Tea;
     using TheCollection.Web.Repositories;
 
     public class Startup {
@@ -49,6 +50,7 @@ namespace TheCollection_Web {
             );
 
             // Add framework services.
+            // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
             services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>()
             .AddDocumentDbStores(options => {
                 options.UserStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
@@ -64,7 +66,8 @@ namespace TheCollection_Web {
             });
 
 
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+            // Add external authentication middleware below.
+            // To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
             // https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
             services.AddAuthentication()
@@ -100,7 +103,7 @@ namespace TheCollection_Web {
             ).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            }); 
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -164,11 +167,12 @@ namespace TheCollection_Web {
             return client;
         }
 
+        // https://msdn.microsoft.com/en-us/magazine/mt826337.aspx
         void CreateRoles(IServiceProvider serviceProvider) {
             //initializing custom roles 
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
+            string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
             IdentityResult roleResult;
 
             foreach (var roleName in roleNames) {
@@ -180,13 +184,13 @@ namespace TheCollection_Web {
             }
 
             var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != "SysAdmin")) {
-                roleResult = UserManager.AddToRoleAsync(_user, "SysAdmin").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
+                roleResult = UserManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
             }
 
             _user = UserManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != "TeaManager")) {
-                roleResult = UserManager.AddToRoleAsync(_user, "TeaManager").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
+                roleResult = UserManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
             }
         }
 

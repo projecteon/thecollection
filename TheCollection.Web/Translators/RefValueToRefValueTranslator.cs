@@ -1,5 +1,6 @@
 namespace TheCollection.Web.Translators {
     using System.Linq;
+    using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
 
     public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, Models.RefValue> {
@@ -12,7 +13,7 @@ namespace TheCollection.Web.Translators {
         public void Translate(Domain.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;
             destination.name = source?.Name;
-            destination.canaddnew = ApplicationUser.Roles.Any(x => x.NormalizedName == "sysadmin");
+            destination.canaddnew = ApplicationUser.Roles.Any(x => x.Name == Roles.SystemAdministrator);
         }
     }
 }

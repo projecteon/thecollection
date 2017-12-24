@@ -1,5 +1,6 @@
 namespace TheCollection.Web.Translators.Tea {
     using System.Linq;
+    using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
 
@@ -25,7 +26,7 @@ namespace TheCollection.Web.Translators.Tea {
             destination.serialnumber = source.SerialNumber;
             destination.insertdate = source.InsertDate;
             destination.imageid = source.ImageId;
-            destination.iseditable = source.UserId == ApplicationUser.Id || ApplicationUser.Roles.Any(x => x.NormalizedName == "sysadmin");
+            destination.iseditable = source.UserId == ApplicationUser.Id || ApplicationUser.Roles.Any(x => x.Name == Roles.SystemAdministrator);
         }
     }
 }
