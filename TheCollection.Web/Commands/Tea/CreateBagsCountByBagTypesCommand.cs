@@ -21,13 +21,13 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             var bags = await bagsRepository.SearchItemsAsync();
             var queryablebags = bags.AsQueryable();
             var countGroupByIRef = new CountGroupBy<Bag, Domain.RefValue, RefValueComparer>(queryablebags);
             var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.BagType);
             var dashboard = new Dashboard<IEnumerable<CountBy<Domain.RefValue>>>() { Id = DashBoardTypes.BagsCountByBagTypes.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.BagsCountByBagTypes, Data = bagsCountByBrand };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Domain.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Domain.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Statistics);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
             return new OkObjectResult(bagsCountByBrand);
         }

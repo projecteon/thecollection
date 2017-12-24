@@ -22,7 +22,7 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(string id) {
-            var bagsRepository = new GetRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new GetRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             var teabag = await bagsRepository.GetItemAsync(id);
             if (teabag == null) {
                 return new NotFoundResult();

@@ -27,7 +27,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("Brand cannot be null");
             }
 
-            var brandRepository = new CreateRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
+            var brandRepository = new CreateRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Brands);
             brand.Id = await brandRepository.CreateItemAsync(brand);
             return new OkObjectResult(BrandTranslator.Translate(brand));
         }

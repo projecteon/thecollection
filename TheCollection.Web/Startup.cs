@@ -51,8 +51,8 @@ namespace TheCollection_Web {
             // Add framework services.
             services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>()
             .AddDocumentDbStores(options => {
-                options.UserStoreDocumentCollection = DocumentDB.AspNetIdentity;
-                options.RoleStoreDocumentCollection = DocumentDB.AspNetIdentity;
+                options.UserStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
+                options.RoleStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
                 options.Database = DocumentDB.DatabaseId;
             })
             .AddDefaultTokenProviders();
@@ -160,7 +160,7 @@ namespace TheCollection_Web {
             serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsIdentityConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
-            client.CreateCollectionIfNotExistsAsync(DocumentDB.DatabaseId, DocumentDB.AspNetIdentity).Wait();
+            client.CreateCollectionIfNotExistsAsync(DocumentDB.DatabaseId, DocumentDB.Collections.AspNetIdentity).Wait();
             return client;
         }
 

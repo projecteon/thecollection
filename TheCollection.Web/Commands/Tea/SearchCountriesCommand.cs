@@ -29,7 +29,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestResult();
             }
 
-            var countriesRepository = new SearchRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.CountriesCollectionId);
+            var countriesRepository = new SearchRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Countries);
             var countries = await countriesRepository.SearchAsync(search.searchterm);
             var sortedcountries = countries.OrderBy(country => country.Name);
 

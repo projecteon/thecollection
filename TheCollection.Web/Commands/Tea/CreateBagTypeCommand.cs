@@ -27,7 +27,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("Brand cannot be null");
             }
 
-            var bagRepository = new CreateRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagRepository = new CreateRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             bagtype.Id = await bagRepository.CreateItemAsync(bagtype);
             return new OkObjectResult(BagTypeTranslator.Translate(bagtype));
         }

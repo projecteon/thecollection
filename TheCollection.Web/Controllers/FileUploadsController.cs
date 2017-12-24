@@ -27,12 +27,12 @@ namespace TheCollection.Web.Controllers {
                 var file = form.Files.First();
 
                 //do something with your file => file.OpenReadStream()
-                var bagsRepository = new SearchRepository<Bag>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+                var bagsRepository = new SearchRepository<Bag>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
                 var bagsCount = bagsRepository.SearchRowCountAsync("");
                 var fileExtension = System.IO.Path.GetExtension(file.FileName);
                 var uri = await imageRepository.Upload(file.OpenReadStream(), $"{bagsCount}.{fileExtension}");
 
-                var imagesRepository = new CreateRepository<Image>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.ImagesCollectionId);
+                var imagesRepository = new CreateRepository<Image>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Images);
                 var newImage = new Image { Filename = file.FileName, Uri = uri };
                 newImage.Id = await imagesRepository.CreateItemAsync(newImage);
 

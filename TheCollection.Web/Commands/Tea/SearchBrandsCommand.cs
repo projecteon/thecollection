@@ -29,7 +29,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestResult();
             }
 
-            var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BrandsCollectionId);
+            var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Brands);
             var brands = await brandsRepository.SearchAsync(search.searchterm);
             var sortedbrands = brands.OrderBy(brand => brand.Name);
 

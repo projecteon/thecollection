@@ -21,7 +21,7 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync(int top) {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             var bags = await bagsRepository.SearchItemsAsync();
             var queryablebags = bags.AsQueryable();
             var strangeBug = queryablebags.Where(x => x.Brand == null);
@@ -30,7 +30,7 @@ namespace TheCollection.Web.Commands.Tea {
                                                    .OrderByDescending(x => x.Count);
 
             var dashboard = new Dashboard<IEnumerable<CountBy<Domain.RefValue>>>() { Id = DashBoardTypes.BagsCountByBrands.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.BagsCountByBrands, Data = bagsCountByBrand };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Domain.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<Domain.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Statistics);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
 
             return new OkObjectResult(bagsCountByBrand.Take(top).OrderBy(x => x.Value?.Name));

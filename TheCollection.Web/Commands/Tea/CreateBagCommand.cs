@@ -28,7 +28,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("Bag cannot be null");
             }
 
-            var bagRepository = new CreateRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagRepository = new CreateRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             bag.UserId = ApplicationUser.Id;
             bag.Id = await bagRepository.CreateItemAsync(bag);
             return new OkObjectResult(BagTranslator.Translate(bag));

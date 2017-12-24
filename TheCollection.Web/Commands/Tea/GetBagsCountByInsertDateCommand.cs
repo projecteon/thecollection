@@ -19,7 +19,7 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Statistics);
             var bagsCountByInsertDate = await dashboardRepository.GetItemAsync(DashBoardTypes.BagsCountByPeriod.Key.ToString());
             if (bagsCountByInsertDate == null) {
                 return new NotFoundResult();

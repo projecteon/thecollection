@@ -41,7 +41,7 @@ namespace TheCollection.Web.Controllers {
         [HttpGet, Route("refvalues/{searchterm:alpha}")]
         public async Task<IActionResult> RefValues([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new SearchRefValuesCommand<Brand>(documentDbClient, applicationUser, DocumentDB.BrandsCollectionId);
+            var command = new SearchRefValuesCommand<Brand>(documentDbClient, applicationUser, DocumentDB.Collections.Brands);
             return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
         }
     }

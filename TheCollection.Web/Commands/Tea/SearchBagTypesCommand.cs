@@ -29,7 +29,7 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestResult();
             }
 
-            var bagTypesRepository = new SearchRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagTypesCollectionId);
+            var bagTypesRepository = new SearchRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.BagTypes);
             var bagTypes = await bagTypesRepository.SearchAsync(search.searchterm);
             var sortedbagtypes = bagTypes.OrderBy(bagType => bagType.Name);
 

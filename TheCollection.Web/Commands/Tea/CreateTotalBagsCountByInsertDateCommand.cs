@@ -22,7 +22,7 @@ namespace TheCollection.Web.Commands.Tea {
         public IApplicationUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync() {
-            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsCollectionId);
+            var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             var bags = await bagsRepository.SearchItemsAsync();
             var queryablebags = bags.AsQueryable();
             var countGroupBy = new CountGroupBy<Bag, NodaTime.LocalDate, LocalDateComparer>(queryablebags);
@@ -36,7 +36,7 @@ namespace TheCollection.Web.Commands.Tea {
             }, new CountBy<NodaTime.LocalDate>(firstPeriod, 0));
 
             var dashboard = new Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>() { Id = DashBoardTypes.TotalBagsCountByPeriod.Key.ToString(), UserId = ApplicationUser.Id, DashboardType = DashBoardTypes.TotalBagsCountByPeriod, Data = totalBagsCountByPeriods };
-            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.BagsStatisticsCollectionId);
+            var dashboardRepository = new UpsertRepository<Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Statistics);
             await dashboardRepository.UpsertItemAsync(dashboard.Id, dashboard);
 
             return new OkObjectResult(totalBagsCountByPeriods);
