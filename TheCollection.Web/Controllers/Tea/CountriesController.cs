@@ -3,11 +3,11 @@ namespace TheCollection.Web.Controllers {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Domain.Contracts.Repository;
-    using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Models.Tea;
 
     [Route("api/Tea/[controller]")]
     public class CountriesController : Controller {
@@ -23,7 +23,7 @@ namespace TheCollection.Web.Controllers {
         public async Task<IActionResult> Countries([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchCountriesCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
+            return await command.ExecuteAsync(new Search { searchterm = searchterm });
         }
 
         [HttpPost()]
@@ -34,15 +34,17 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPut()]
-        public Country Update([FromBody] Country country) {
-            return country;
+        public async Task<IActionResult> Update([FromBody] Country country) {
+            var applicationUser = await applicationUserRepository.GetItemAsync();
+            var command = new UpdateCountryCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(country);
         }
 
         [HttpGet, Route("refvalues/{searchterm:alpha}")]
         public async Task<IActionResult> RefValues([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new SearchRefValuesCommand<Country>(documentDbClient, applicationUser, DocumentDB.Collections.Countries);
-            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
+            var command = new SearchRefValuesCommand<Domain.Tea.Country>(documentDbClient, applicationUser, DocumentDB.Collections.Countries);
+            return await command.ExecuteAsync(new Search { searchterm = searchterm });
         }
     }
 }

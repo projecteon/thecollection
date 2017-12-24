@@ -1,10 +1,8 @@
 namespace TheCollection.Web.Translators {
-
     using System.Linq;
     using TheCollection.Web.Contracts;
 
     public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, Models.RefValue> {
-
         public RefValueToRefValueTranslator(IApplicationUser applicationUser) {
             ApplicationUser = applicationUser;
         }

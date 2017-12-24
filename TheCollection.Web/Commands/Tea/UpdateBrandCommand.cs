@@ -10,8 +10,8 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
-    public class CreateBrandCommand : IAsyncCommand<Models.Tea.Brand> {
-        public CreateBrandCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+    public class UpdateBrandCommand : IAsyncCommand<Models.Tea.Brand> {
+        public UpdateBrandCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BrandTranslator = new BrandToBrandTranslator(applicationUser);
             BrandDtoTranslator = new BrandDtoToBrandTranslator(applicationUser);
@@ -27,10 +27,10 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("Brand cannot be null");
             }
 
-            var brandRepository = new CreateRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Brands);
-            var newBrand = BrandDtoTranslator.Translate(brand);
-            newBrand.Id = await brandRepository.CreateItemAsync(newBrand);
-            return new OkObjectResult(BrandTranslator.Translate(newBrand));
+            var updateRepository = new UpdateRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Brands);
+            var updateBrand = BrandDtoTranslator.Translate(brand);
+            updateBrand.Id = await updateRepository.UpdateItemAsync(brand.id, updateBrand);
+            return new OkObjectResult(BrandTranslator.Translate(updateBrand));
         }
     }
 }

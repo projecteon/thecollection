@@ -1,10 +1,9 @@
 namespace TheCollection.Data.DocumentDB {
-
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
+    using TheCollection.Domain.Contracts.Repository;
 
     public class UpdateRepository<T> : IUpdateRepository<T> where T : class {
         private readonly string DatabaseId;

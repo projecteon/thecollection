@@ -2,17 +2,16 @@ namespace TheCollection.Web.Commands.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
-    using TheCollection.Web.Contracts;
 
-    public class CreateBagTypeCommand : IAsyncCommand<Models.Tea.BagType> {
-
-        public CreateBagTypeCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+    public class UpdateBagTypeCommand : IAsyncCommand<Models.Tea.BagType> {
+        public UpdateBagTypeCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
             BagTypeTranslator = new BagTypeToBagTypeTranslator(applicationUser);
@@ -29,10 +28,10 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("BagType cannot be null");
             }
 
-            var bagRepository = new CreateRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.BagTypes);
-            var newBagType = BagTypeDtoTranslator.Translate(bagtype);
-            newBagType.Id = await bagRepository.CreateItemAsync(newBagType);
-            return new OkObjectResult(BagTypeTranslator.Translate(newBagType));
+            var updateRepository = new UpdateRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.BagTypes);
+            var updateBagType = BagTypeDtoTranslator.Translate(bagtype);
+            updateBagType.Id = await updateRepository.UpdateItemAsync(bagtype.id, updateBagType);
+            return new OkObjectResult(BagTypeTranslator.Translate(updateBagType));
         }
     }
 }

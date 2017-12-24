@@ -3,9 +3,9 @@ namespace TheCollection.Web.Controllers {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Domain.Contracts.Repository;
-    using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Models.Tea;
 
     [Route("api/Tea/[controller]")]
     public class BagsController : Controller {
@@ -21,7 +21,7 @@ namespace TheCollection.Web.Controllers {
         public async Task<IActionResult> Bags([FromQuery] string searchterm = "", [FromQuery] int pagesize = 300, [FromQuery] int page = 0) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchBagsCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm, pagesize = pagesize });
+            return await command.ExecuteAsync(new Search { searchterm = searchterm, pagesize = pagesize });
         }
 
         [HttpGet("{id}")]
@@ -39,9 +39,10 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPut()]
-        public async Task<Bag> Update([FromBody] Bag bag) {
+        public async Task<IActionResult> Update([FromBody] Bag bag) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            return bag;
+            var command = new UpdateBagCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(bag);
         }
     }
 }

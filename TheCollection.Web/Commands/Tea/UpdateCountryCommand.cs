@@ -10,8 +10,8 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
 
-    public class CreateCountryCommand : IAsyncCommand<Models.Tea.Country> {
-        public CreateCountryCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+    public class UpdateCountryCommand : IAsyncCommand<Models.Tea.Country> {
+        public UpdateCountryCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             CountryTranslator = new CountryToCountryTranslator(applicationUser);
             CountryDtoTranslator = new CountryDtoToCountryTranslator(applicationUser);
@@ -27,10 +27,10 @@ namespace TheCollection.Web.Commands.Tea {
                 return new BadRequestObjectResult("Country cannot be null");
             }
 
-            var brandRepository = new CreateRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Countries);
-            var newCountry = CountryDtoTranslator.Translate(country);
-            newCountry.Id = await brandRepository.CreateItemAsync(newCountry);
-            return new OkObjectResult(CountryTranslator.Translate(newCountry));
+            var updateRepository = new UpdateRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Countries);
+            var updateCountry = CountryDtoTranslator.Translate(country);
+            updateCountry.Id = await updateRepository.UpdateItemAsync(country.id, updateCountry);
+            return new OkObjectResult(CountryTranslator.Translate(updateCountry));
         }
     }
 }

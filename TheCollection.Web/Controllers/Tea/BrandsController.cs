@@ -3,11 +3,11 @@ namespace TheCollection.Web.Controllers {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Domain.Contracts.Repository;
-    using TheCollection.Domain.Tea;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
+    using TheCollection.Web.Models.Tea;
 
     [Route("api/Tea/[controller]")]
     public class BrandsController : Controller {
@@ -23,7 +23,7 @@ namespace TheCollection.Web.Controllers {
         public async Task<IActionResult> Brands([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchBrandsCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
+            return await command.ExecuteAsync(new Search { searchterm = searchterm });
         }
 
         [HttpPost()]
@@ -34,15 +34,17 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPut()]
-        public Brand Update([FromBody] Brand brand) {
-            return brand;
+        public async Task<IActionResult> Update([FromBody] Brand brand) {
+            var applicationUser = await applicationUserRepository.GetItemAsync();
+            var command = new UpdateBrandCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(brand);
         }
 
         [HttpGet, Route("refvalues/{searchterm:alpha}")]
         public async Task<IActionResult> RefValues([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new SearchRefValuesCommand<Brand>(documentDbClient, applicationUser, DocumentDB.Collections.Brands);
-            return await command.ExecuteAsync(new Models.Search { searchterm = searchterm });
+            var command = new SearchRefValuesCommand<Domain.Tea.Brand>(documentDbClient, applicationUser, DocumentDB.Collections.Brands);
+            return await command.ExecuteAsync(new Search { searchterm = searchterm });
         }
     }
 }
