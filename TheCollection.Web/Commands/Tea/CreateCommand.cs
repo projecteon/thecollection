@@ -4,6 +4,7 @@ namespace TheCollection.Web.Commands.Tea {
     using Microsoft.Azure.Documents;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
@@ -26,6 +27,10 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<TDto, TEntity> DtoTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(TDto dto) {
+            if (ApplicationUser.Roles.None(x => x.NormalizedName == "sysadmin" || x.NormalizedName == "TeaManager")) {
+                return new ForbidResult();
+            }
+
             if (dto == null) {
                 return new BadRequestObjectResult("Update item cannot be null");
             }

@@ -12,7 +12,7 @@ namespace TheCollection.Web.Translators {
         public void Translate(Domain.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;
             destination.name = source?.Name;
-            destination.canaddnew = ApplicationUser.Roles.Any(x => x.Name == "sysadmin");
+            destination.canaddnew = ApplicationUser.Roles.Any(x => x.NormalizedName == "sysadmin");
         }
     }
 }

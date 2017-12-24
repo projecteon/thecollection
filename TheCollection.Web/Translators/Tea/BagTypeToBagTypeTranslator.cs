@@ -13,7 +13,7 @@ namespace TheCollection.Web.Translators.Tea {
         public void Translate(BagType source, Models.Tea.BagType destination) {
             destination.id = source.Id;
             destination.name = source.Name;
-            destination.iseditable = ApplicationUser.Roles.Any(x => x.Name == "sysadmin");
+            destination.iseditable = ApplicationUser.Roles.Any(x => x.NormalizedName == "sysadmin");
         }
     }
 }

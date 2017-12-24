@@ -3,6 +3,7 @@ namespace TheCollection.Web.Commands.Tea {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
@@ -24,6 +25,10 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<Models.Tea.Bag, Bag> BagDtoTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Models.Tea.Bag bag) {
+            if (ApplicationUser.Roles.None(x => x.NormalizedName == "sysadmin" || x.NormalizedName == "TeaManager")) {
+                return new ForbidResult();
+            }
+
             if (bag == null) {
                 return new BadRequestObjectResult("Bag cannot be null");
             }

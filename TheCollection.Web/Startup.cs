@@ -183,6 +183,11 @@ namespace TheCollection_Web {
             if (_user != null && _user.Roles.None(x => x.Name != "SysAdmin")) {
                 roleResult = UserManager.AddToRoleAsync(_user, "SysAdmin").Result;
             }
+
+            _user = UserManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != "TeaManager")) {
+                roleResult = UserManager.AddToRoleAsync(_user, "TeaManager").Result;
+            }
         }
 
         //async Task CreateRoles(IServiceProvider serviceProvider) {
