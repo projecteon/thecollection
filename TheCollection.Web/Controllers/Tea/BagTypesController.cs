@@ -27,9 +27,10 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPost()]
-        public BagType Create([FromBody] BagType bagType) {
-            bagType.Id = System.Guid.NewGuid().ToString();
-            return bagType;
+        public async Task<IActionResult> Create([FromBody] BagType bagType) {
+            var applicationUser = await applicationUserRepository.GetItemAsync();
+            var command = new CreateBagTypeCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(bagType);
         }
 
         [HttpPut()]

@@ -1,18 +1,16 @@
 namespace TheCollection.Web.Commands.Tea {
-
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
-    using TheCollection.Web.Contracts;
 
     public class CreateBrandCommand : IAsyncCommand<Brand> {
-
         public CreateBrandCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BrandTranslator = new BrandToBrandTranslator(applicationUser);

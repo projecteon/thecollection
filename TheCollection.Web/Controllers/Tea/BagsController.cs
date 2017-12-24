@@ -32,10 +32,10 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPost()]
-        public async Task<Bag> Create([FromBody] Bag bag) {
+        public async Task<IActionResult> Create([FromBody] Bag bag) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            bag.Id = System.Guid.NewGuid().ToString();
-            return bag;
+            var command = new CreateBagCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(bag);
         }
 
         [HttpPut()]

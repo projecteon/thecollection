@@ -27,9 +27,10 @@ namespace TheCollection.Web.Controllers {
         }
 
         [HttpPost()]
-        public Country Create([FromBody] Country country) {
-            country.Id = System.Guid.NewGuid().ToString();
-            return country;
+        public async Task<IActionResult> Create([FromBody] Country country) {
+            var applicationUser = await applicationUserRepository.GetItemAsync();
+            var command = new CreateCountryCommand(documentDbClient, applicationUser);
+            return await command.ExecuteAsync(country);
         }
 
         [HttpPut()]
