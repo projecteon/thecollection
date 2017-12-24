@@ -1,6 +1,5 @@
 namespace TheCollection_Web {
     using System;
-    using System.Net;
     using System.Text.RegularExpressions;
     using AspNetCore.Identity.DocumentDb;
     using AspNetCore.Identity.DocumentDb.Tools;
@@ -19,6 +18,7 @@ namespace TheCollection_Web {
     using NodaTime.Serialization.JsonNet;
     using TheCollection.Data.DocumentDB.Extensions;
     using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
     using TheCollection.Web.Extensions;
@@ -149,7 +149,7 @@ namespace TheCollection_Web {
                     defaults: new { controller = "Home", action = "Index" });
             });
 
-            //CreateRoles(app.ApplicationServices);
+            CreateRoles(app.ApplicationServices);
         }
 
         DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
@@ -164,43 +164,26 @@ namespace TheCollection_Web {
             return client;
         }
 
-        //void CreateRoles(IServiceProvider serviceProvider) {
-        //    //initializing custom roles 
-        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
-        //    IdentityResult roleResult;
+        void CreateRoles(IServiceProvider serviceProvider) {
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
+            IdentityResult roleResult;
 
-        //    foreach (var roleName in roleNames) {
-        //        var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
-        //        if (!roleExist) {
-        //            //create the roles and seed them to the database: Question 1
-        //            roleResult = RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName }).Result;
-        //        }
-        //    }
+            foreach (var roleName in roleNames) {
+                var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
+                if (!roleExist) {
+                    //create the roles and seed them to the database: Question 1
+                    roleResult = RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName }).Result;
+                }
+            }
 
-        //    //Here you could create a super user who will maintain the web app
-        //    var poweruser = new ApplicationUser {
-
-        //        UserName = "Aleksander Spro",
-        //        Email = "abspro@gmail.com",
-        //    };
-        //    //Ensure you have these values in your appsettings.json file
-        //    var userPWD = "dummy";
-        //    var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
-
-        //    if (_user == null) {
-        //        var createPowerUser = UserManager.CreateAsync(poweruser, userPWD).Result;
-        //        if (createPowerUser.Succeeded) {
-        //            //here we tie the new user to the role
-        //            roleResult = UserManager.AddToRoleAsync(poweruser, "SysAdmin").Result;
-
-        //        }
-        //    }
-        //    else {
-        //        roleResult = UserManager.AddToRoleAsync(_user, "SysAdmin").Result;
-        //    }
-        //}
+            var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != "SysAdmin")) {
+                roleResult = UserManager.AddToRoleAsync(_user, "SysAdmin").Result;
+            }
+        }
 
         //async Task CreateRoles(IServiceProvider serviceProvider) {
         //    //initializing custom roles 
