@@ -20,6 +20,7 @@ namespace TheCollection.Web.Constants {
                 { typeof(Domain.Tea.Brand), Brands },
                 { typeof(Domain.Tea.BagType), BagTypes },
                 { typeof(Domain.Tea.Country), Countries},
+                { typeof(Domain.Tea.Image), Images},
             };
         }
     }
