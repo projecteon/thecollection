@@ -10,6 +10,5 @@ namespace TheCollection.Web.Constants {
         public const string ImagesCollectionId = "Images";
 
         public const string AspNetIdentity = nameof(AspNetIdentity);
-        public const string AspNetIdentityRoles = nameof(AspNetIdentityRoles);
     }
 }
