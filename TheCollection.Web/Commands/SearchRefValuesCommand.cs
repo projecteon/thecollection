@@ -1,21 +1,19 @@
 namespace TheCollection.Web.Commands {
-
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain;
-    using TheCollection.Domain.Extensions;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
+    using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
     using TheCollection.Web.Translators;
     using TheCollection.Web.Translators.Tea;
-    using TheCollection.Web.Contracts;
 
     public class SearchRefValuesCommand<T> where T : class, IRef {
-
         public SearchRefValuesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser, string refValueCollectionId) {
             DocumentDbClient = documentDbClient;
             RefValueCollectionId = refValueCollectionId;

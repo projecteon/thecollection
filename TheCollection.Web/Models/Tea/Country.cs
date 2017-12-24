@@ -1,6 +1,7 @@
 namespace TheCollection.Web.Models.Tea {
+    using TheCollection.Web.Contracts;
 
-    public class Country {
+    public class Country : IDto {
         public string id { get; set; }
 
         public string name { get; set; }

@@ -1,15 +1,15 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using TheCollection.Data.DocumentDB;
-using TheCollection.Domain.Tea;
-using TheCollection.Web.Constants;
-using TheCollection.Web.Contracts;
-using TheCollection.Web.Extensions;
-using TheCollection.Web.Translators;
-using TheCollection.Web.Translators.Tea;
-
 namespace TheCollection.Web.Commands.Tea {
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Azure.Documents;
+    using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Tea;
+    using TheCollection.Web.Constants;
+    using TheCollection.Web.Contracts;
+    using TheCollection.Web.Extensions;
+    using TheCollection.Web.Translators;
+    using TheCollection.Web.Translators.Tea;
+
     public class UpdateBagCommand : IAsyncCommand<Models.Tea.Bag> {
         public UpdateBagCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
             DocumentDbClient = documentDbClient;

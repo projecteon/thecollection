@@ -8,6 +8,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
     using TheCollection.Web.Models.Tea;
+    using TheCollection.Web.Translators.Tea;
 
     [Route("api/Tea/[controller]")]
     public class BagTypesController : Controller {
@@ -29,14 +30,18 @@ namespace TheCollection.Web.Controllers {
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] BagType bagType) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new CreateBagTypeCommand(documentDbClient, applicationUser);
+            var entityTranslator = new BagTypeToBagTypeTranslator(applicationUser);
+            var dtoTranslator = new BagTypeDtoToBagTypeTranslator(applicationUser);
+            var command = new CreateCommand<Domain.Tea.BagType, BagType>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(bagType);
         }
 
         [HttpPut()]
         public async Task<IActionResult> Update([FromBody] BagType bagType) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new UpdateBagTypeCommand(documentDbClient, applicationUser);
+            var entityTranslator = new BagTypeToBagTypeTranslator(applicationUser);
+            var dtoTranslator = new BagTypeDtoToBagTypeTranslator(applicationUser);
+            var command = new UpdateCommand<Domain.Tea.BagType, BagType>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(bagType);
         }
 

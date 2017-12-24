@@ -8,6 +8,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
     using TheCollection.Web.Models.Tea;
+    using TheCollection.Web.Translators.Tea;
 
     [Route("api/Tea/[controller]")]
     public class CountriesController : Controller {
@@ -29,14 +30,18 @@ namespace TheCollection.Web.Controllers {
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] Country country) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new CreateCountryCommand(documentDbClient, applicationUser);
+            var entityTranslator = new CountryToCountryTranslator(applicationUser);
+            var dtoTranslator = new CountryDtoToCountryTranslator(applicationUser);
+            var command = new CreateCommand<Domain.Tea.Country, Country>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(country);
         }
 
         [HttpPut()]
         public async Task<IActionResult> Update([FromBody] Country country) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new UpdateCountryCommand(documentDbClient, applicationUser);
+            var entityTranslator = new CountryToCountryTranslator(applicationUser);
+            var dtoTranslator = new CountryDtoToCountryTranslator(applicationUser);
+            var command = new UpdateCommand<Domain.Tea.Country, Country>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(country);
         }
 

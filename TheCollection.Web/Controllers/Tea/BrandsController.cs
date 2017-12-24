@@ -8,6 +8,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
     using TheCollection.Web.Models.Tea;
+    using TheCollection.Web.Translators.Tea;
 
     [Route("api/Tea/[controller]")]
     public class BrandsController : Controller {
@@ -29,14 +30,18 @@ namespace TheCollection.Web.Controllers {
         [HttpPost()]
         public async Task<IActionResult> Create([FromBody] Brand brand) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new CreateBrandCommand(documentDbClient, applicationUser);
+            var entityTranslator = new BrandToBrandTranslator(applicationUser);
+            var dtoTranslator = new BrandDtoToBrandTranslator(applicationUser);
+            var command = new CreateCommand<Domain.Tea.Brand, Brand>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(brand);
         }
 
         [HttpPut()]
         public async Task<IActionResult> Update([FromBody] Brand brand) {
             var applicationUser = await applicationUserRepository.GetItemAsync();
-            var command = new UpdateBrandCommand(documentDbClient, applicationUser);
+            var entityTranslator = new BrandToBrandTranslator(applicationUser);
+            var dtoTranslator = new BrandDtoToBrandTranslator(applicationUser);
+            var command = new UpdateCommand<Domain.Tea.Brand, Brand>(documentDbClient, applicationUser, entityTranslator, dtoTranslator);
             return await command.ExecuteAsync(brand);
         }
 

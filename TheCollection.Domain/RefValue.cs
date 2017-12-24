@@ -1,5 +1,6 @@
 namespace TheCollection.Domain {
     using Newtonsoft.Json;
+    using TheCollection.Domain.Contracts;
 
     public class RefValue : IRef {
         [JsonProperty(PropertyName = "id")]
@@ -8,11 +9,5 @@ namespace TheCollection.Domain {
         [Searchable]
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-    }
-
-    public interface IRef {
-        string Id { get; set; }
-
-        string Name { get; set; }
     }
 }
