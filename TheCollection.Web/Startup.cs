@@ -16,8 +16,8 @@ namespace TheCollection_Web {
     using Newtonsoft.Json;
     using NodaTime;
     using NodaTime.Serialization.JsonNet;
+    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
-    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
@@ -41,7 +41,7 @@ namespace TheCollection_Web {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<IGetRepository<ApplicationUser>, ApplicationUserRepository>();
+            services.AddScoped<IGetRepository<WebUser>, WebUserRepository>();
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
@@ -50,7 +50,7 @@ namespace TheCollection_Web {
 
             // Add framework services.
             // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
-            services.AddIdentity<ApplicationUser, DocumentDbIdentityRole>()
+            services.AddIdentity<WebUser, DocumentDbIdentityRole>()
             .AddDocumentDbStores(options => {
                 options.UserStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
                 options.RoleStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
@@ -170,7 +170,7 @@ namespace TheCollection_Web {
         void CreateRoles(IServiceProvider serviceProvider) {
             //initializing custom roles 
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
             string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
             IdentityResult roleResult;
 

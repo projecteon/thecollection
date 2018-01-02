@@ -32,6 +32,7 @@
     <Content Remove="ClientApp\**" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TheCollection.Application.Services\TheCollection.Application.Services.csproj" />
     <ProjectReference Include="..\TheCollection.Data.DocumentDB\TheCollection.Data.DocumentDB.csproj" />
     <ProjectReference Include="..\TheCollection.Domain\TheCollection.Domain.csproj" />
   </ItemGroup>

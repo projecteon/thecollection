@@ -14,7 +14,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators.Tea;
 
     public class SearchCountriesCommand {
-        public SearchCountriesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public SearchCountriesCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             CountryTranslator = new CountryToCountryTranslator(applicationUser);
         }
@@ -23,12 +23,12 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<Country, Models.Tea.Country> CountryTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
-            if (search.searchterm.IsNullOrWhiteSpace()) {
+            if (search.Searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
             var countriesRepository = new SearchRepository<Country>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Countries);
-            var countries = await countriesRepository.SearchAsync(search.searchterm);
+            var countries = await countriesRepository.SearchAsync(search.Searchterm);
             var sortedcountries = countries.OrderBy(country => country.Name);
 
             return new OkObjectResult(CountryTranslator.Translate(sortedcountries));

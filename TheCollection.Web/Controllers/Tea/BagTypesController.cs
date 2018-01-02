@@ -2,7 +2,7 @@ namespace TheCollection.Web.Controllers {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Web.Commands;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Constants;
@@ -13,9 +13,9 @@ namespace TheCollection.Web.Controllers {
     [Route("api/Tea/[controller]")]
     public class BagTypesController : Controller {
         private readonly IDocumentClient documentDbClient;
-        private readonly IGetRepository<ApplicationUser> applicationUserRepository;
+        private readonly IGetRepository<WebUser> applicationUserRepository;
 
-        public BagTypesController(IDocumentClient documentDbClient, IGetRepository<ApplicationUser> applicationUserRepository) {
+        public BagTypesController(IDocumentClient documentDbClient, IGetRepository<WebUser> applicationUserRepository) {
             this.documentDbClient = documentDbClient;
             this.applicationUserRepository = applicationUserRepository;
         }
@@ -24,7 +24,7 @@ namespace TheCollection.Web.Controllers {
         public async Task<IActionResult> BagTypes([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchBagTypesCommand(documentDbClient, applicationUser);
-            return await command.ExecuteAsync(new Search { searchterm = searchterm });
+            return await command.ExecuteAsync(new Search { Searchterm = searchterm });
         }
 
         [HttpPost()]
@@ -49,7 +49,7 @@ namespace TheCollection.Web.Controllers {
         public async Task<IActionResult> RefValues([FromQuery] string searchterm = "") {
             var applicationUser = await applicationUserRepository.GetItemAsync();
             var command = new SearchRefValuesCommand<Domain.Tea.BagType>(documentDbClient, applicationUser, DocumentDB.Collections.BagTypes);
-            return await command.ExecuteAsync(new Search { searchterm = searchterm });
+            return await command.ExecuteAsync(new Search { Searchterm = searchterm });
         }
     }
 }

@@ -3,8 +3,8 @@ namespace TheCollection.Import.Console {
     using System.IO;
     using System.Linq;
     using Microsoft.Azure.Documents.Client;
+    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB;
-    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Domain.Tea;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;

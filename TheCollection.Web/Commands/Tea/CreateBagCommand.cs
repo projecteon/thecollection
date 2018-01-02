@@ -12,7 +12,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators.Tea;
 
     public class CreateBagCommand : IAsyncCommand<Models.Tea.Bag> {
-        public CreateBagCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public CreateBagCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
             BagTranslator = new BagToBagTranslator(applicationUser);
@@ -20,7 +20,7 @@ namespace TheCollection.Web.Commands.Tea {
         }
 
         IDocumentClient DocumentDbClient { get; }
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
         ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
         ITranslator<Models.Tea.Bag, Bag> BagDtoTranslator { get; }
 
@@ -35,7 +35,7 @@ namespace TheCollection.Web.Commands.Tea {
 
             var bagRepository = new CreateRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
             var newBag = BagDtoTranslator.Translate(bag);
-            newBag.UserId = ApplicationUser.Id;
+            newBag.OwnerId = ApplicationUser.Id;
             newBag.Id = await bagRepository.CreateItemAsync(newBag);
             return new OkObjectResult(BagTranslator.Translate(newBag));
         }

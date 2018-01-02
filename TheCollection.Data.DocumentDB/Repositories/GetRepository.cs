@@ -1,15 +1,9 @@
 namespace TheCollection.Data.DocumentDB {
-
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
-    using Microsoft.Azure.Documents.Linq;
-    using TheCollection.Domain.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
+    using TheCollection.Application.Services.Contracts.Repository;
 
     public class GetRepository<T> : IGetRepository<T> where T : class {
         private readonly string DatabaseId;

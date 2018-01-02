@@ -30,7 +30,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
                 Country = CountryRef,
                 InsertDate = new LocalDate(1985, 08, 22),
                 ImageId = "imageid",
-                UserId = Guid.NewGuid().ToString()
+                OwnerId = Guid.NewGuid().ToString()
             };
             SearchableBag = new Searchable(Bag);
         }
@@ -80,8 +80,8 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
 
         [Fact(DisplayName = "Tag does not contain user id")]
         public void NotContainsUserId() {
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId));
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId.ToLower()));
+            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.OwnerId));
+            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.OwnerId.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain stopwords except for words with accents parsed to stop words")]

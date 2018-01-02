@@ -7,11 +7,11 @@ namespace TheCollection.Web.Translators.Tea {
 
     public class CountryToCountryTranslator : ITranslator<Country, Models.Tea.Country> {
 
-        public CountryToCountryTranslator(IApplicationUser applicationUser) {
+        public CountryToCountryTranslator(IWebUser applicationUser) {
             ApplicationUser = applicationUser;
         }
 
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
 
         public void Translate(Country source, Models.Tea.Country destination) {
             destination.id = source.Id;

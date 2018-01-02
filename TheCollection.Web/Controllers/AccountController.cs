@@ -11,12 +11,12 @@ namespace TheCollection.Web.Controllers {
 
     [Authorize]
     public class AccountController : Controller {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<WebUser> _userManager;
+        private readonly SignInManager<WebUser> _signInManager;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager) {
+            UserManager<WebUser> userManager,
+            SignInManager<WebUser> signInManager) {
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -97,7 +97,7 @@ namespace TheCollection.Web.Controllers {
                 if (info == null) {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new WebUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded) {
                     result = await _userManager.AddLoginAsync(user, info);
@@ -125,7 +125,7 @@ namespace TheCollection.Web.Controllers {
             }
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync() {
+        private Task<WebUser> GetCurrentUserAsync() {
             return _userManager.GetUserAsync(HttpContext.User);
         }
 

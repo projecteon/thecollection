@@ -12,13 +12,13 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Contracts;
 
     public class CreateBagsCountByBrandsCommand : IAsyncCommand<int> {
-        public CreateBagsCountByBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public CreateBagsCountByBrandsCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
         }
 
         public IDocumentClient DocumentDbClient { get; }
-        public IApplicationUser ApplicationUser { get; }
+        public IWebUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync(int top) {
             var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);

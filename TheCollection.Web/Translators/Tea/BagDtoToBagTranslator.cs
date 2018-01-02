@@ -3,7 +3,7 @@ namespace TheCollection.Web.Translators.Tea {
     using TheCollection.Web.Extensions;
 
     public class BagDtoToBagTranslator : ITranslator<Models.Tea.Bag, Domain.Tea.Bag> {
-        public BagDtoToBagTranslator(IApplicationUser applicationUser) {
+        public BagDtoToBagTranslator(IWebUser applicationUser) {
             RefValueTranslator = new RefValueDtoToRefValueTranslator(applicationUser);
         }
 

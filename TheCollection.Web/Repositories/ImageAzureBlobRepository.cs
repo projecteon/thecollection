@@ -4,7 +4,7 @@ namespace TheCollection.Web.Repositories {
     using System.Threading.Tasks;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Application.Services.Contracts.Repository;
 
     // https://blogs.msdn.microsoft.com/premier_developer/2017/03/14/building-a-simple-photo-album-using-azure-blob-storage-with-net-core/
     // https://docs.microsoft.com/en-us/azure/storage/storage-samples-dotnet

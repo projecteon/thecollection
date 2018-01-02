@@ -6,11 +6,11 @@ namespace TheCollection.Web.Translators.Tea {
 
     public class BrandToBrandTranslator : ITranslator<Brand, Models.Tea.Brand> {
 
-        public BrandToBrandTranslator(IApplicationUser applicationUser) {
+        public BrandToBrandTranslator(IWebUser applicationUser) {
             ApplicationUser = applicationUser;
         }
 
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
 
         public void Translate(Brand source, Models.Tea.Brand destination) {
             destination.id = source.Id;

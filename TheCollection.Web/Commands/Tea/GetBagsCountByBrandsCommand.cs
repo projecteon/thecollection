@@ -11,13 +11,13 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Contracts;
 
     public class GetBagsCountByBrandsCommand : IAsyncCommand<int> {
-        public GetBagsCountByBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public GetBagsCountByBrandsCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
         }
 
         public IDocumentClient DocumentDbClient { get; }
-        public IApplicationUser ApplicationUser { get; }
+        public IWebUser ApplicationUser { get; }
 
         public async Task<IActionResult> ExecuteAsync(int top = 10) {
             var dashboardRepository = new GetRepository<Dashboard<IEnumerable<CountBy<Domain.RefValue>>>>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Statistics);

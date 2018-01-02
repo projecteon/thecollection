@@ -2,16 +2,16 @@ namespace TheCollection.Web.Controllers.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Models;
 
     [Route("api/Tea/[controller]")]
     public class DashboardsController : Controller {
         private readonly IDocumentClient documentDbClient;
-        private readonly IGetRepository<ApplicationUser> applicationUserRepository;
+        private readonly IGetRepository<WebUser> applicationUserRepository;
 
-        public DashboardsController(IDocumentClient documentDbClient, IGetRepository<ApplicationUser> applicationUserRepository) {
+        public DashboardsController(IDocumentClient documentDbClient, IGetRepository<WebUser> applicationUserRepository) {
             this.documentDbClient = documentDbClient;
             this.applicationUserRepository = applicationUserRepository;
         }

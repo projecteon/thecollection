@@ -1,45 +1,42 @@
 namespace TheCollection.Web.Commands.Tea {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
+    using TheCollection.Application.Services;
+    using TheCollection.Application.Services.Commands;
     using TheCollection.Data.DocumentDB;
-    using TheCollection.Domain.Extensions;
     using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
-    using TheCollection.Web.Extensions;
     using TheCollection.Web.Models;
     using TheCollection.Web.Translators;
-    using TheCollection.Web.Translators.Tea;
 
     public class SearchBagsCommand : IAsyncCommand<Search> {
-        public SearchBagsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public SearchBagsCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
-            BagTranslator = new BagToBagTranslator(applicationUser);
+            ApplicationUser = applicationUser;
+            ActivityTranslator = new ActivityResultToActionResultTranslator<SearchResult<Models.Tea.Bag>>();
         }
 
         IDocumentClient DocumentDbClient { get; }
-        ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
+        public IWebUser ApplicationUser { get; }
+        public ActivityResultToActionResultTranslator<SearchResult<Models.Tea.Bag>> ActivityTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
-            if (search.searchterm.IsNullOrWhiteSpace()) {
-                return new BadRequestResult();
-            }
-
             var bagsRepository = new SearchRepository<Bag>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Bags);
-            var bags = await bagsRepository.SearchAsync(search.searchterm, search.pagesize);
-            var sortedbags = bags.OrderBy(bag => bag.Brand.Name)
-                                 .ThenBy(bag => bag.Serie)
-                                 .ThenBy(bag => bag.Hallmark)
-                                 .ThenBy(bag => bag.BagType?.Name)
-                                 .ThenBy(bag => bag.Flavour);
-            var result = new SearchResult<Models.Tea.Bag> {
-                count = await bagsRepository.SearchRowCountAsync(search.searchterm),
-                data = BagTranslator.Translate(sortedbags)
-            };
+            var command = new SearchOwnedCommand<Bag>(bagsRepository, new Activity(), new ActivityAuthorizer(ApplicationUser), OrderBy);
+            var result = await command.ExecuteAsync(search);
+            return ActivityTranslator.Translate(result);
+        }
 
-            return new OkObjectResult(result);
+        static IOrderedEnumerable<Bag> OrderBy(IEnumerable<Bag> bags) {
+            return bags.OrderBy(bag => bag.Brand.Name)
+                       .ThenBy(bag => bag.Serie)
+                       .ThenBy(bag => bag.Hallmark)
+                       .ThenBy(bag => bag.BagType?.Name)
+                       .ThenBy(bag => bag.Flavour);
         }
     }
 }

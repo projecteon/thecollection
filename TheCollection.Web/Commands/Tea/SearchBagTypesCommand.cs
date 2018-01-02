@@ -14,7 +14,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators.Tea;
 
     public class SearchBagTypesCommand {
-        public SearchBagTypesCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public SearchBagTypesCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BagTypeTranslator = new BagTypeToBagTypeTranslator(applicationUser);
         }
@@ -23,12 +23,12 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<BagType, Models.Tea.BagType> BagTypeTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
-            if (search.searchterm.IsNullOrWhiteSpace()) {
+            if (search.Searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
             var bagTypesRepository = new SearchRepository<BagType>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.BagTypes);
-            var bagTypes = await bagTypesRepository.SearchAsync(search.searchterm);
+            var bagTypes = await bagTypesRepository.SearchAsync(search.Searchterm);
             var sortedbagtypes = bagTypes.OrderBy(bagType => bagType.Name);
 
             return new OkObjectResult(BagTypeTranslator.Translate(sortedbagtypes));

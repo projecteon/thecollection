@@ -12,7 +12,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators.Tea;
 
     public class UpdateBagCommand : IAsyncCommand<Models.Tea.Bag> {
-        public UpdateBagCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public UpdateBagCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             ApplicationUser = applicationUser;
             BagTranslator = new BagToBagTranslator(applicationUser);
@@ -20,7 +20,7 @@ namespace TheCollection.Web.Commands.Tea {
         }
 
         IDocumentClient DocumentDbClient { get; }
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
         ITranslator<Bag, Models.Tea.Bag> BagTranslator { get; }
         ITranslator<Models.Tea.Bag, Bag> BagDtoTranslator { get; }
 

@@ -1,7 +1,9 @@
 namespace TheCollection.Web.Models {
+    using TheCollection.Application.Services.Contracts;
 
-    public class Search {
-        public string searchterm { get; set; }
-        public int pagesize { get; set; }
+    public class Search : ISearch {
+        public string Searchterm { get; set; }
+
+        public int Pagesize { get; set; }
     }
 }

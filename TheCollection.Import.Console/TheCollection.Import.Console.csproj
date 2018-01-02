@@ -155,6 +155,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TheCollection.Application.Services\TheCollection.Application.Services.csproj">
+      <Project>{377788bd-abd0-448b-bc8f-40a0731ae72f}</Project>
+      <Name>TheCollection.Application.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TheCollection.Domain\TheCollection.Domain.csproj">
       <Project>{adeab4e0-7278-4fa5-ae85-29a9d7e9b632}</Project>
       <Name>TheCollection.Domain</Name>

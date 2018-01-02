@@ -4,11 +4,11 @@ namespace TheCollection.Web.Translators {
     using TheCollection.Web.Contracts;
 
     public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, Models.RefValue> {
-        public RefValueToRefValueTranslator(IApplicationUser applicationUser) {
+        public RefValueToRefValueTranslator(IWebUser applicationUser) {
             ApplicationUser = applicationUser;
         }
 
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
 
         public void Translate(Domain.RefValue source, Models.RefValue destination) {
             destination.id = source?.Id;

@@ -5,11 +5,11 @@ namespace TheCollection.Web.Translators.Tea {
     using TheCollection.Web.Contracts;
 
     public class BagTypeToBagTypeTranslator : ITranslator<BagType, Models.Tea.BagType> {
-        public BagTypeToBagTypeTranslator(IApplicationUser applicationUser) {
+        public BagTypeToBagTypeTranslator(IWebUser applicationUser) {
             ApplicationUser = applicationUser;
         }
 
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
 
         public void Translate(BagType source, Models.Tea.BagType destination) {
             destination.id = source.Id;

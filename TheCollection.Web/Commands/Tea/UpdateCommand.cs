@@ -12,7 +12,7 @@ namespace TheCollection.Web.Commands.Tea {
 
     public class UpdateCommand<TEntity, TDto> : IAsyncCommand<TDto> where TEntity : class, IEntity, new() where TDto : IDto, new() {
         public UpdateCommand(IDocumentClient documentDbClient,
-                             IApplicationUser applicationUser,
+                             IWebUser applicationUser,
                              ITranslator<TEntity, TDto> entityTranslator,
                              ITranslator<TDto, TEntity> dtoTranslator) {
             DocumentDbClient = documentDbClient;
@@ -22,7 +22,7 @@ namespace TheCollection.Web.Commands.Tea {
         }
 
         IDocumentClient DocumentDbClient { get; }
-        IApplicationUser ApplicationUser { get; }
+        IWebUser ApplicationUser { get; }
         ITranslator<TEntity, TDto> EntityTranslator { get; }
         ITranslator<TDto, TEntity> DtoTranslator { get; }
 

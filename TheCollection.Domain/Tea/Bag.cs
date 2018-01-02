@@ -2,16 +2,17 @@ namespace TheCollection.Domain.Tea {
     using System.ComponentModel.DataAnnotations;
     using Newtonsoft.Json;
     using NodaTime;
+    using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Converters;
 
     [JsonConverter(typeof(SearchableConverter))]
-    public class Bag {
+    public class Bag: IOwnedEntity {
         [Key]
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         [JsonProperty(PropertyName = "userid")]
-        public string UserId { get; set; }
+        public string OwnerId { get; set; }
 
         [Searchable]
         [JsonProperty(PropertyName = "mainid")]

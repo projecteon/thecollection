@@ -1,4 +1,4 @@
-namespace TheCollection.Domain.Contracts.Repository {
+namespace TheCollection.Application.Services.Contracts.Repository {
     using System.Threading.Tasks;
 
     public interface IUpsertRepository<T> where T : class {

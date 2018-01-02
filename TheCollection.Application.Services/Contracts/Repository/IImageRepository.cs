@@ -1,4 +1,4 @@
-namespace TheCollection.Domain.Contracts.Repository {
+namespace TheCollection.Application.Services.Contracts.Repository {
     using System.Drawing;
     using System.IO;
     using System.Threading.Tasks;

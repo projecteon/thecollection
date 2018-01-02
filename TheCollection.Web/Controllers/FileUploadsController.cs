@@ -8,7 +8,7 @@ namespace TheCollection.Web.Controllers {
     using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
     using TheCollection.Web.Constants;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Application.Services.Contracts.Repository;
 
     [Route("api/FileUploads")]
     public class FileUploadsController : Controller {

@@ -4,7 +4,11 @@ namespace TheCollection.Domain.Extensions {
     using System.Linq;
 
     public static class IEnumerableExtensions {
-        public static bool None<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) {
+        public static bool None<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = null) {
+            if (predicate == null) {
+                return !source.Any();
+            }
+
             return !source.Any(predicate);
         }
 

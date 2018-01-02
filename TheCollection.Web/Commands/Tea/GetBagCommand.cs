@@ -13,7 +13,7 @@ namespace TheCollection.Web.Commands.Tea {
 
     public class GetBagCommand : IAsyncCommand<string> {
 
-        public GetBagCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public GetBagCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BagTranslator = new BagToBagTranslator(applicationUser);
         }

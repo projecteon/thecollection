@@ -14,7 +14,7 @@ namespace TheCollection.Web.Commands.Tea {
     using TheCollection.Web.Translators.Tea;
 
     public class SearchBrandsCommand : IAsyncCommand<Search> {
-        public SearchBrandsCommand(IDocumentClient documentDbClient, IApplicationUser applicationUser) {
+        public SearchBrandsCommand(IDocumentClient documentDbClient, IWebUser applicationUser) {
             DocumentDbClient = documentDbClient;
             BrandTranslator = new BrandToBrandTranslator(applicationUser);
         }
@@ -23,12 +23,12 @@ namespace TheCollection.Web.Commands.Tea {
         ITranslator<Brand, Models.Tea.Brand> BrandTranslator { get; }
 
         public async Task<IActionResult> ExecuteAsync(Search search) {
-            if (search.searchterm.IsNullOrWhiteSpace()) {
+            if (search.Searchterm.IsNullOrWhiteSpace()) {
                 return new BadRequestResult();
             }
 
             var brandsRepository = new SearchRepository<Brand>(DocumentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Brands);
-            var brands = await brandsRepository.SearchAsync(search.searchterm);
+            var brands = await brandsRepository.SearchAsync(search.Searchterm);
             var sortedbrands = brands.OrderBy(brand => brand.Name);
 
             return new OkObjectResult(BrandTranslator.Translate(sortedbrands));
