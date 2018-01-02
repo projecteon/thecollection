@@ -1,4 +1,4 @@
-namespace TheCollection.Application.Services.Models {
+namespace TheCollection.Application.Services.ViewModels {
     using System.Collections.Generic;
 
     public class SearchResult<T> {

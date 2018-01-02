@@ -5,7 +5,7 @@ namespace TheCollection.Application.Services.Commands {
     using System.Threading.Tasks;
     using TheCollection.Application.Services.Contracts;
     using TheCollection.Application.Services.Contracts.Repository;
-    using TheCollection.Application.Services.Models;
+    using TheCollection.Application.Services.ViewModels;
     using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Extensions;
 
