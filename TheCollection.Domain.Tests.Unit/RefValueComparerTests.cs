@@ -2,7 +2,7 @@ namespace TheCollection.Domain.Tests.Unit {
     using TheCollection.Domain;
     using Xunit;
 
-    [Trait("RefValueComparerTests", "RefValueComparer equality tests")]
+    [Trait(nameof(RefValueComparer), "RefValueComparer equality tests")]
     public class RefValueComparerTests {
         [Fact(DisplayName = "When RefValues are same object then return true")]
         public void WhenRefValuesAreSameObjectThenReturnTrue() {

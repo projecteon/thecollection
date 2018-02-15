@@ -3,7 +3,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
     using TheCollection.Domain.Tea;
     using Xunit;
 
-    [Trait("Country", "Tags are created")]
+    [Trait(nameof(Country), "Tags are created")]
     public class CountryTagsTests {
         private Country Country { get; }
         private Searchable SearchableCountry { get; }

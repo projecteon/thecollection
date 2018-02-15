@@ -4,6 +4,8 @@ If you’re using PowerShell in Windows, execute $Env:ASPNETCORE_ENVIRONMENT = "
 
 https://blogs.msdn.microsoft.com/webdev/2017/02/14/building-single-page-applications-on-asp-net-core-with-javascriptservices/
 
+https://joonasw.net/view/aspnet-core-2-configuration-changes
+
 [Swagger with WebApi](https://github.com/FabianGosebrink/ASPNETCore-WebAPI-Sample)
 
 ## Search

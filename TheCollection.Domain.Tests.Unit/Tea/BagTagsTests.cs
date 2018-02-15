@@ -6,7 +6,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
     using TheCollection.Domain.Tea;
     using Xunit;
 
-    [Trait("Bag", "Tags are created")]
+    [Trait(nameof(Bag), "Tags are created")]
     public class BagTagsTests {
         private Bag Bag { get; }
         private RefValue BagTypeRef { get; }

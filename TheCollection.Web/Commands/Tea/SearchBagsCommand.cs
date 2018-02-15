@@ -32,7 +32,7 @@ namespace TheCollection.Web.Commands.Tea {
         }
 
         static IOrderedEnumerable<Bag> OrderBy(IEnumerable<Bag> bags) {
-            return bags.OrderBy(bag => bag.Brand.Name)
+            return bags.OrderBy(bag => bag.Brand?.Name)
                        .ThenBy(bag => bag.Serie)
                        .ThenBy(bag => bag.Hallmark)
                        .ThenBy(bag => bag.BagType?.Name)

@@ -3,7 +3,7 @@ namespace TheCollection.Application.Services.Tests.Unit {
     using TheCollection.Application.Services.Contracts;
     using Xunit;
 
-    [Trait("ActivityAuthorizerTests", "ActivityAuthorizer tests")]
+    [Trait(nameof(ActivityAuthorizer), "ActivityAuthorizer tests")]
     public class ActivityAuthorizerTests
     {
         public ActivityAuthorizerTests() {
