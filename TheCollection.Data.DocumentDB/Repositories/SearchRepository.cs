@@ -13,8 +13,8 @@ namespace TheCollection.Data.DocumentDB {
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.Azure.Documents.Linq;
-    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class SearchRepository<T> : ISearchRepository<T>, ILinqSearchRepository<T> where T : class {
         private readonly string DatabaseId;
@@ -60,7 +60,7 @@ namespace TheCollection.Data.DocumentDB {
         public async Task<IEnumerable<T>> SearchItemsAsync(Expression<Func<T, bool>> predicate = null, int pageSize = 0, int page = 0) {
             var query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                new FeedOptions { MaxItemCount = predicate == null ? 1000 : - 1 }).AsQueryable();
+                new FeedOptions { MaxItemCount = predicate == null ? 1000 : -1 }).AsQueryable();
 
             if (predicate != null) {
                 query = query.Where(predicate);

@@ -2,8 +2,8 @@ namespace TheCollection.Application.Services.Commands {
     using System.Linq;
     using System.Threading.Tasks;
     using TheCollection.Application.Services.Contracts;
-    using TheCollection.Application.Services.Contracts.Repository;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class UpdateCommand<TEntity> : IAsyncCommand<TEntity> where TEntity : class, IEntity, new() {
         public UpdateCommand(IUpdateRepository<TEntity> updateRepository,

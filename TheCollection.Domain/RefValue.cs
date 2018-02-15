@@ -1,6 +1,6 @@
 namespace TheCollection.Domain {
     using Newtonsoft.Json;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
 
     public class RefValue : IRef {
         [JsonProperty(PropertyName = "id")]

@@ -13,4 +13,8 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TheCollection.Domain.Core\TheCollection.Domain.Core.csproj" />
+  </ItemGroup>
+
 </Project>

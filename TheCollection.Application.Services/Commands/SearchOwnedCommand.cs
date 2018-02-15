@@ -4,9 +4,9 @@ namespace TheCollection.Application.Services.Commands {
     using System.Linq;
     using System.Threading.Tasks;
     using TheCollection.Application.Services.Contracts;
-    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Application.Services.ViewModels;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Domain.Extensions;
 
     public class SearchOwnedCommand<TEntity> : IAsyncCommand<ISearch> where TEntity : class, IOwnedEntity, new() {
@@ -36,7 +36,7 @@ namespace TheCollection.Application.Services.Commands {
             }
 
             var entities = await SearchRepository.SearchAsync(search.Searchterm, search.Pagesize);
-            if(ResultSorter != null) {
+            if (ResultSorter != null) {
                 entities = ResultSorter(entities);
             }
 

@@ -3,7 +3,7 @@ namespace TheCollection.Data.DocumentDB {
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
     using TheCollection.Data.DocumentDB.Extensions;
-    using TheCollection.Application.Services.Contracts.Repository;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class GetRepository<T> : IGetRepository<T> where T : class {
         private readonly string DatabaseId;

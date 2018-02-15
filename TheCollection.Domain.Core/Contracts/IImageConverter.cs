@@ -1,4 +1,4 @@
-namespace TheCollection.Domain.Contracts {
+namespace TheCollection.Domain.Core.Contracts {
     using System.Drawing;
     using System.IO;
 

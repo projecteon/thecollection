@@ -6,7 +6,7 @@ namespace TheCollection.Web.Commands {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
     using TheCollection.Data.DocumentDB;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Contracts;
     using TheCollection.Web.Extensions;

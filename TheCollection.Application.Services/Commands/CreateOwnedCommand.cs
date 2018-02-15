@@ -2,8 +2,8 @@ namespace TheCollection.Application.Services.Commands {
     using System.Linq;
     using System.Threading.Tasks;
     using TheCollection.Application.Services.Contracts;
-    using TheCollection.Application.Services.Contracts.Repository;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class CreateOwnedCommand<TEntity> : IAsyncCommand<TEntity> where TEntity : class, IOwnedEntity, new() {
         public CreateOwnedCommand(ICreateRepository<TEntity> createRepository,
@@ -30,7 +30,6 @@ namespace TheCollection.Application.Services.Commands {
             if (entity == null) {
                 return new ErrorResult("New item cannot be null");
             }
-
 
             entity.OwnerId = ApplicationUser.Id;
             entity.Id = await CreateRepository.CreateItemAsync(entity);

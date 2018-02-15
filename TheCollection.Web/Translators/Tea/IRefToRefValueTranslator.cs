@@ -1,5 +1,5 @@
 namespace TheCollection.Web.Translators.Tea {
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
 
     public class IRefToRefValueTranslator : ITranslator<IRef, Models.RefValue> {
         public void Translate(IRef source, Models.RefValue destination) {

@@ -1,14 +1,13 @@
 namespace TheCollection.Web.Controllers {
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Domain.Tea;
     using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Core.Contracts.Repository;
+    using TheCollection.Domain.Tea;
     using TheCollection.Web.Constants;
-    using TheCollection.Application.Services.Contracts.Repository;
 
     [Route("api/FileUploads")]
     public class FileUploadsController : Controller {

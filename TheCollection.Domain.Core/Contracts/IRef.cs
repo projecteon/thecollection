@@ -1,4 +1,4 @@
-namespace TheCollection.Domain.Contracts {
+namespace TheCollection.Domain.Core.Contracts {
     public interface IRef {
         string Id { get; set; }
 

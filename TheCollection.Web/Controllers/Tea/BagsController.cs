@@ -2,13 +2,8 @@ namespace TheCollection.Web.Controllers {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Application.Services;
-    using TheCollection.Application.Services.Commands;
-    using TheCollection.Application.Services.Contracts;
-    using TheCollection.Application.Services.Contracts.Repository;
-    using TheCollection.Data.DocumentDB;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Web.Commands.Tea;
-    using TheCollection.Web.Constants;
     using TheCollection.Web.Models;
     using TheCollection.Web.Models.Tea;
 

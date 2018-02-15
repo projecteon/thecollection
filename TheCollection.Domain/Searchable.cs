@@ -3,7 +3,7 @@ namespace TheCollection.Domain {
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
     using TheCollection.Domain.Extensions;
 
     public class Searchable : ISearchable {

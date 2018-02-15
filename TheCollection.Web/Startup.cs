@@ -16,8 +16,8 @@ namespace TheCollection_Web {
     using Newtonsoft.Json;
     using NodaTime;
     using NodaTime.Serialization.JsonNet;
-    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
     using TheCollection.Web.Controllers;
@@ -27,7 +27,6 @@ namespace TheCollection_Web {
     using TheCollection.Web.Repositories;
 
     public class Startup {
-
         public Startup(IHostingEnvironment env) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -64,7 +63,6 @@ namespace TheCollection_Web {
                 options.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
             });
 
-
             // Add external authentication middleware below.
             // To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
@@ -73,7 +71,7 @@ namespace TheCollection_Web {
             .AddGoogle(options => {
                 options.ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId");
                 options.ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret");
-            })  
+            })
             .AddFacebook(options => {
                 options.AppId = Configuration.GetValue<string>("OAuth:Facebook:ClientId");
                 options.AppSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret");
@@ -99,8 +97,7 @@ namespace TheCollection_Web {
                     options.SslPort = 44330;
                     options.Filters.Add(new RequireHttpsAttribute());
                 }
-            ).AddJsonOptions(options =>
-            {
+            ).AddJsonOptions(options => {
                 options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
             });
         }
@@ -168,7 +165,7 @@ namespace TheCollection_Web {
 
         // https://msdn.microsoft.com/en-us/magazine/mt826337.aspx
         void CreateRoles(IServiceProvider serviceProvider) {
-            //initializing custom roles 
+            //initializing custom roles
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
             string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
@@ -194,7 +191,7 @@ namespace TheCollection_Web {
         }
 
         //async Task CreateRoles(IServiceProvider serviceProvider) {
-        //    //initializing custom roles 
+        //    //initializing custom roles
         //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
         //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         //    string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
@@ -210,7 +207,6 @@ namespace TheCollection_Web {
 
         //    //Here you could create a super user who will maintain the web app
         //    var poweruser = new ApplicationUser {
-
         //        UserName = Configuration["AppSettings:UserName"],
         //        Email = Configuration["AppSettings:UserEmail"],
         //    };

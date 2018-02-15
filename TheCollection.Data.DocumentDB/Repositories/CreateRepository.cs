@@ -2,8 +2,8 @@ namespace TheCollection.Data.DocumentDB {
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
-    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB.Extensions;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class CreateRepository<T> : ICreateRepository<T> where T : class {
         private readonly string DatabaseId;

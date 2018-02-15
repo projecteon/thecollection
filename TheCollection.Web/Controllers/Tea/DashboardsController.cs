@@ -2,7 +2,7 @@ namespace TheCollection.Web.Controllers.Tea {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents;
-    using TheCollection.Application.Services.Contracts.Repository;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Web.Commands.Tea;
     using TheCollection.Web.Models;
 

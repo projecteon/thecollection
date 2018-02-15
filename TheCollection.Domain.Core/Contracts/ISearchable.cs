@@ -1,4 +1,4 @@
-namespace TheCollection.Domain.Contracts {
+namespace TheCollection.Domain.Core.Contracts {
     using System.Collections.Generic;
 
     public interface ISearchable {

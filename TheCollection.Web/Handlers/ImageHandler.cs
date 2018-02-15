@@ -1,15 +1,14 @@
 namespace TheCollection.Web.Handlers {
-
     using System;
     using System.Drawing;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Azure.Documents;
-    using TheCollection.Application.Services.Contracts.Repository;
     using TheCollection.Data.DocumentDB;
-    using TheCollection.Domain.Contracts;
     using TheCollection.Domain.Converters;
+    using TheCollection.Domain.Core.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Domain.Extensions;
     using TheCollection.Web.Constants;
 

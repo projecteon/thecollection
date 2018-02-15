@@ -1,4 +1,4 @@
-namespace TheCollection.Application.Services.Contracts.Repository {
+namespace TheCollection.Domain.Core.Contracts.Repository {
     using System.Threading.Tasks;
 
     public interface IUpdateRepository<T> where T : class {

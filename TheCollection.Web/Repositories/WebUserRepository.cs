@@ -2,7 +2,7 @@ namespace TheCollection.Web.Repositories {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
-    using TheCollection.Application.Services.Contracts.Repository;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Web.Models;
 
     public class WebUserRepository : IGetRepository<WebUser> {

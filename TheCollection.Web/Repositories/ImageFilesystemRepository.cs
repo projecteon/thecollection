@@ -3,7 +3,7 @@ namespace TheCollection.Web.Repositories {
     using System.Drawing;
     using System.IO;
     using System.Threading.Tasks;
-    using TheCollection.Application.Services.Contracts.Repository;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
     public class ImageFilesystemRepository : IImageRepository {
         public const string Path = @"C:\src\Theedatabase\Afbeeldingen Zakjes\";

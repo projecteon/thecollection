@@ -3,7 +3,7 @@ namespace TheCollection.Domain.Converters {
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
-    using TheCollection.Domain.Contracts;
+    using TheCollection.Domain.Core.Contracts;
     using TheCollection.Domain.Extensions;
 
     public class PngImageConverter : IImageConverter {
