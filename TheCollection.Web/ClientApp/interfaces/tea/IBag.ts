@@ -11,7 +11,7 @@ export interface ITeabag {
   hallmark: string;
   bagtype: IRefValue;
   country: IRefValue;
-  serialnumber: string;
-  imageid: string;
+  serialNumber: string;
+  imageId: string;
   iseditable: boolean;
 }

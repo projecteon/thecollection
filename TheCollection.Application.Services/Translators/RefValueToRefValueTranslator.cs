@@ -1,19 +1,25 @@
 namespace TheCollection.Application.Services.Translators {
     using System.Linq;
+    using System.Threading.Tasks;
     using TheCollection.Application.Services.Constants;
     using TheCollection.Application.Services.Contracts;
+    using TheCollection.Domain.Core.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
 
-    public class RefValueToRefValueTranslator : ITranslator<Domain.RefValue, ViewModels.RefValue> {
-        public RefValueToRefValueTranslator(IApplicationUser applicationUser) {
-            ApplicationUser = applicationUser;
+    public class RefValueToRefValueTranslator : IAsyncTranslator<Domain.RefValue, ViewModels.RefValue> {
+        public RefValueToRefValueTranslator(IGetRepository<IApplicationUser> repository) {
+            Repository = repository ?? throw new System.ArgumentNullException(nameof(repository));
         }
 
-        IApplicationUser ApplicationUser { get; }
+        IGetRepository<IApplicationUser> Repository { get; }
 
-        public void Translate(Domain.RefValue source, ViewModels.RefValue destination) {
-            destination.id = source?.Id;
-            destination.name = source?.Name;
-            destination.canaddnew = ApplicationUser.Roles.Any(x => x.Name == Roles.SystemAdministrator);
+        public async Task<ViewModels.RefValue> Translate(Domain.RefValue source) {
+            if (source == null)
+                return null;
+
+            var ApplicationUser = await Repository.GetItemAsync();
+            var canaddnew = ApplicationUser.Roles.Any(x => x.Name == Roles.SystemAdministrator);
+            return new ViewModels.RefValue(source.Id, source.Name, canaddnew);
         }
     }
 }

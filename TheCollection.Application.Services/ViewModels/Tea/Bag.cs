@@ -1,29 +1,31 @@
 namespace TheCollection.Application.Services.ViewModels.Tea {
     using NodaTime;
+    using TheCollection.Domain.Core.Contracts;
 
-    public class Bag {
-        public string id { get; set; }
+    public class Bag: IEntity {
+        public Bag(string id, RefValue brand, string serie, string flavour, string hallmark, RefValue bagType, RefValue country, string serialNumber, LocalDate insertDate, string imageId) {
+            Id = id;
+            Brand = brand;
+            Serie = serie;
+            Flavour = flavour;
+            Hallmark = hallmark;
+            BagType = bagType;
+            Country = country;
+            SerialNumber = serialNumber;
+            InsertDate = insertDate;
+            ImageId = imageId;
+        }
 
-        public int mainid { get; set; }
-
-        public RefValue brand { get; set; }
-
-        public string serie { get; set; }
-
-        public string flavour { get; set; }
-
-        public string hallmark { get; set; }
-
-        public RefValue bagtype { get; set; }
-
-        public RefValue country { get; set; }
-
-        public string serialnumber { get; set; }
-
-        public LocalDate insertdate { get; set; }
-
-        public string imageid { get; set; }
-
-        public bool iseditable { get; set; }
+        public string Id { get; }
+        public RefValue Brand { get; }
+        public string Serie { get; }
+        public string Flavour { get; }
+        public string Hallmark { get; }
+        public RefValue BagType { get; }
+        public RefValue Country { get; }
+        public string SerialNumber { get; }
+        public LocalDate InsertDate { get; }
+        public string ImageId { get; }
+        public bool iseditable { get; }
     }
 }

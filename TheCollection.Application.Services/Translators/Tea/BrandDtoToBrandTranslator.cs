@@ -1,16 +1,12 @@
 namespace TheCollection.Application.Services.Translators.Tea {
-    using TheCollection.Application.Services.Contracts;
-    using TheCollection.Domain.Tea;
+    using TheCollection.Domain.Core.Contracts;
 
-    public class BrandDtoToBrandTranslator : ITranslator<ViewModels.Tea.Brand, Brand> {
-        public BrandDtoToBrandTranslator(IApplicationUser applicationUser) {
-            ApplicationUser = applicationUser;
+    public class BrandDtoToBrandTranslator : ITranslator<ViewModels.Tea.Brand, Domain.Tea.Brand> {
+        public BrandDtoToBrandTranslator() {
         }
 
-        IApplicationUser ApplicationUser { get; }
-
-        public void Translate(ViewModels.Tea.Brand source, Brand destination) {
-            destination.Name = source.name;
+        public Domain.Tea.Brand Translate(ViewModels.Tea.Brand source) {
+            return new Domain.Tea.Brand(source.id, source.name);
         }
     }
 }

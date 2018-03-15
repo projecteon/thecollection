@@ -1,7 +1,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace TheCollection_Web {
+namespace TheCollection.Web {
 
     public class Program {
 

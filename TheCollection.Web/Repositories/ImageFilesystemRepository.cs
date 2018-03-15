@@ -8,15 +8,15 @@ namespace TheCollection.Web.Repositories {
     public class ImageFilesystemRepository : IImageRepository {
         public const string Path = @"C:\src\Theedatabase\Afbeeldingen Zakjes\";
 
-        public Task<bool> Delete(string filename) {
+        public async Task<bool> Delete(string filename) {
             throw new NotImplementedException();
         }
 
-        public Task<Bitmap> Get(string filename) {
-            return Task.Run(() => { return new Bitmap($"{Path}{filename}"); });
+        public async Task<Bitmap> Get(string filename) {
+            return await Task.Run(() => { return new Bitmap($"{Path}{filename}"); });
         }
 
-        public Task<string> Upload(Stream stream, string filename) {
+        public async Task<string> Upload(Stream stream, string filename) {
             //if (!System.IO.Directory.Exists(Path))
             //{
             //    System.IO.Directory.CreateDirectory(Path);

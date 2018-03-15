@@ -1,4 +1,4 @@
-namespace TheCollection_Web {
+namespace TheCollection.Web {
     using System;
     using System.Text.RegularExpressions;
     using AspNetCore.Identity.DocumentDb;
@@ -14,8 +14,13 @@ namespace TheCollection_Web {
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
     using NodaTime;
     using NodaTime.Serialization.JsonNet;
+    using Swashbuckle.NodaTime.AspNetCore;
+    using Swashbuckle.AspNetCore.Swagger;
+    using TheCollection.Application.Services;
     using TheCollection.Data.DocumentDB.Extensions;
     using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Domain.Extensions;
@@ -25,6 +30,8 @@ namespace TheCollection_Web {
     using TheCollection.Web.Handlers;
     using TheCollection.Web.Models;
     using TheCollection.Web.Repositories;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Mvc.Routing;
 
     public class Startup {
         public Startup(IHostingEnvironment env) {
@@ -40,7 +47,15 @@ namespace TheCollection_Web {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<IGetRepository<WebUser>, WebUserRepository>();
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(it =>
+                    it.GetRequiredService<IUrlHelperFactory>()
+                      .GetUrlHelper(it.GetRequiredService<IActionContextAccessor>().ActionContext)
+                );
+
+            // wire application
+            services.WireDependencies();
 
             services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
                 Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
@@ -49,11 +64,11 @@ namespace TheCollection_Web {
 
             // Add framework services.
             // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
-            services.AddIdentity<WebUser, DocumentDbIdentityRole>()
+            services.AddIdentity<WebUser, WebRole>()
             .AddDocumentDbStores(options => {
-                options.UserStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
-                options.RoleStoreDocumentCollection = DocumentDB.Collections.AspNetIdentity;
-                options.Database = DocumentDB.DatabaseId;
+                options.UserStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
+                options.RoleStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
+                options.Database = DocumentDBConstants.DatabaseId;
             })
             .AddDefaultTokenProviders();
 
@@ -81,15 +96,12 @@ namespace TheCollection_Web {
                 options.ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret");
             });
 
-            //services.AddSingleton<IImageService, ImageFilesystemService>();
-            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Name"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Key"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Endpoints"))
-            );
-
-            // wire repositories
-            // services.AddScoped(typeof(ISearchRepository<>), typeof(SearchRepository<>));
+            services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
+            //services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
+            //                                                                    Configuration.GetValue<string>("StorageAccount:Name"),
+            //                                                                    Configuration.GetValue<string>("StorageAccount:Key"),
+            //                                                                    Configuration.GetValue<string>("StorageAccount:Endpoints"))
+            //);
 
             // Add framework services.
             services.AddMvc(
@@ -99,6 +111,20 @@ namespace TheCollection_Web {
                 }
             ).AddJsonOptions(options => {
                 options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            });
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info { Title = "MeetingRoom API", Version = "v1" });
+
+                var settings = new JsonSerializerSettings {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Converters = {
+                      new StringEnumConverter()
+                    },
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                settings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+                c.ConfigureForNodaTime(settings);
             });
         }
 
@@ -134,6 +160,13 @@ namespace TheCollection_Web {
 
             app.UseAuthentication();
 
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MeetingRoom API V1");
+            });
+
             app.UseMvc(routes => {
                 routes.MapRoute(
                     name: "default",
@@ -159,14 +192,14 @@ namespace TheCollection_Web {
             serializerSettings.Converters.Add(new TheCollection.Web.JsonClaimsIdentityConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
-            client.CreateCollectionIfNotExistsAsync(DocumentDB.DatabaseId, DocumentDB.Collections.AspNetIdentity).Wait();
+            client.CreateCollectionIfNotExistsAsync(DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.AspNetIdentity).Wait();
             return client;
         }
 
         // https://msdn.microsoft.com/en-us/magazine/mt826337.aspx
         void CreateRoles(IServiceProvider serviceProvider) {
             //initializing custom roles
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<WebRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
             string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
             IdentityResult roleResult;
@@ -175,7 +208,7 @@ namespace TheCollection_Web {
                 var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
                 if (!roleExist) {
                     //create the roles and seed them to the database: Question 1
-                    roleResult = RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName }).Result;
+                    roleResult = RoleManager.CreateAsync(new WebRole { Name = roleName }).Result;
                 }
             }
 
@@ -189,39 +222,5 @@ namespace TheCollection_Web {
                 roleResult = UserManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
             }
         }
-
-        //async Task CreateRoles(IServiceProvider serviceProvider) {
-        //    //initializing custom roles
-        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<DocumentDbIdentityRole>>();
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    string[] roleNames = { "SysAdmin", "TeaManager", "Collector", "Member" };
-        //    IdentityResult roleResult;
-
-        //    foreach (var roleName in roleNames) {
-        //        var roleExist = await RoleManager.RoleExistsAsync(roleName);
-        //        if (!roleExist) {
-        //            //create the roles and seed them to the database: Question 1
-        //            roleResult = await RoleManager.CreateAsync(new DocumentDbIdentityRole { Name = roleName });
-        //        }
-        //    }
-
-        //    //Here you could create a super user who will maintain the web app
-        //    var poweruser = new ApplicationUser {
-        //        UserName = Configuration["AppSettings:UserName"],
-        //        Email = Configuration["AppSettings:UserEmail"],
-        //    };
-        //    //Ensure you have these values in your appsettings.json file
-        //    var userPWD = Configuration["AppSettings:UserPassword"];
-        //    var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
-
-        //    if (_user == null) {
-        //        var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
-        //        if (createPowerUser.Succeeded) {
-        //            //here we tie the new user to the role
-        //            await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-        //        }
-        //    }
-        //}
     }
 }

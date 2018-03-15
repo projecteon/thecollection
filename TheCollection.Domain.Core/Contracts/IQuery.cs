@@ -1,0 +1,4 @@
+namespace TheCollection.Domain.Core.Contracts {
+    public interface IQuery {
+    }
+}

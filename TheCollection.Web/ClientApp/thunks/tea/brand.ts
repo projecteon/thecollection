@@ -30,7 +30,7 @@ export const requestBrand = {
   },
  };
 
- export const addBrand = {
+export const addBrand = {
   addBrand: (brand: IBrand): AppThunkAction<ChangeBrandAction | RouterAction> => (dispatch, getState) => {
     try {
       let addBrandTask = fetch(`/api/Tea/Brands/`, {
@@ -54,7 +54,7 @@ export const requestBrand = {
   },
  };
 
- export const changeName = {
+export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
     dispatch({type: CHANGE_NAME, name: name});
   },

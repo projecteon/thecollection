@@ -1,9 +1,13 @@
 namespace TheCollection.Application.Services.ViewModels.Tea {
     public class Country {
-        public string id { get; set; }
+        public Country(string id, string name, bool isEditable) {
+            Id = id;
+            Name = name;
+            IsEditable = isEditable;
+        }
 
-        public string name { get; set; }
-
-        public bool iseditable { get; set; }
+        public string Id { get; }
+        public string Name { get; }
+        public bool IsEditable { get; }
     }
 }

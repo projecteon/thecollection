@@ -6,12 +6,17 @@ namespace TheCollection.Domain.Tea {
 
     [JsonConverter(typeof(SearchableConverter))]
     public class Brand : IRef, IEntity {
+        public Brand(string id, string name) {
+            Id = id;
+            Name = name;
+        }
+
         [Key]
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [Searchable]
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string Name { get; }
     }
 }

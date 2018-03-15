@@ -9,7 +9,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
         private Searchable SearchableBagType { get; }
 
         public BagTypeTagsTests() {
-            BagType = new BagType { Id = System.Guid.NewGuid().ToString(), Name = "Paper" };
+            BagType = new BagType(System.Guid.NewGuid().ToString(), "Paper");
             SearchableBagType = new Searchable(BagType);
         }
 

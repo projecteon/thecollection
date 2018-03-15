@@ -9,7 +9,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
         private Searchable SearchableBrand { get; }
 
         public BrandTagsTests() {
-            Brand = new Brand { Id = System.Guid.NewGuid().ToString(), Name = "Twinning" };
+            Brand = new Brand(System.Guid.NewGuid().ToString(), "Twinning");
             SearchableBrand = new Searchable(Brand);
         }
 

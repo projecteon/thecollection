@@ -1,4 +1,4 @@
-namespace TheCollection.Data.DocumentDB {
+namespace TheCollection.Data.DocumentDB.Repositories {
     // consider     https://github.com/Crokus/documentdb-repo/blob/master/src/DocumentDb.Repository/DocumentDbRepository.cs
     // partitioning https://petarivanovblog.wordpress.com/2015/10/13/azure-documentdb-generic-repository-with-partitioning-part-1/
     // search       https://azure.microsoft.com/en-us/blog/searching-for-text-with-documentdb/

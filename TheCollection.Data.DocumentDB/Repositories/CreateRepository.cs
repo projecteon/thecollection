@@ -1,4 +1,4 @@
-namespace TheCollection.Data.DocumentDB {
+namespace TheCollection.Data.DocumentDB.Repositories {
     using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;

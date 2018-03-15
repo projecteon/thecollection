@@ -7,13 +7,30 @@ namespace TheCollection.Domain.Tea {
 
     [JsonConverter(typeof(SearchableConverter))]
     public class Bag: IOwnedEntity {
+        public Bag() {
+        }
+
+        public Bag(string id, string ownerId, int mainId, RefValue brand, string serie, string flavour, string hallmark, RefValue bagType, RefValue country, string serialNumber, LocalDate insertDate, string imageId) {
+            Id = id;
+            OwnerId = ownerId;
+            MainID = mainId;
+            Brand = brand;
+            Serie = serie;
+            Flavour = flavour;
+            Hallmark = hallmark;
+            BagType = bagType;
+            Country = country;
+            SerialNumber = serialNumber;
+            InsertDate = insertDate;
+            ImageId = imageId;
+        }
+
         [Key]
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
         [JsonProperty(PropertyName = "userid")]
         public string OwnerId { get; set; }
-
         [Searchable]
         [JsonProperty(PropertyName = "mainid")]
         public int MainID { get; set; }

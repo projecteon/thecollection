@@ -1,17 +1,20 @@
 namespace TheCollection.Application.Services {
     using System.Linq;
+    using System.Threading.Tasks;
     using TheCollection.Application.Services.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Domain.Extensions;
 
     public class ActivityAuthorizer : IActivityAuthorizer {
-        public ActivityAuthorizer(IApplicationUser applicationUser) {
-            ApplicationUser = applicationUser;
+        public ActivityAuthorizer(IGetRepository<IApplicationUser> repository) {
+            Repository = repository ?? throw new System.ArgumentNullException(nameof(repository));
         }
 
-        IApplicationUser ApplicationUser { get; }
+        public IGetRepository<IApplicationUser> Repository { get; }
 
-        public bool IsAuthorized(IActivity activity) {
-            if (ApplicationUser == null || ApplicationUser.Roles.None()) {
+        public async Task<bool> IsAuthorized(IActivity activity) {
+            var applicationUser = await Repository.GetItemAsync();
+            if (applicationUser == null || applicationUser.Roles.None()) {
                 return false;
             }
 
@@ -19,7 +22,7 @@ namespace TheCollection.Application.Services {
                 return false;
             }
 
-            if (ApplicationUser.Roles.Any(x => activity.ValidRoles.Any(y => x.Name == y.Name))) {
+            if (applicationUser.Roles.Any(x => activity.ValidRoles.Any(y => x.Name == y.Name))) {
                 return true;
             }
 

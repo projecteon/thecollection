@@ -17,17 +17,23 @@ namespace TheCollection.Domain.Tea {
     }
 
     public class Dashboard<T> {
+        public Dashboard(string id, string userId, DashBoardTypes dashBoardType, T data) {
+            Id = id;
+            UserId = userId;
+            DashBoardType = dashBoardType;
+            Data = data;
+        }
+
         [Key]
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
+        public string Id { get; }
         [JsonProperty(PropertyName = "userid")]
-        public string UserId { get; set; }
-
+        public string UserId { get; }
+        public DashBoardTypes DashBoardType { get; }
         [JsonProperty(PropertyName = "dashboardtype")]
-        public DashBoardTypes DashboardType { get; set; }
+        public DashBoardTypes DashboardType { get; }
 
         [JsonProperty(PropertyName = "data")]
-        public T Data { get; set; }
+        public T Data { get; }
     }
 }

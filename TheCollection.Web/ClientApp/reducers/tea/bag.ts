@@ -28,7 +28,7 @@ export interface ITeabagState {
 export const actionCreators = {...changeBagtype, ...changeBrand, ...changeCountry, ...clearBagtype, ...clearBrand, ...clearCountry, ...changeFlavour, ...changeHallmark, ...changeSerialNumber, ...changeSerie, ...requestTeabag, ...saveTeabag};
 
 const emptyRef = {id: '', name: '', canaddnew: true};
-const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageid: '', serialnumber: '', serie: '', bagtype: emptyRef, iseditable: true};
+const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageId: '', serialNumber: '', serie: '', bagtype: emptyRef, iseditable: true};
 const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag };
 type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryAction | ClearBagTypeAction | ClearBrandAction | ClearCountryAction | ChangeFlavourAction | ChangeHallmarkAction | ChangeSerialNumberAction | ChangeSerieAction | ReceiveTeabagAction | RequestTeabagAction | SaveTeabag;
 export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: KnownActions) => {
@@ -54,7 +54,7 @@ export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: Know
     case CHANGE_HALLMARK:
       return {...state, ...{teabag: {...state.teabag, ...{hallmark: action.hallmark}}}};
     case CHANGE_SERIALNUMBER:
-      return {...state, ...{teabag: {...state.teabag, ...{serialnumber: action.serialnumber}}}};
+      return {...state, ...{teabag: {...state.teabag, ...{serialNumber: action.serialnumber}}}};
     case CHANGE_SERIE:
       return {...state, ...{teabag: {...state.teabag, ...{serie: action.serie}}}};
     case SAVE_TEABAG:

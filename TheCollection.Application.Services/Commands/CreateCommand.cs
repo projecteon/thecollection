@@ -1,35 +1,11 @@
-namespace TheCollection.Application.Services.Commands {
-    using System.Linq;
-    using System.Threading.Tasks;
-    using TheCollection.Application.Services.Contracts;
+﻿namespace TheCollection.Application.Services.Commands {
     using TheCollection.Domain.Core.Contracts;
-    using TheCollection.Domain.Core.Contracts.Repository;
 
-    public class CreateCommand<TEntity> : IAsyncCommand<TEntity> where TEntity : class, IEntity, new() {
-        public CreateCommand(ICreateRepository<TEntity> createRepository,
-                             ILinqSearchRepository<IActivity> activityRepository,
-                             IActivityAuthorizer authorizer) {
-            CreateRepository = createRepository;
-            ActivityRepository = activityRepository;
-            Authorizer = authorizer;
+    public class CreateCommand<TViewModel> : ICommand {
+        public CreateCommand(TViewModel data) {
+            Data = data;
         }
 
-        ICreateRepository<TEntity> CreateRepository { get; }
-        ILinqSearchRepository<IActivity> ActivityRepository { get; }
-        IActivityAuthorizer Authorizer { get; }
-
-        public async Task<IActivityResult> ExecuteAsync(TEntity entity) {
-            var activity = await ActivityRepository.SearchItemsAsync(x => x.Name == $"{typeof(TEntity)}{nameof(CreateCommand<TEntity>)}");
-            if (Authorizer.IsAuthorized(activity.FirstOrDefault())) {
-                return new ForbidResult();
-            }
-
-            if (entity == null) {
-                return new ErrorResult("New item cannot be null");
-            }
-
-            entity.Id = await CreateRepository.CreateItemAsync(entity);
-            return new OkObjectResult<TEntity>(entity);
-        }
+        public TViewModel Data { get; }
     }
 }

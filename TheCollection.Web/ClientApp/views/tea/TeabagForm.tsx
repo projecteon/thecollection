@@ -127,7 +127,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
               <div className='row'>
                 <div className='col-sm-6 flex-first'>
                   <div className='form-group'>
-                    <Image imageid={this.props.teabag.imageid}/>
+                    <Image imageid={this.props.teabag.imageId}/>
                   </div>
                 </div>
                 <div className='col-sm-6 flex-last'>
@@ -144,7 +144,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
                                         isReadOnly={this.props.teabag.iseditable === false} />
                   <InputFormGroupItem inputid='inputFlavour' responsiveInputComponentWidth='col-sm-12' label='Flavour' placeholder='Flavour' value={this.props.teabag.flavour} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeFlavour}/>
                   <InputFormGroupItem inputid='inputSeries' responsiveInputComponentWidth='col-sm-12' label='Series' placeholder='Series' value={this.props.teabag.serie} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeSerie}/>
-                  <InputFormGroupItem inputid='inputSerialnumber' responsiveInputComponentWidth='col-sm-6' label='Serialnumber' placeholder='Serialnumber' value={this.props.teabag.serialnumber} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeSerialNumber}/>
+                  <InputFormGroupItem inputid='inputSerialnumber' responsiveInputComponentWidth='col-sm-6' label='Serialnumber' placeholder='Serialnumber' value={this.props.teabag.serialNumber} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeSerialNumber}/>
                   <TextareaFormGroupItem inputid='inputHallmark' responsiveInputComponentWidth='col-sm-12' label='Hallmark' placeholder='Hallmark' value={this.props.teabag.hallmark} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeHallmark}/>
                   <BagtypeInputGroupItem  inputid='inputBagType'
                                           responsiveInputComponentWidth='col-sm-12'

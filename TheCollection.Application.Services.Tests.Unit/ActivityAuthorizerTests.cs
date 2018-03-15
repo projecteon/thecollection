@@ -1,6 +1,10 @@
 namespace TheCollection.Application.Services.Tests.Unit {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using FakeItEasy;
     using TheCollection.Application.Services.Contracts;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using Xunit;
 
     [Trait(nameof(ActivityAuthorizer), "ActivityAuthorizer tests")]
@@ -9,22 +13,17 @@ namespace TheCollection.Application.Services.Tests.Unit {
         public ActivityAuthorizerTests() {
             FakeUser = A.Fake<IApplicationUser>();
             FakeActivity = A.Fake<IActivity>();
+            FakeRepository = A.Fake<IGetRepository<IApplicationUser>>();
+            A.CallTo(() => FakeRepository.GetItemAsync(A<string>._)).Returns(Task.FromResult(FakeUser));
         }
 
+        public IGetRepository<IApplicationUser> FakeRepository { get; private set; }
         IApplicationUser FakeUser { get; }
         IActivity FakeActivity { get; }
 
-        [Theory]
-        [InlineData(1)]
-        [InlineData(3)]
-        [InlineData(8)]
-        [InlineData(12)]
-        public void GiveApplicationUserIsNullAndActivityHasValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
-            A.CallTo(() => FakeActivity.ValidRoles).Returns(A.CollectionOfFake<IRole>(numberOfRoles));
-
-            var authorizer = new ActivityAuthorizer(null);
-
-            Assert.False(authorizer.IsAuthorized(FakeActivity));
+        [Fact]
+        public void GivenApplicationUserRepositoryIsNullWhenConstructorIsCalledThenExceptionIsThrown() {
+            Assert.Throws<ArgumentNullException>(() => new ActivityAuthorizer(null));
         }
 
         [Theory]
@@ -32,19 +31,34 @@ namespace TheCollection.Application.Services.Tests.Unit {
         [InlineData(3)]
         [InlineData(8)]
         [InlineData(12)]
-        public void GiveApplicationUserHasRolesAndActivityIsNullWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
+        public async Task GivenApplicationUserIsNullAndActivityHasValidRolesWhenIsAuthorizedIsCalledThenExceptionIsThrown(int numberOfRoles) {
+            var fakeRepository = A.Fake<IGetRepository<IApplicationUser>>();
+            A.CallTo(() => FakeRepository.GetItemAsync(A<string>._)).Returns(Task.FromResult<IApplicationUser>(null));
+            A.CallTo(() => FakeActivity.ValidRoles).Returns(A.CollectionOfFake<IRole>(numberOfRoles));
+
+            var authorizer = new ActivityAuthorizer(fakeRepository);
+
+            Assert.False(await authorizer.IsAuthorized(FakeActivity));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        [InlineData(8)]
+        [InlineData(12)]
+        public async Task GiveApplicationUserHasRolesAndActivityIsNullWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
             A.CallTo(() => FakeUser.Roles).Returns(A.CollectionOfFake<IRole>(numberOfRoles));
 
-            var authorizer = new ActivityAuthorizer(FakeUser);
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.False(authorizer.IsAuthorized(null));
+            Assert.False(await authorizer.IsAuthorized(null));
         }
 
         [Fact]
-        public void GiveApplicationUserHasNoRolesAndActivityHasNoValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned() {
-            var authorizer = new ActivityAuthorizer(FakeUser);
+        public async Task GiveApplicationUserHasNoRolesAndActivityHasNoValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned() {
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.False(authorizer.IsAuthorized(FakeActivity));
+            Assert.False(await authorizer.IsAuthorized(FakeActivity));
         }
 
         [Theory]
@@ -52,12 +66,12 @@ namespace TheCollection.Application.Services.Tests.Unit {
         [InlineData(3)]
         [InlineData(8)]
         [InlineData(12)]
-        public void GiveApplicationUserHasNoRolesAndActivityHasValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
+        public async Task GiveApplicationUserHasNoRolesAndActivityHasValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
             A.CallTo(() => FakeActivity.ValidRoles).Returns(A.CollectionOfFake<IRole>(numberOfRoles));
 
-            var authorizer = new ActivityAuthorizer(FakeUser);
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.False(authorizer.IsAuthorized(FakeActivity));
+            Assert.False(await authorizer.IsAuthorized(FakeActivity));
         }
 
         [Theory]
@@ -65,33 +79,35 @@ namespace TheCollection.Application.Services.Tests.Unit {
         [InlineData(3)]
         [InlineData(8)]
         [InlineData(12)]
-        public void GiveApplicationUserHasRolesAndActivityHasNoValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
+        public async Task GiveApplicationUserHasRolesAndActivityHasNoValidRolesWhenIsAuthorizedIsCalledThenFalseIsReturned(int numberOfRoles) {
             A.CallTo(() => FakeUser.Roles).Returns(A.CollectionOfFake<IRole>(numberOfRoles));
 
-            var authorizer = new ActivityAuthorizer(FakeUser);
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.False(authorizer.IsAuthorized(FakeActivity));
+            Assert.False(await authorizer.IsAuthorized(FakeActivity));
         }
 
         [Fact]
-        public void GiveApplicationUserHasRolesAndActivityHasValidRolesThatMatchWhenIsAuthorizedIsCalledThenTrueIsReturned() {
+        public async Task GiveApplicationUserHasRolesAndActivityHasValidRolesThatMatchWhenIsAuthorizedIsCalledThenTrueIsReturned() {
             var fakeRoles = A.CollectionOfFake<IRole>(1);
             A.CallTo(() => FakeUser.Roles).Returns(fakeRoles);
             A.CallTo(() => FakeActivity.ValidRoles).Returns(fakeRoles);
 
-            var authorizer = new ActivityAuthorizer(FakeUser);
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.True(authorizer.IsAuthorized(FakeActivity));
+            Assert.True(await authorizer.IsAuthorized(FakeActivity));
         }
 
         [Fact]
-        public void GiveApplicationUserHasRolesAndActivityHasValidRolesThatDoesNotMatchWhenIsAuthorizedIsCalledThenFalseIsReturned() {
-            A.CallTo(() => FakeUser.Roles).Returns(A.CollectionOfFake<IRole>(1));
+        public async Task GiveApplicationUserHasRolesAndActivityHasValidRolesThatDoesNotMatchWhenIsAuthorizedIsCalledThenFalseIsReturned() {
+            var fakeRole = A.Fake<IRole>();
+            A.CallTo(() => fakeRole.Name).Returns("Role1");
+            A.CallTo(() => FakeUser.Roles).Returns(new List<IRole> { fakeRole });
             A.CallTo(() => FakeActivity.ValidRoles).Returns(A.CollectionOfFake<IRole>(1));
 
-            var authorizer = new ActivityAuthorizer(FakeUser);
+            var authorizer = new ActivityAuthorizer(FakeRepository);
 
-            Assert.False(authorizer.IsAuthorized(FakeActivity));
+            Assert.False(await authorizer.IsAuthorized(FakeActivity));
         }
     }
 }

@@ -1,16 +1,12 @@
 namespace TheCollection.Application.Services.Translators.Tea {
-    using TheCollection.Application.Services.Contracts;
-    using TheCollection.Domain.Tea;
+    using TheCollection.Domain.Core.Contracts;
 
-    public class BagTypeDtoToBagTypeTranslator : ITranslator<ViewModels.Tea.BagType, BagType> {
-        public BagTypeDtoToBagTypeTranslator(IApplicationUser applicationUser) {
-            ApplicationUser = applicationUser;
+    public class BagTypeDtoToBagTypeTranslator : ITranslator<ViewModels.Tea.BagType, Domain.Tea.BagType> {
+        public BagTypeDtoToBagTypeTranslator() {
         }
 
-        IApplicationUser ApplicationUser { get; }
-
-        public void Translate(ViewModels.Tea.BagType source, BagType destination) {
-            destination.Name = source.name;
+        public Domain.Tea.BagType Translate(ViewModels.Tea.BagType source) {
+            return new Domain.Tea.BagType(source.id, source.name);
         }
     }
 }

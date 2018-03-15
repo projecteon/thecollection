@@ -6,6 +6,11 @@ namespace TheCollection.Domain.Tea {
 
     [JsonConverter(typeof(SearchableConverter))]
     public class BagType : IRef, IEntity {
+        public BagType(string id, string name) {
+            Id = id;
+            Name = name;
+        }
+
         [Key]
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }

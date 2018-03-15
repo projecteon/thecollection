@@ -5,7 +5,7 @@ namespace TheCollection.Web.Handlers {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Azure.Documents;
-    using TheCollection.Data.DocumentDB;
+    using TheCollection.Data.DocumentDB.Repositories;
     using TheCollection.Domain.Converters;
     using TheCollection.Domain.Core.Contracts;
     using TheCollection.Domain.Core.Contracts.Repository;
@@ -20,7 +20,7 @@ namespace TheCollection.Web.Handlers {
         }
 
         public async Task Invoke(HttpContext context, IDocumentClient documentDbClient, IImageRepository imageRepository) {
-            var imagesRepository = new GetRepository<Domain.Tea.Image>(documentDbClient, DocumentDB.DatabaseId, DocumentDB.Collections.Images);
+            var imagesRepository = new GetRepository<Domain.Tea.Image>(documentDbClient, DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.Images);
             var matches = Regex.Matches(context.Request.Path, RegEx);
             if (matches.Count > 0 && matches[0].Groups.Count > 1) {
                 var image = await imagesRepository.GetItemAsync(matches[0].Groups[1].Value);

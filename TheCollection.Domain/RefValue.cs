@@ -3,11 +3,16 @@ namespace TheCollection.Domain {
     using TheCollection.Domain.Core.Contracts;
 
     public class RefValue : IRef {
+        public RefValue(string id, string name) {
+            Id = id;
+            Name = name;
+        }
+
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [Searchable]
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string Name { get; }
     }
 }

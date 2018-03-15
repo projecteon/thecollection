@@ -30,7 +30,7 @@ export const requestBagtype = {
   },
  };
 
- export const addBagtype = {
+export const addBagtype = {
   addBagtype: (bagtype: IBagType): AppThunkAction<ChangeBagTypeAction | RouterAction> => (dispatch, getState) => {
     try {
       let addBrandTask = fetch(`/api/Tea/BagTypes/`, {
@@ -54,7 +54,7 @@ export const requestBagtype = {
   },
  };
 
- export const changeName = {
+export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
     dispatch({type: CHANGE_NAME, name: name});
   },

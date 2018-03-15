@@ -15,9 +15,9 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
         private Searchable SearchableBag { get; }
 
         public BagTagsTests() {
-            BagTypeRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Paper" };
-            BrandRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Twinning" };
-            CountryRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Norway" };
+            BagTypeRef = new RefValue(System.Guid.NewGuid().ToString(), "Paper");
+            BrandRef = new RefValue(System.Guid.NewGuid().ToString(), "Twinning");
+            CountryRef = new RefValue(System.Guid.NewGuid().ToString(), "Norway");
             Bag = new Bag {
                 Id = System.Guid.NewGuid().ToString(),
                 MainID = 999,

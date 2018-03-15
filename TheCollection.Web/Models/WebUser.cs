@@ -3,9 +3,8 @@ namespace TheCollection.Web.Models {
     using System.Linq;
     using AspNetCore.Identity.DocumentDb;
     using TheCollection.Application.Services.Contracts;
-    using TheCollection.Web.Contracts;
 
-    public class WebUser : DocumentDbIdentityUser<DocumentDbIdentityRole>, IWebUser {
+    public class WebUser : DocumentDbIdentityUser<WebRole>, IApplicationUser {
         public WebUser() {
             Contacts = new List<Domain.RefValue>();
         }
@@ -17,5 +16,9 @@ namespace TheCollection.Web.Models {
         public ICollection<Domain.RefValue> Contacts { get; }
 
         IEnumerable<IRole> IApplicationUser.Roles { get { return Roles.Cast<IRole>(); } }
+
+        //IEnumerable<IRole> IApplicationUser.Roles { get { return Roles.Select(x => new WebRole(x.Id, x.Name)); } }
+    }
+    public class WebRole : DocumentDbIdentityRole, IRole {
     }
 }

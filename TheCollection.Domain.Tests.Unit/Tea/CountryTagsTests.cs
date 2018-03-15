@@ -9,7 +9,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
         private Searchable SearchableCountry { get; }
 
         public CountryTagsTests() {
-            Country = new Country { Id = System.Guid.NewGuid().ToString(), Name = "Norway" };
+            Country = new Country(System.Guid.NewGuid().ToString(), "Norway");
             SearchableCountry = new Searchable(Country);
         }
 
