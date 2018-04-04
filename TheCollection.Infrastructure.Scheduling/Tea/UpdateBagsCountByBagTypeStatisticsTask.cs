@@ -1,5 +1,5 @@
 namespace TheCollection.Infrastructure.Scheduling.Tea {
-
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using NodaTime;
@@ -11,7 +11,7 @@ namespace TheCollection.Infrastructure.Scheduling.Tea {
     public class UpdateBagsCountByBagTypeStatisticsTask : IScheduledTask {
 
         public UpdateBagsCountByBagTypeStatisticsTask(
-            IGetRepository<IApplicationUser> applicationUserRepository,
+            IGetAllRepository<IApplicationUser> applicationUserRepository,
             IAsyncCommandHandler<CreateBagsCountByBagTypesCommand> createCountByBagTypesCommand,
             ILogger<UpdateTotalCountByInsertDateStatisticsTask> logger) {
             ApplicationUserRepository = applicationUserRepository ?? throw new System.ArgumentNullException(nameof(applicationUserRepository));
@@ -19,7 +19,7 @@ namespace TheCollection.Infrastructure.Scheduling.Tea {
             Logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
-        private IGetRepository<IApplicationUser> ApplicationUserRepository { get; }
+        private IGetAllRepository<IApplicationUser> ApplicationUserRepository { get; }
         private IAsyncCommandHandler<CreateBagsCountByBagTypesCommand> CreateCountByBagTypesCommand { get; }
         private ILogger<UpdateTotalCountByInsertDateStatisticsTask> Logger { get; }
 
@@ -27,8 +27,10 @@ namespace TheCollection.Infrastructure.Scheduling.Tea {
         public bool RunOnStartup => false;
 
         public async Task ExecuteAsync(CancellationToken cancellationToken) {
-            var applicationUser = await ApplicationUserRepository.GetItemAsync();
-            var result = await CreateCountByBagTypesCommand.ExecuteAsync(new CreateBagsCountByBagTypesCommand(applicationUser));
+            var applicationUsers = await ApplicationUserRepository.GetAllAsync();
+            foreach (var applicationUser in applicationUsers.Where(x => x.Email == "l.wolterink@hotmail.com")) {
+                await CreateCountByBagTypesCommand.ExecuteAsync(new CreateBagsCountByBagTypesCommand(applicationUser));
+            }
         }
     }
 }
