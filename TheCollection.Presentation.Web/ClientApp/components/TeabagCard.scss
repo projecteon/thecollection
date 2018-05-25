@@ -1,0 +1,36 @@
+.card {
+  border: none;
+
+  p.edit {
+    display: none;
+    font-size: 2em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(149,149,149, 0.2);
+    cursor: pointer;
+
+    &:hover .text-info {
+      color: #31b0d5 !important;
+    }
+  }
+
+  &:hover p.edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .card p.edit {
+    background-color: inherit;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

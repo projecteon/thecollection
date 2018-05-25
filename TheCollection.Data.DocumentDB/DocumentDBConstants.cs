@@ -1,4 +1,4 @@
-namespace TheCollection.Web.Constants {
+namespace TheCollection.Presentation.Web.Constants {
     using System;
     using System.Collections.Generic;
 

@@ -9,8 +9,8 @@ namespace TheCollection.Import.Console {
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
     using TheCollection.Import.Console.Translators;
-    using TheCollection.Web.Constants;
-    using TheCollection.Web.Repositories;
+    using TheCollection.Presentation.Web.Constants;
+    using TheCollection.Presentation.Web.Repositories;
 
     public class DocumentDbImport {
         public static async System.Threading.Tasks.Task<IList<Brand>> ImportBrandsAsync(DocumentClient client, List<Merk> meerken) {

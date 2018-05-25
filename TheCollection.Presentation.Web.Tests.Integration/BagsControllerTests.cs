@@ -4,7 +4,7 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using TheCollection.Api.Controllers.Tea;
-    using TheCollection.Web;
+    using TheCollection.Presentation.Web;
     using Xunit;
 
     /// <summary>

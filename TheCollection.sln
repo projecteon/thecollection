@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCollection.Web", "TheCollection.Web\TheCollection.Web.csproj", "{6CB3B9ED-0E19-41DA-809F-A052C93357FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheCollection.Presentation.Web", "TheCollection.Presentation.Web\TheCollection.Presentation.Web.csproj", "{6CB3B9ED-0E19-41DA-809F-A052C93357FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{309440C7-A49D-4956-ACC2-B344252EF250}"
 	ProjectSection(SolutionItems) = preProject

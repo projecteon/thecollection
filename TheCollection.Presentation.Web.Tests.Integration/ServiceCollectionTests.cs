@@ -13,7 +13,7 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
     using TheCollection.Application.Services.Commands.Tea;
     using TheCollection.Domain.Core.Contracts;
     using TheCollection.Domain.Core.Contracts.Repository;
-    using TheCollection.Web;
+    using TheCollection.Presentation.Web;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -119,7 +119,7 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
     public class StartUpFixture : IDisposable {
         public StartUpFixture() {
             var dir = System.IO.Directory.GetCurrentDirectory();
-            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.0", @"TheCollection.Web");
+            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.0", @"TheCollection.Presentation.Web");
             var hostingEnvironment = A.Fake<IHostingEnvironment>();
             A.CallTo(() => hostingEnvironment.ContentRootPath).Returns(dir);
             A.CallTo(() => hostingEnvironment.EnvironmentName).Returns("Test");

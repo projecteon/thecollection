@@ -1,0 +1,29 @@
+.badge-default {
+  background-color: #636c72;
+  margin-left: 5px;
+}
+
+.labelBadge {
+  padding: 0 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #86b404;
+    color: #fff;
+    border-radius: 0.25rem;
+
+    .badge-default {
+      background-color: #86b404;
+    }
+  }
+}
+
+.searchBar {
+  top: 0px;
+}
+
+@media (max-width: 767px) {
+  .searchBar {
+    top: 53px;
+  }
+}
