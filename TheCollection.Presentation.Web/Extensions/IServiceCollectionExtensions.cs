@@ -1,13 +1,25 @@
 namespace TheCollection.Presentation.Web.Extensions {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AspNetCore.Identity.DocumentDb;
+    using AspNetCore.Identity.DocumentDb.Tools;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Azure.Documents;
+    using Microsoft.Azure.Documents.Client;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
     using NodaTime;
+    using NodaTime.Serialization.JsonNet;
+    using Swashbuckle.AspNetCore.Swagger;
+    using Swashbuckle.NodaTime.AspNetCore;
     using TheCollection.Api;
     using TheCollection.Application.Services;
     using TheCollection.Application.Services.Commands;
@@ -17,6 +29,7 @@ namespace TheCollection.Presentation.Web.Extensions {
     using TheCollection.Application.Services.Queries.Tea;
     using TheCollection.Application.Services.Translators;
     using TheCollection.Application.Services.Translators.Tea;
+    using TheCollection.Data.DocumentDB.Extensions;
     using TheCollection.Data.DocumentDB.Repositories;
     using TheCollection.Domain;
     using TheCollection.Domain.Core.Contracts;
@@ -26,6 +39,7 @@ namespace TheCollection.Presentation.Web.Extensions {
     using TheCollection.Infrastructure.Scheduling;
     using TheCollection.Infrastructure.Scheduling.Tea;
     using TheCollection.Presentation.Web.Constants;
+    using TheCollection.Presentation.Web.Models;
     using TheCollection.Presentation.Web.Repositories;
 
     public static class IServiceCollectionExtensions {
@@ -280,6 +294,54 @@ namespace TheCollection.Presentation.Web.Extensions {
             });
 
             return services;
+        }
+
+        public static IServiceCollection AddSwagger(this IServiceCollection services) {
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info { Title = "TheCollection API", Version = "v1" });
+
+                var settings = new JsonSerializerSettings {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Converters = {
+                       new StringEnumConverter()
+                     },
+                    NullValueHandling = NullValueHandling.Ignore
+                }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+
+                c.ConfigureForNodaTime(settings);
+            });
+            return services;
+        }
+
+        public static IServiceCollection AddIdentity(this IServiceCollection services, IConfigurationRoot configuration) {
+            services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
+                configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
+                configuration.GetValue<string>("DocumentDbClient:AuthorizationKey"))
+            );
+
+            // Add framework services.
+            // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
+            services.AddIdentity<WebUser, WebRole>()
+            .AddDocumentDbStores(options => {
+                options.UserStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
+                options.RoleStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
+                options.Database = DocumentDBConstants.DatabaseId;
+            })
+            .AddDefaultTokenProviders();
+
+            return services;
+        }
+
+        static DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
+            serializerSettings = serializerSettings ?? new JsonSerializerSettings();
+            serializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            serializerSettings.Converters.Add(new JsonClaimConverter());
+            serializerSettings.Converters.Add(new TheCollection.Presentation.Web.JsonClaimsPrincipalConverter());
+            serializerSettings.Converters.Add(new TheCollection.Presentation.Web.JsonClaimsIdentityConverter());
+            // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
+            var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
+            client.CreateCollectionIfNotExistsAsync(DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.AspNetIdentity).Wait();
+            return client;
         }
     }
 }

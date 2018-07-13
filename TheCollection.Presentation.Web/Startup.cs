@@ -47,31 +47,17 @@ namespace TheCollection.Presentation.Web {
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services) {
             // wire application
             services.WireDependencies();
+            services.AddIdentity(Configuration);
+                       
 
-            services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
-                Configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
-                Configuration.GetValue<string>("DocumentDbClient:AuthorizationKey"))
-            );
-
-            // Add framework services.
-            // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
-            services.AddIdentity<WebUser, WebRole>()
-            .AddDocumentDbStores(options => {
-                options.UserStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
-                options.RoleStoreDocumentCollection = DocumentDBConstants.Collections.AspNetIdentity;
-                options.Database = DocumentDBConstants.DatabaseId;
-            })
-            .AddDefaultTokenProviders();
-
-            //services.Configure<CookiePolicyOptions>(options =>
-            //{
-            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            //    options.CheckConsentNeeded = context => true;
-            //    options.MinimumSameSitePolicy = SameSiteMode.None;
-            //});
+            services.Configure<CookiePolicyOptions>(options => {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             services.ConfigureApplicationCookie(options => {
                 //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
@@ -113,19 +99,7 @@ namespace TheCollection.Presentation.Web {
             .AddJsonOptions(options => { options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb); })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info { Title = "MeetingRoom API", Version = "v1" });
-
-                var settings = new JsonSerializerSettings {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Converters = {
-                      new StringEnumConverter()
-                    },
-                    NullValueHandling = NullValueHandling.Ignore
-                };
-                settings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-                c.ConfigureForNodaTime(settings);
-            });
+            services.AddSwagger();
 
             services.AddHttpsRedirection(options =>
             {
@@ -133,11 +107,11 @@ namespace TheCollection.Presentation.Web {
             });
 
             // Build the intermediate service provider then return it
-            return services.BuildServiceProvider();
+            //return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider) {
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider, RoleManager<WebRole> roleManager, UserManager<WebUser> userManager) {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -151,19 +125,12 @@ namespace TheCollection.Presentation.Web {
             }
             else {
                 app.UseExceptionHandler("/Home/Error");
-                //app.UseHsts();
+                app.UseHsts();
             }
 
-            // Create branch to the MyHandlerMiddleware.
-            app.MapWhen(
-                context => Regex.IsMatch(context.Request.Path.ToString(), ThumbnailHandler.RegEx),
-                appBranch => { appBranch.UseThumbnailHandler(); }
-            );
-
-            app.MapWhen(
-                context => Regex.IsMatch(context.Request.Path.ToString(), ImageHandler.RegEx),
-                appBranch => { appBranch.UseImageHandler(); }
-            );
+            // Add custom middleweara for thumbnails and images.
+            app.UseThumbnailHandler();
+            app.UseImageHandler();
 
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -171,12 +138,8 @@ namespace TheCollection.Presentation.Web {
 
             app.UseAuthentication();
 
-            app.UseSwagger();
-
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MeetingRoom API V1");
-            });
+            app.UseSwagger();
 
             app.UseMvc(routes => {
                 routes.MapRoute(
@@ -192,48 +155,32 @@ namespace TheCollection.Presentation.Web {
                     defaults: new { controller = "Home", action = "Index" });
             });
 
-            CreateRoles(serviceProvider);
-        }
-
-        DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
-            serializerSettings = serializerSettings ?? new JsonSerializerSettings();
-            serializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            serializerSettings.Converters.Add(new JsonClaimConverter());
-            serializerSettings.Converters.Add(new TheCollection.Presentation.Web.JsonClaimsPrincipalConverter());
-            serializerSettings.Converters.Add(new TheCollection.Presentation.Web.JsonClaimsIdentityConverter());
-            // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
-            var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
-            client.CreateCollectionIfNotExistsAsync(DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.AspNetIdentity).Wait();
-            return client;
+            CreateRoles(roleManager, userManager);
         }
 
         // https://msdn.microsoft.com/en-us/magazine/mt826337.aspx
         // https://stackoverflow.com/questions/44180773/dependency-injection-in-asp-net-core-2-throws-exception
-        void CreateRoles(IServiceProvider serviceProvider) {
+        void CreateRoles(RoleManager<WebRole> roleManager, UserManager<WebUser> userManager) {
             //initializing custom roles
-            using (var scope = serviceProvider.CreateScope()) {
-                var RoleManager = serviceProvider.GetRequiredService<RoleManager<WebRole>>();
-                var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
-                string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
-                IdentityResult roleResult;
+            string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
+            IdentityResult roleResult;
 
-                foreach (var roleName in roleNames) {
-                    var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
-                    if (!roleExist) {
-                        //create the roles and seed them to the database: Question 1
-                        roleResult = RoleManager.CreateAsync(new WebRole { Name = roleName }).Result;
-                    }
+            foreach (var roleName in roleNames) {
+                var roleExist = roleManager.RoleExistsAsync(roleName).Result;
+                if (!roleExist) {
+                    //create the roles and seed them to the database: Question 1
+                    roleResult = roleManager.CreateAsync(new WebRole { Name = roleName }).Result;
                 }
+            }
 
-                var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
-                if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
-                    roleResult = UserManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
-                }
+            var _user = userManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
+                roleResult = userManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
+            }
 
-                _user = UserManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
-                if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
-                    roleResult = UserManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
-                }
+            _user = userManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
+            if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
+                roleResult = userManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
             }
         }
     }
