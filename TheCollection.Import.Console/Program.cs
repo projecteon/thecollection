@@ -8,13 +8,14 @@ using TheCollection.Import.Console.Repositories;
 using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
+using System.Threading.Tasks;
 
 namespace TheCollection.Import.Console
 {
     class Program
     {
         // TheCollection.Import.Console.exe /DocumentDbClient:EndpointUri=uri /DocumentDbClient:AuthorizationKey=key /StorageAccount:Name=name /StorageAccount:Key=key
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             System.Console.WriteLine("Conversions start");
 
@@ -60,7 +61,7 @@ namespace TheCollection.Import.Console
             //var imageUploadService = new ImageAzureBlobService(imageUploadConnectionString);
             //var azureStorageClient = new AzureStorageClient(imageUploadConnectionString);
 
-            ImportTeabags(documentDbClient);
+            await ImportTeabags(documentDbClient);
             //ImportImagesAndUpdateTeabags(documentDbClient, imageUploadService);
             //CopyMissingFilesToTempUploadDir(azureStorageClient);
 
@@ -68,9 +69,9 @@ namespace TheCollection.Import.Console
             System.Console.ReadLine();
         }
 
-        static void CopyMissingFilesToTempUploadDir(AzureStorageClient azureClient)
+        static async Task CopyMissingFilesToTempUploadDir(AzureStorageClient azureClient)
         {
-            var (meerkens, thees) = ImportFromAccess();
+            var (meerkens, thees) = await ImportFromAccess();
             var list = azureClient.GetList();
             var missingImageImports = thees.Where(thee => !list.Contains($"{thee.MainID}.jpg"));
             var missingImageImportsNames = missingImageImports.Select(thee => $"{thee.MainID}.jpg").ToList();
@@ -86,29 +87,29 @@ namespace TheCollection.Import.Console
             });
         }
 
-        static (IEnumerable<Models.Merk> meerkens, IEnumerable<Models.Thee> thees) ImportFromAccess()
+        static async Task<(IEnumerable<Models.Merk> meerkens, IEnumerable<Models.Thee> thees)> ImportFromAccess()
         {
             var accessDbPath = "importfiles/Thee Database.mdb";
-            var meerkens = (new MerkRepository(accessDbPath)).SearchItemsAsync().Result;
-            var thees = (new TheeRepository(accessDbPath)).SearchItemsAsync().Result;
+            var meerkens = await (new MerkRepository(accessDbPath)).SearchItemsAsync();
+            var thees = await (new TheeRepository(accessDbPath)).SearchItemsAsync();
 
             return (meerkens, thees);
         }
 
 
-        private static void ImportTeabags(DocumentClient documentDbClient)
+        private static async Task ImportTeabags(DocumentClient documentDbClient)
         {
-            var (meerkens, thees) = ImportFromAccess();
+            var (meerkens, thees) = await ImportFromAccess();
             var theesToImport = thees.OrderBy(thee => thee.MainID).ToList();
             var meerkensToImport = meerkens.ToList();
 
-            var brands = DocumentDbImport.ImportBrandsAsync(documentDbClient, meerkensToImport).Result;
-            var bags = DocumentDbImport.ImportBagsAsync(documentDbClient, theesToImport, brands).Result;
+            var brands = await DocumentDbImport.ImportBrandsAsync(documentDbClient, meerkensToImport);
+            var bags = await DocumentDbImport.ImportBagsAsync(documentDbClient, theesToImport, brands);
         }
 
-        private static void ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobRepository imageUploadService)
+        private static async Task ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobRepository imageUploadService)
         {
-            var updateBags = DocumentDbImport.UpdateBagsAsync(documentDbClient, imageUploadService).Result;
+            var updateBags = await DocumentDbImport.UpdateBagsAsync(documentDbClient, imageUploadService);
         }
     }
 }

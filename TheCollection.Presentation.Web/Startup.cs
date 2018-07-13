@@ -32,8 +32,9 @@ namespace TheCollection.Presentation.Web {
     using TheCollection.Presentation.Web.Repositories;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
+  using Microsoft.AspNetCore.Http;
 
-    public class Startup {
+  public class Startup {
         public Startup(IHostingEnvironment env) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -46,14 +47,7 @@ namespace TheCollection.Presentation.Web {
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) {
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(it =>
-                    it.GetRequiredService<IUrlHelperFactory>()
-                      .GetUrlHelper(it.GetRequiredService<IActionContextAccessor>().ActionContext)
-                );
-
+        public IServiceProvider ConfigureServices(IServiceCollection services) {
             // wire application
             services.WireDependencies();
 
@@ -71,6 +65,13 @@ namespace TheCollection.Presentation.Web {
                 options.Database = DocumentDBConstants.DatabaseId;
             })
             .AddDefaultTokenProviders();
+
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
             services.ConfigureApplicationCookie(options => {
                 //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
@@ -108,10 +109,9 @@ namespace TheCollection.Presentation.Web {
                 options => {
                     options.SslPort = 44330;
                     options.Filters.Add(new RequireHttpsAttribute());
-                }
-            ).AddJsonOptions(options => {
-                options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            });
+            })
+            .AddJsonOptions(options => { options.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb); })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "MeetingRoom API", Version = "v1" });
@@ -126,23 +126,32 @@ namespace TheCollection.Presentation.Web {
                 settings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
                 c.ConfigureForNodaTime(settings);
             });
+
+            services.AddHttpsRedirection(options =>
+            {
+                options.HttpsPort = 44330;
+            });
+
+            // Build the intermediate service provider then return it
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider) {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
-                    HotModuleReplacement = true,
-                    HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
-                    ReactHotModuleReplacement = true
-                });
+                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                //    HotModuleReplacement = true,
+                //    HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
+                //    ReactHotModuleReplacement = true
+                //});
             }
             else {
                 app.UseExceptionHandler("/Home/Error");
+                //app.UseHsts();
             }
 
             // Create branch to the MyHandlerMiddleware.
@@ -156,7 +165,9 @@ namespace TheCollection.Presentation.Web {
                 appBranch => { appBranch.UseImageHandler(); }
             );
 
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
@@ -181,7 +192,7 @@ namespace TheCollection.Presentation.Web {
                     defaults: new { controller = "Home", action = "Index" });
             });
 
-            CreateRoles(app.ApplicationServices);
+            CreateRoles(serviceProvider);
         }
 
         DocumentClient InitializeDocumentClient(Uri endpointUri, string authorizationKey, JsonSerializerSettings serializerSettings = null) {
@@ -197,29 +208,32 @@ namespace TheCollection.Presentation.Web {
         }
 
         // https://msdn.microsoft.com/en-us/magazine/mt826337.aspx
+        // https://stackoverflow.com/questions/44180773/dependency-injection-in-asp-net-core-2-throws-exception
         void CreateRoles(IServiceProvider serviceProvider) {
             //initializing custom roles
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<WebRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
-            string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
-            IdentityResult roleResult;
+            using (var scope = serviceProvider.CreateScope()) {
+                var RoleManager = serviceProvider.GetRequiredService<RoleManager<WebRole>>();
+                var UserManager = serviceProvider.GetRequiredService<UserManager<WebUser>>();
+                string[] roleNames = { Roles.SystemAdministrator, Roles.TeaManager, Roles.Collector, Roles.Member };
+                IdentityResult roleResult;
 
-            foreach (var roleName in roleNames) {
-                var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
-                if (!roleExist) {
-                    //create the roles and seed them to the database: Question 1
-                    roleResult = RoleManager.CreateAsync(new WebRole { Name = roleName }).Result;
+                foreach (var roleName in roleNames) {
+                    var roleExist = RoleManager.RoleExistsAsync(roleName).Result;
+                    if (!roleExist) {
+                        //create the roles and seed them to the database: Question 1
+                        roleResult = RoleManager.CreateAsync(new WebRole { Name = roleName }).Result;
+                    }
                 }
-            }
 
-            var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
-                roleResult = UserManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
-            }
+                var _user = UserManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
+                if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
+                    roleResult = UserManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
+                }
 
-            _user = UserManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
-                roleResult = UserManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
+                _user = UserManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
+                if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
+                    roleResult = UserManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
+                }
             }
         }
     }

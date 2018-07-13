@@ -118,3 +118,33 @@ exports.CheckerPlugin = function() {
     plugins: [new CheckerPlugin()]
   }
 }
+
+exports.loadDlls = function(manifestPath) {
+  return {
+    plugins: [
+      new webpack.DllReferencePlugin({
+          context: __dirname,
+          manifest: require(manifestPath)
+      })
+    ]
+  }
+}
+
+exports.loadDevelopment = function() {
+  return {
+    plugins: [
+      new webpack.SourceMapDevToolPlugin({
+        filename: '[file].map', // Remove this line if you prefer inline source maps
+        moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
+      })
+    ]
+  }
+}
+
+exports.loadProduction = function() {
+  return {
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin()
+    ]
+  }
+}

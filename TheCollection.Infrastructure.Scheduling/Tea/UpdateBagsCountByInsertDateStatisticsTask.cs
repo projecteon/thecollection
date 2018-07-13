@@ -1,7 +1,9 @@
 namespace TheCollection.Infrastructure.Scheduling.Tea {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using NodaTime;
     using TheCollection.Application.Services.Commands.Tea;
     using TheCollection.Application.Services.Contracts;
@@ -11,25 +13,27 @@ namespace TheCollection.Infrastructure.Scheduling.Tea {
     public class UpdateBagsCountByInsertDateStatisticsTask : IScheduledTask {
 
         public UpdateBagsCountByInsertDateStatisticsTask(
-            IGetAllRepository<IApplicationUser> applicationUserRepository,
-            IAsyncCommandHandler<CreateBagsCountByInsertDateCommand> createCountByInsertDateCommand,
-            ILogger<UpdateTotalCountByInsertDateStatisticsTask> logger) {
-            ApplicationUserRepository = applicationUserRepository ?? throw new System.ArgumentNullException(nameof(applicationUserRepository));
-            CreateCountByInsertDateCommand = createCountByInsertDateCommand ?? throw new System.ArgumentNullException(nameof(createCountByInsertDateCommand));
+            ILogger<UpdateTotalCountByInsertDateStatisticsTask> logger,
+            IServiceProvider services) {
             Logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
+            Services = services ?? throw new ArgumentNullException(nameof(services));
         }
 
-        IGetAllRepository<IApplicationUser> ApplicationUserRepository { get; }
-        IAsyncCommandHandler<CreateBagsCountByInsertDateCommand> CreateCountByInsertDateCommand { get; }
         ILogger<UpdateTotalCountByInsertDateStatisticsTask> Logger { get; }
+        IServiceProvider Services { get; }
 
         public Period Schedule => Period.FromMinutes(20);
         public bool RunOnStartup => false;
 
         public async Task ExecuteAsync(CancellationToken cancellationToken) {
-            var applicationUsers = await ApplicationUserRepository.GetAllAsync();
-            foreach (var applicationUser in applicationUsers.Where(x => x.Email == "l.wolterink@hotmail.com")) {
-                await CreateCountByInsertDateCommand.ExecuteAsync(new CreateBagsCountByInsertDateCommand(applicationUser));
+            using (var scope = Services.CreateScope()) {
+                var applicationUserRepository = scope.ServiceProvider.GetRequiredService<IGetAllRepository<IApplicationUser>>();
+                var createCountByInsertDateCommand = scope.ServiceProvider.GetRequiredService<IAsyncCommandHandler<CreateBagsCountByInsertDateCommand>>();
+
+                var applicationUsers = await applicationUserRepository.GetAllAsync();
+                foreach (var applicationUser in applicationUsers.Where(x => x.Email == "l.wolterink@hotmail.com")) {
+                    await createCountByInsertDateCommand.ExecuteAsync(new CreateBagsCountByInsertDateCommand(applicationUser));
+                }
             }
         }
     }

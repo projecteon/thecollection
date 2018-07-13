@@ -1,19 +1,27 @@
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-
 namespace TheCollection.Presentation.Web {
+    using System.IO;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
 
     public class Program {
 
-        public static void Main(string[] args) {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
+         public static async Task Main(string[] args) =>
+            await CreateWebHostBuilder(args).Build().RunAsync();
 
-            host.Run();
-        }
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+
+        // public static void Main(string[] args) {
+        //     var host = new WebHostBuilder()
+        //         .UseKestrel()
+        //         .UseContentRoot(Directory.GetCurrentDirectory())
+        //         .UseIISIntegration()
+        //         .UseStartup<Startup>()
+        //         .Build();
+
+        //     host.Run();
+        // }
     }
 }

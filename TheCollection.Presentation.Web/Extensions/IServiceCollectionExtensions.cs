@@ -2,6 +2,8 @@ namespace TheCollection.Presentation.Web.Extensions {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.AspNetCore.Mvc.Routing;
     using Microsoft.Azure.Documents;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -28,6 +30,14 @@ namespace TheCollection.Presentation.Web.Extensions {
 
     public static class IServiceCollectionExtensions {
         public static IServiceCollection WireDependencies(this IServiceCollection services) {
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(it =>
+                    it.GetRequiredService<IUrlHelperFactory>()
+                      .GetUrlHelper(it.GetRequiredService<IActionContextAccessor>().ActionContext)
+                );
+
+
             services.AddSingleton<IClock>(SystemClock.Instance);
             services.AddSingleton(typeof(ILogger<>), typeof(ConsoleLogger<>));
 
@@ -36,17 +46,17 @@ namespace TheCollection.Presentation.Web.Extensions {
             services.AddQueries();
             services.AddCommands();
             services.AddNotificationServices();
-            services.AddSchedulingServices();
+            // services.AddSchedulingServices();
             return services;
         }
 
         public static IServiceCollection AddTranslators(this IServiceCollection services) {
             #region Domain models to view models
-            services.AddSingleton<IAsyncTranslator<Domain.RefValue, Application.Services.ViewModels.RefValue>, RefValueToRefValueTranslator>();
-            services.AddSingleton<IAsyncTranslator<Domain.Tea.Bag, Application.Services.ViewModels.Tea.Bag>, BagToBagViewModelTranslator>();
-            services.AddSingleton<IAsyncTranslator<Domain.Tea.BagType, Application.Services.ViewModels.Tea.BagType>, BagTypeToBagTypeTranslator>();
-            services.AddSingleton<IAsyncTranslator<Domain.Tea.Brand, Application.Services.ViewModels.Tea.Brand>, BrandToBrandTranslator>();
-            services.AddSingleton<IAsyncTranslator<Domain.Tea.Country, Application.Services.ViewModels.Tea.Country>, CountryToCountryViewModelTranslator>();
+            services.AddScoped<IAsyncTranslator<Domain.RefValue, Application.Services.ViewModels.RefValue>, RefValueToRefValueTranslator>();
+            services.AddScoped<IAsyncTranslator<Domain.Tea.Bag, Application.Services.ViewModels.Tea.Bag>, BagToBagViewModelTranslator>();
+            services.AddScoped<IAsyncTranslator<Domain.Tea.BagType, Application.Services.ViewModels.Tea.BagType>, BagTypeToBagTypeTranslator>();
+            services.AddScoped<IAsyncTranslator<Domain.Tea.Brand, Application.Services.ViewModels.Tea.Brand>, BrandToBrandTranslator>();
+            services.AddScoped<IAsyncTranslator<Domain.Tea.Country, Application.Services.ViewModels.Tea.Country>, CountryToCountryViewModelTranslator>();
             #endregion (Domain models to view models)
 
             #region View models to domain models
@@ -184,66 +194,66 @@ namespace TheCollection.Presentation.Web.Extensions {
 
         public static IServiceCollection AddQueries(this IServiceCollection services) {
             #region Bag
-            services.AddSingleton<SearchQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, SearchQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>>();
-            services.AddSingleton<GetQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, GetQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>>();
+            services.AddScoped<SearchQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, SearchQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>>();
+            services.AddScoped<GetQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, GetQueryHandler<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>>();
             #endregion (Bag)
 
             #region BagType
-            services.AddSingleton<SearchQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, SearchQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
-            services.AddSingleton<GetQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, GetQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
-            services.AddSingleton<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.BagType>>, SearchRefValuesQueryHandler<Domain.Tea.BagType>>();
+            services.AddScoped<SearchQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, SearchQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
+            services.AddScoped<GetQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, GetQueryHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
+            services.AddScoped<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.BagType>>, SearchRefValuesQueryHandler<Domain.Tea.BagType>>();
             #endregion (BagType)
 
             #region Brands
-            services.AddSingleton<SearchQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, SearchQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
-            services.AddSingleton<GetQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, GetQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
-            services.AddSingleton<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.Brand>>, SearchRefValuesQueryHandler<Domain.Tea.Brand>>();
+            services.AddScoped<SearchQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, SearchQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
+            services.AddScoped<GetQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, GetQueryHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
+            services.AddScoped<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.Brand>>, SearchRefValuesQueryHandler<Domain.Tea.Brand>>();
             #endregion (Brands)
 
             #region Country
-            services.AddSingleton<SearchQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, SearchQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
-            services.AddSingleton<GetQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, GetQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
-            services.AddSingleton<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.Country>>, SearchRefValuesQueryHandler<Domain.Tea.Country>>();
+            services.AddScoped<SearchQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, SearchQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
+            services.AddScoped<GetQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, GetQueryHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
+            services.AddScoped<IAsyncQueryHandler<SearchRefValuesQuery<Domain.Tea.Country>>, SearchRefValuesQueryHandler<Domain.Tea.Country>>();
             #endregion (Country)
 
             #region Dashboard
-            services.AddSingleton<IAsyncQueryHandler<TotalBagsCountByInsertDateQuery>, TotalBagsCountByInsertDateQueryHandler>();
-            services.AddSingleton<IAsyncQueryHandler<BagsCountByInsertDateQuery>, BagsCountByInsertDateQueryHandler>();
-            services.AddSingleton<IAsyncQueryHandler<BagsCountByBrandsQuery>, BagsCountByBrandsQueryHandler>();
-            services.AddSingleton<IAsyncQueryHandler<BagsCountByBagTypesQuery>, BagsCountByBagTypesQueryHandler>();
+            services.AddScoped<IAsyncQueryHandler<TotalBagsCountByInsertDateQuery>, TotalBagsCountByInsertDateQueryHandler>();
+            services.AddScoped<IAsyncQueryHandler<BagsCountByInsertDateQuery>, BagsCountByInsertDateQueryHandler>();
+            services.AddScoped<IAsyncQueryHandler<BagsCountByBrandsQuery>, BagsCountByBrandsQueryHandler>();
+            services.AddScoped<IAsyncQueryHandler<BagsCountByBagTypesQuery>, BagsCountByBagTypesQueryHandler>();
             #endregion (Dashboard)
             return services;
         }
 
         public static IServiceCollection AddCommands(this IServiceCollection services) {
             #region Bag
-            services.AddSingleton<IAsyncCommandHandler<UpdateBagCommand>, UpdateBagCommandHandler>();
-            services.AddSingleton<IAsyncCommandHandler<CreateBagCommand>, CreateBagCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<UpdateBagCommand>, UpdateBagCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<CreateBagCommand>, CreateBagCommandHandler>();
             #endregion (Bag)
 
             #region BagType
-            services.AddSingleton<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.BagType>, Domain.Tea.BagType>, UpdateCommandHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
-            services.AddSingleton<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.BagType>, Domain.Tea.BagType>, CreateCommandHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
+            services.AddScoped<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.BagType>, Domain.Tea.BagType>, UpdateCommandHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
+            services.AddScoped<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.BagType>, Domain.Tea.BagType>, CreateCommandHandler<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>>();
             #endregion (BagType)
 
             #region Brands
-            services.AddSingleton<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.Brand>, Domain.Tea.Brand>, UpdateCommandHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
-            services.AddSingleton<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.Brand>, Domain.Tea.Brand>, CreateCommandHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
+            services.AddScoped<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.Brand>, Domain.Tea.Brand>, UpdateCommandHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
+            services.AddScoped<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.Brand>, Domain.Tea.Brand>, CreateCommandHandler<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>>();
             #endregion (Brands)
 
             #region Country
-            services.AddSingleton<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.Country>, Domain.Tea.Country>, UpdateCommandHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
-            services.AddSingleton<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.Country>, Domain.Tea.Country>, CreateCommandHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
+            services.AddScoped<IAsyncCommandHandler<UpdateCommand<Application.Services.ViewModels.Tea.Country>, Domain.Tea.Country>, UpdateCommandHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
+            services.AddScoped<IAsyncCommandHandler<CreateCommand<Application.Services.ViewModels.Tea.Country>, Domain.Tea.Country>, CreateCommandHandler<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>>();
             #endregion (Country)
 
             #region Dashboard
-            services.AddSingleton<IAsyncCommandHandler<CreateBagsCountByBagTypesCommand>, CreateBagsCountByBagTypesCommandHandler>();
-            services.AddSingleton<IAsyncCommandHandler<CreateBagsCountByBrandsCommand>, CreateBagsCountByBrandsCommandHandler>();
-            services.AddSingleton<IAsyncCommandHandler<CreateBagsCountByInsertDateCommand>, CreateBagsCountByInsertDateCommandHandler>();
-            services.AddSingleton<IAsyncCommandHandler<CreateTotalBagsCountByInsertDateCommand>, CreateTotalBagsCountByInsertDateCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<CreateBagsCountByBagTypesCommand>, CreateBagsCountByBagTypesCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<CreateBagsCountByBrandsCommand>, CreateBagsCountByBrandsCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<CreateBagsCountByInsertDateCommand>, CreateBagsCountByInsertDateCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<CreateTotalBagsCountByInsertDateCommand>, CreateTotalBagsCountByInsertDateCommandHandler>();
             #endregion (Dashboard)
 
-            services.AddSingleton<IAsyncCommandHandler<UploadTeabagImageCommand>, UploadTeabagImageCommandHandler>();
+            services.AddScoped<IAsyncCommandHandler<UploadTeabagImageCommand>, UploadTeabagImageCommandHandler>();
             return services;
         }
 

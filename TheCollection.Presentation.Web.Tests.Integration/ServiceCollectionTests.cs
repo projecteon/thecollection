@@ -120,7 +120,7 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
         public StartUpFixture() {
             var dir = System.IO.Directory.GetCurrentDirectory();
             dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.0", @"TheCollection.Presentation.Web");
-            var hostingEnvironment = A.Fake<IHostingEnvironment>();
+            var hostingEnvironment = A.Fake<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
             A.CallTo(() => hostingEnvironment.ContentRootPath).Returns(dir);
             A.CallTo(() => hostingEnvironment.EnvironmentName).Returns("Test");
             ServiceCollection = new ServiceCollection();

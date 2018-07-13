@@ -126,7 +126,7 @@ namespace TheCollection.Import.Console {
                     }
                 }
 
-                var id = imageRepository.CreateItemAsync(image).Result;
+                var id = await imageRepository.CreateItemAsync(image);
                 insertedImages.Add(new Image(id, image.Filename, uri));
                 insertCounter++;
                 System.Console.WriteLine($"Inserted image#: {insertCounter}");
