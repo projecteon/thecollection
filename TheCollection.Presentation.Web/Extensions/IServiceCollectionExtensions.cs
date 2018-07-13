@@ -340,7 +340,7 @@ namespace TheCollection.Presentation.Web.Extensions {
             serializerSettings.Converters.Add(new TheCollection.Presentation.Web.JsonClaimsIdentityConverter());
             // Create a DocumentClient and an initial collection (if it does not exist yet) for sample purposes
             var client = new DocumentClient(endpointUri, authorizationKey, serializerSettings, new ConnectionPolicy { EnableEndpointDiscovery = false }, null);
-            client.CreateCollectionIfNotExistsAsync(DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.AspNetIdentity).Wait();
+            client.CreateCollectionIfNotExistsAsync(DocumentDBConstants.DatabaseId, DocumentDBConstants.Collections.AspNetIdentity).Wait(); // handle in application start Configure(IApplicationBuilder) or use IHostedService
             return client;
         }
     }

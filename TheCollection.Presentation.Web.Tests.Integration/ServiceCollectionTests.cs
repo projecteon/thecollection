@@ -119,10 +119,10 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
     public class StartUpFixture : IDisposable {
         public StartUpFixture() {
             var dir = System.IO.Directory.GetCurrentDirectory();
-            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.0", @"TheCollection.Presentation.Web");
+            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.1", @"TheCollection.Presentation.Web");
             var hostingEnvironment = A.Fake<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
             A.CallTo(() => hostingEnvironment.ContentRootPath).Returns(dir);
-            A.CallTo(() => hostingEnvironment.EnvironmentName).Returns("Test");
+            A.CallTo(() => hostingEnvironment.EnvironmentName).Returns("test");
             ServiceCollection = new ServiceCollection();
             ServiceCollection.AddSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(XunitLogger<>));
 
