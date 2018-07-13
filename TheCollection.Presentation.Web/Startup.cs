@@ -42,6 +42,13 @@ namespace TheCollection.Presentation.Web {
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = { new StringEnumConverter() },
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
         }
 
         public IConfigurationRoot Configuration { get; }
