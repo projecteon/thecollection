@@ -46,7 +46,7 @@ namespace TheCollection.Presentation.Web.Extensions {
     using TheCollection.Presentation.Web.Repositories;
 
     public static class IServiceCollectionExtensions {
-        public static IServiceCollection WireDependencies(this IServiceCollection services, IConfigurationRoot configuration) {
+        public static IServiceCollection WireDependencies(this IServiceCollection services, IConfiguration configuration) {
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(it =>
@@ -321,7 +321,7 @@ namespace TheCollection.Presentation.Web.Extensions {
             return services;
         }
 
-        public static IServiceCollection AddLoginIdentities(this IServiceCollection services, IConfigurationRoot configuration) {
+        public static IServiceCollection AddLoginIdentities(this IServiceCollection services, IConfiguration configuration) {
 
             // Add framework services.
             // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion

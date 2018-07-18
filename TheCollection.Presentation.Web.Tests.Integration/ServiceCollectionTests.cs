@@ -1,9 +1,11 @@
 namespace TheCollection.Presentation.Web.Tests.Integration {
     using System;
+    using System.IO;
     using FakeItEasy;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using NodaTime;
@@ -118,24 +120,19 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
 
     public class StartUpFixture : IDisposable {
         public StartUpFixture() {
-            var dir = System.IO.Directory.GetCurrentDirectory();
-            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.1", @"TheCollection.Presentation.Web");
-            var hostingEnvironment = A.Fake<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
-            A.CallTo(() => hostingEnvironment.ContentRootPath).Returns(dir);
-            A.CallTo(() => hostingEnvironment.EnvironmentName).Returns("test");
+            var configuration = new ConfigurationBuilder()
+                                        .SetBasePath(Directory.GetCurrentDirectory())
+                                        .AddJsonFile("appsettings.json")
+                                        .Build();
             ServiceCollection = new ServiceCollection();
             ServiceCollection.AddSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(XunitLogger<>));
 
-            var target = new Startup(hostingEnvironment);
+            var target = new Startup(configuration);
             target.ConfigureServices(ServiceCollection);
 
             // Override configuration in startup untill I can find good fakes/mocks
             var fakeUrlHelper = A.Fake<IUrlHelper>();
             ServiceCollection.AddSingleton(fakeUrlHelper);
-
-            //var fakeActionContextAccessor = A.Fake<IActionContextAccessor>();
-            //A.CallTo(() => fakeActionContextAccessor.ActionContext).Returns(new ActionContext());
-            //ServiceCollection.AddSingleton(fakeActionContextAccessor);
 
             var fakeImageRepository = A.Fake<IImageRepository>();
             ServiceCollection.AddSingleton<IImageRepository>(fakeImageRepository);            
