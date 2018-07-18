@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import './ImageZoom.scss'
+import './ImageZoom.scss';
 
 export interface IImageZoomProps extends React.Props<any> {
   imageid: string;

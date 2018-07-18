@@ -24,7 +24,7 @@ namespace TheCollection.Application.Services.Commands.Tea {
             var bagsCountByBrand = countGroupByIRef.GroupAndCountBy(x => x.Brand)
                                                    .OrderByDescending(x => x.Count)
                                                    .Take(30);
-            var dashboard = new Dashboard<IEnumerable<CountBy<RefValue>>>(DashBoardTypes.BagsCountByBagTypes.Key.ToString(), command.User.Id, DashBoardTypes.BagsCountByBagTypes, bagsCountByBrand);
+            var dashboard = new Dashboard<IEnumerable<CountBy<RefValue>>>(DashBoardTypes.BagsCountByBrands.Key.ToString(), command.User.Id, DashBoardTypes.BagsCountByBagTypes, bagsCountByBrand);
             await UpsertRepository.UpsertItemAsync(dashboard.Id, dashboard);
             return new OkResult();
         }

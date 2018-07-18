@@ -1,6 +1,5 @@
-import { fetch, addTask } from 'domain-task';
-import { Action, Reducer, ActionCreator } from 'redux';
-import { AppThunkAction } from '../../store';
+import produce from 'immer';
+import { Reducer } from 'redux';
 import { ITeabag } from '../../interfaces/tea/IBag';
 import {
     CHANGE_BAGTYPE,
@@ -21,7 +20,7 @@ import { ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTy
 import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, changeFlavour, changeHallmark, changeSerialNumber, changeSerie, requestTeabag, saveTeabag } from '../../thunks/tea/bag';
 
 export interface ITeabagState {
-  teabag?: ITeabag;
+  teabag: ITeabag;
   isLoading: boolean;
 }
 
@@ -31,37 +30,51 @@ const emptyRef = {id: '', name: '', canaddnew: true};
 const emptyTeabag: ITeabag = {id: '', brand: emptyRef, country: emptyRef, flavour: '', hallmark: '', imageId: '', serialNumber: '', serie: '', bagtype: emptyRef, iseditable: true};
 const unloadedState: ITeabagState = { isLoading: false, teabag: {} as ITeabag };
 type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryAction | ClearBagTypeAction | ClearBrandAction | ClearCountryAction | ChangeFlavourAction | ChangeHallmarkAction | ChangeSerialNumberAction | ChangeSerieAction | ReceiveTeabagAction | RequestTeabagAction | SaveTeabag;
-export const reducer: Reducer<ITeabagState> = (state: ITeabagState, action: KnownActions) => {
-  switch (action.type) {
-    case REQUEST_TEABAG:
-      return  {...state, ...{ teabag:  {} as ITeabag, isLoading: true }};
-    case RECEIVE_TEABAG:
-      return  {...state, ...{ teabag: action.teabag, isLoading: false }};
-    case CHANGE_BRAND:
-      return {...state, ...{teabag: {...state.teabag, ...{brand: action.brand}}}};
-    case CLEAR_BRAND:
-      return {...state, ...{teabag: {...state.teabag, ...{brand: undefined}}}};
-    case CHANGE_BAGTYPE:
-      return {...state, ...{teabag: {...state.teabag, ...{bagtype: action.bagtype}}}};
-    case CLEAR_BAGTYPE:
-      return {...state, ...{teabag: {...state.teabag, ...{bagtype: undefined}}}};
-    case CHANGE_COUNTRY:
-      return {...state, ...{teabag: {...state.teabag, ...{country: action.country}}}};
-    case CLEAR_COUNTRY:
-      return {...state, ...{teabag: {...state.teabag, ...{country: undefined}}}};
-    case CHANGE_FLAVOUR:
-      return {...state, ...{teabag: {...state.teabag, ...{flavour: action.flavour}}}};
-    case CHANGE_HALLMARK:
-      return {...state, ...{teabag: {...state.teabag, ...{hallmark: action.hallmark}}}};
-    case CHANGE_SERIALNUMBER:
-      return {...state, ...{teabag: {...state.teabag, ...{serialNumber: action.serialnumber}}}};
-    case CHANGE_SERIE:
-      return {...state, ...{teabag: {...state.teabag, ...{serie: action.serie}}}};
-    case SAVE_TEABAG:
-      return {...state, ...{isLoading: true}};
-    default:
-      const exhaustiveCheck: never = action;
-  }
-
-  return state || unloadedState;
-};
+export const reducer: Reducer<ITeabagState, KnownActions> = (state = unloadedState, action) =>
+  produce(state, draft => {
+    switch (action.type) {
+      case REQUEST_TEABAG:
+        draft.teabag = emptyTeabag;
+        draft.isLoading = true;
+        break;
+      case RECEIVE_TEABAG:
+        draft.teabag = action.teabag;
+        draft.isLoading = false;
+        break;
+      case CHANGE_BRAND:
+        draft.teabag.brand = action.brand;
+        break;
+      case CLEAR_BRAND:
+        draft.teabag.brand = emptyRef;
+        break;
+      case CHANGE_BAGTYPE:
+        draft.teabag.bagtype = action.bagtype;
+        break;
+      case CLEAR_BAGTYPE:
+        draft.teabag.bagtype = emptyRef;
+        break;
+      case CHANGE_COUNTRY:
+        draft.teabag.country = action.country;
+        break;
+      case CLEAR_COUNTRY:
+        draft.teabag.country = emptyRef;
+        break;
+      case CHANGE_FLAVOUR:
+        draft.teabag.flavour = action.flavour;
+        break;
+      case CHANGE_HALLMARK:
+        draft.teabag.hallmark = action.hallmark;
+        break;
+      case CHANGE_SERIALNUMBER:
+        draft.teabag.serialNumber = action.serialnumber;
+        break;
+      case CHANGE_SERIE:
+        draft.teabag.serie = action.serie;
+        break;
+      case SAVE_TEABAG:
+        draft.isLoading = true;
+        break;
+      default:
+        const exhaustiveCheck: never = action;
+    }
+  });

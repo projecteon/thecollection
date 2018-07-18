@@ -21,7 +21,7 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
   public state: FileUploadState;
 
   controls: {
-    fileinput?: HTMLInputElement;
+    fileinput?: HTMLInputElement | null;
   } = {};
 
   constructor(props: FileUploadProps) {
@@ -59,7 +59,10 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
     this.props.onDrop(droppedFiles);
   }
 
-  private onDragStart(e: React.DragEvent<HTMLDivElement>) {}
+  private onDragStart(e: React.DragEvent<HTMLDivElement>) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
 
   private onDragEnter(e: React.DragEvent<HTMLDivElement>) {
     this.setState({ draggedCount: this.state.draggedCount + 1 });
@@ -71,21 +74,36 @@ export default class FileUpload extends React.Component<FileUploadProps, FileUpl
     e.dataTransfer.dropEffect = 'copy';
   }
 
-  private onDrag(e: React.DragEvent<HTMLDivElement>) {}
+  private onDrag(e: React.DragEvent<HTMLDivElement>) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
 
   private OnDragLeave(e: React.DragEvent<HTMLDivElement>) {
     this.setState({ draggedCount: this.state.draggedCount - 1 });
   }
 
-   private onDragExit(e: React.DragEvent<HTMLDivElement>) {}
-   private OnDragEnd(e: React.DragEvent<HTMLDivElement>) {}
+  private onDragExit(e: React.DragEvent<HTMLDivElement>) {
+    e.stopPropagation();
+    e.preventDefault();
+
+  }
+
+  private OnDragEnd(e: React.DragEvent<HTMLDivElement>) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
 
   private onFileInput() {
-    this.controls.fileinput.click();
+    if (this.controls.fileinput) {
+      this.controls.fileinput.click();
+    }
   }
 
   private renderFileIcons() {
-    if (this.props.filetypes.length) return undefined;
+    if (this.props.filetypes.length) {
+      return undefined;
+    }
 
     let filetypes = Util.FileUpload.getUniqueFileTypeExtensions(this.props.filetypes);
     let icons = filetypes.map(function (filetype, index) {

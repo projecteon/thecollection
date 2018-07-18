@@ -36,29 +36,26 @@ export function ItemsList<T>(): ComponentClass<IItemListProps<T>> {
 
     }
 
-    onKeyDown(event) {
+    onKeyDown(event: KeyboardEvent) {
       switch (event.key) {
-        case 'ArrowDown': {
-            if (this.state.itemHoverIndex < this.props.items.length - 1) {
-              this.setState({itemHoverIndex: this.state.itemHoverIndex + 1});
-            }
-            event.stopPropagation();
-            event.preventDefault();
+        case 'ArrowDown':
+          if (this.state.itemHoverIndex < this.props.items.length - 1) {
+            this.setState({itemHoverIndex: this.state.itemHoverIndex + 1});
           }
+          event.stopPropagation();
+          event.preventDefault();
           break;
-        case 'ArrowUp': {
-            if (this.state.itemHoverIndex > 0) {
-              this.setState({itemHoverIndex: this.state.itemHoverIndex - 1});
-            }
-            event.stopPropagation();
-            event.preventDefault();
+        case 'ArrowUp':
+          if (this.state.itemHoverIndex > 0) {
+            this.setState({itemHoverIndex: this.state.itemHoverIndex - 1});
           }
-        break;
-        case 'Enter': {
-            this.props.onItemSelected(this.props.items[this.state.itemHoverIndex]);
-            event.stopPropagation();
-            event.preventDefault();
-          }
+          event.stopPropagation();
+          event.preventDefault();
+          break;
+        case 'Enter':
+          this.props.onItemSelected(this.props.items[this.state.itemHoverIndex]);
+          event.stopPropagation();
+          event.preventDefault();
           break;
         default:
           break;

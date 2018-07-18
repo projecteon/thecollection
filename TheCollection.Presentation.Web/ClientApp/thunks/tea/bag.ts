@@ -1,5 +1,4 @@
 import { fetch, addTask } from 'domain-task';
-import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from '../../store';
 import { ITeabag } from '../../interfaces/tea/IBag';
 import { IRefValue } from '../../interfaces/IRefValue';
@@ -90,7 +89,7 @@ export const changeSerialNumber = {
 };
 
 export const requestTeabags = {
-  requestTeabags: (searchTerms?: string): AppThunkAction<Actions.RequestTeabagsAction | Actions.ReceiveTeabagsAction | Actions.SearchTermsError> => (dispatch, getState) => {
+  requestTeabags: (searchTerms: string): AppThunkAction<Actions.RequestTeabagsAction | Actions.ReceiveTeabagsAction | Actions.SearchTermsError> => (dispatch, getState) => {
     if (searchTerms.trim().length < 3) {
       dispatch({ type: Constants.SEARCH_TERMS_ERROR, searchError: 'Requires at least 3 characters to search' });
       return;

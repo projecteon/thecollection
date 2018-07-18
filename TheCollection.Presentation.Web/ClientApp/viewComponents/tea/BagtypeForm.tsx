@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Link, withRouter } from 'react-router';
+import {  withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
 import * as BagtypeReducer from '../../reducers/tea/bagtype';
 import Loader from '../../components/Loader';
-import {IBagType} from '../../interfaces/tea/IBagType';
 
 type BagtypeProps =
     BagtypeReducer.IBagTypeState     // ... state we've requested from the Redux store
@@ -16,7 +15,7 @@ type BagtypeProps =
 class BagtypeForm extends React.Component<BagtypeProps, {}> {
 
   constructor(props: BagtypeProps) {
-    super();
+    super(props);
 
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onAdd = this.onAdd.bind(this);
@@ -90,7 +89,7 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState) => state.bagtype, // selects which state properties are merged into the component's props
+    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.bagtype, // selects which state properties are merged into the component's props
     BagtypeReducer.actionCreators,               // selects which action creators are merged into the component's props
 )(BagtypeForm));
 

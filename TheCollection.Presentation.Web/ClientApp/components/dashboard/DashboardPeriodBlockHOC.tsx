@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import {Component, ComponentClass, StatelessComponent} from 'react';
-import { ChartType } from '../../types/Chart';
 import Loader from '../Loader';
 
 type DashboardPeriodBlockHOCProps = {
@@ -17,7 +16,7 @@ type DashboardPeriodBlockHOCProps = {
 // tslint:disable-next-line:variable-name
 export function DashboardPeriodBlockHOC<T>(BlockComponent: ComponentClass<T> | StatelessComponent<T>): ComponentClass<T & DashboardPeriodBlockHOCProps> {
   return class extends Component<T & DashboardPeriodBlockHOCProps, {}> {
-    constructor(props: T & DashboardPeriodBlockHOCProps) {
+    constructor(props: any) {
       super(props);
 
       this.onNextPeriod = this.onNextPeriod.bind(this);
@@ -26,7 +25,9 @@ export function DashboardPeriodBlockHOC<T>(BlockComponent: ComponentClass<T> | S
     }
 
     onRefresh() {
-      this.props.onRefresh(this.props.chartId);
+      if (this.props.onRefresh) {
+        this.props.onRefresh(this.props.chartId);
+      }
     }
 
     onPerviousPeriod() {

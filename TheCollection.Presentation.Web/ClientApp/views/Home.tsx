@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router';
 
-export default class Home extends React.Component<void, {}> {
+class Home extends React.Component<{} & RouteComponentProps<{}>, {}> {
     public render() {
         return <div>
             <h1>Hello, world!</h1>
@@ -22,3 +23,5 @@ export default class Home extends React.Component<void, {}> {
         </div>;
     }
 }
+
+export default withRouter(Home);

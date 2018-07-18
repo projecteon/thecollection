@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import * as TeaBags from '../reducers/tea/bags';
 import * as Teabag from '../reducers/tea/bag';
 import * as Brand from '../reducers/tea/brand';
@@ -25,6 +26,7 @@ export const reducers = {
 
 // this type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
 // correctly typed to match your store.
+// tslint:disable-next-line:interface-name
 export interface AppThunkAction<TAction> {
     (dispatch: (action: TAction) => void, getState: () => IApplicationState): void | AppThunkAction<TAction>;
 }

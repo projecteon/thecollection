@@ -30,7 +30,7 @@ namespace TheCollection.Application.Services.Commands.Tea {
             var totalBagsCountByPeriods = bagsCountByInsertDate.ToList().Scan((state, item) => {
                 return new CountBy<NodaTime.LocalDate>(item.Value, item.Count + state.Count);
             }, new CountBy<NodaTime.LocalDate>(firstPeriod, 0));
-            var dashboard = new Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>(DashBoardTypes.BagsCountByPeriod.Key.ToString(), command.User.Id, DashBoardTypes.BagsCountByPeriod, totalBagsCountByPeriods);
+            var dashboard = new Dashboard<IEnumerable<CountBy<NodaTime.LocalDate>>>(DashBoardTypes.TotalBagsCountByPeriod.Key.ToString(), command.User.Id, DashBoardTypes.BagsCountByPeriod, totalBagsCountByPeriods);
             await UpsertRepository.UpsertItemAsync(dashboard.Id, dashboard);
             return new OkResult();
         }

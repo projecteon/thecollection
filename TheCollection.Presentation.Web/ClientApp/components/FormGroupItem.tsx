@@ -19,5 +19,5 @@ export function FormGroupItem<T>(InputComponent: ComponentClass<T> | StatelessCo
           </div>
         </div>);
     }
-  }
+  };
 }

@@ -1,15 +1,14 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import * as c3 from 'c3';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
 import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD, BAGSCOUNTBYBRAND, BAGSCOUNTBYBAGTYPES } from '../../constants/tea/dashboard';
-import { getMonthlyPeriodsFromNowTill, getMonthlyPeriodsFromTill, getMonthlyPeriodsYearsBackFrom } from '../../util/PeriodUtil';
+import { getMonthlyPeriodsYearsBackFrom } from '../../util/PeriodUtil';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { DashboardBlockHOC } from '../../components/DashboardBlockHOC';
+import { DashboardBlockHOC } from '../../components/dashboard/DashboardBlockHOC';
 import { DashboardPeriodBlockHOC } from '../../components/dashboard/DashboardPeriodBlockHOC';
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
@@ -32,7 +31,7 @@ type DashboardProps =
 
 class Dashboard extends React.Component<DashboardProps, {}> {
   constructor(props: DashboardProps) {
-    super();
+    super(props);
 
     this.onChartChanged = this.onChartChanged.bind(this);
     this.onNextPeriod = this.onNextPeriod.bind(this);
@@ -58,21 +57,21 @@ class Dashboard extends React.Component<DashboardProps, {}> {
   }
 
   onPerviousPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(-1, 'y'), chartId);
+    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(-1, 'y'), chartId);
   }
   onNextPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId].startDate.clone().add(1, 'y'), chartId);
+    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(1, 'y'), chartId);
   }
 
   onExpandChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
-      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length + 10);
+      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length + 10);
     }
   }
 
   onCompressChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
-      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands.data.length - 10);
+      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length - 10);
     }
   }
 
@@ -124,7 +123,12 @@ class Dashboard extends React.Component<DashboardProps, {}> {
         continue;
       }
 
-      data.push(this.renderCountByRefValueBlock(blockData as DashboardReducer.CountByRefValueTypes, this.props.countByRefValueCharts[blockData]));
+      let key = blockData as DashboardReducer.CountByRefValueTypes;
+      if (this.props.countByRefValueCharts[key] === undefined) {
+        continue;
+      }
+
+      data.push(this.renderCountByRefValueBlock(key, this.props.countByRefValueCharts[key]!));
     }
 
     return data;
@@ -132,7 +136,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
   renderPeriodChart() {
     let data = this.props.countByPeriodCharts.added;
-    if (data === undefined) {
+    if (!data || !data.startDate) {
       return undefined;
     }
 
@@ -150,7 +154,7 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 
   renderTotalPeriodChart() {
     let data = this.props.countByPeriodCharts.totalcount;
-    if (data === undefined) {
+    if (!data || !data.startDate) {
       return undefined;
     }
 

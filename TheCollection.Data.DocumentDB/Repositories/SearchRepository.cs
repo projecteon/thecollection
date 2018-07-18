@@ -19,7 +19,7 @@ namespace TheCollection.Data.DocumentDB.Repositories {
     public class SearchRepository<T> : ISearchRepository<T>, ILinqSearchRepository<T> where T : class {
         private readonly string DatabaseId;
         private readonly string CollectionId;
-        private IDocumentClient client;
+        private readonly IDocumentClient client;
 
         public SearchRepository(IDocumentClient client, string databaseId, string collectionId) {
             DatabaseId = databaseId;

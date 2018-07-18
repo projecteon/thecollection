@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component, ComponentClass } from 'react';
-import debounce from 'lodash/debounce';
+import debounce from 'lodash-es/debounce'; // https://stackoverflow.com/questions/41991178/correct-way-of-importing-and-using-lodash-in-angular, https://medium.com/@martin_hotell/tree-shake-lodash-with-webpack-jest-and-typescript-2734fa13b5cd
 
 import { ItemsList } from './ItemsList';
 
@@ -33,10 +33,10 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
   return class extends Component<IComboBoxProps<T>, IComboBoxState<T>> {
     delayedSearch: ((searchedTerm: string) => void);
     controls: {
-      input?: HTMLInputElement;
+      input?: HTMLInputElement | null;
     } = {};
 
-    constructor(props: IComboBoxProps<T>) {
+    constructor(props: any) {
       super(props);
 
       this.delayedSearch = debounce(this.onSearch, 250); // http://stackoverflow.com/questions/23123138/perform-debounce-in-react-js, https://medium.com/@justintulk/debouncing-reacts-controlled-textareas-w-redux-lodash-4383084ca090
@@ -72,7 +72,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     onBlur() {
-      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty] && this.state.selectedItem[this.props.displayProperty] !== this.props.selectedItem[this.props.displayProperty]) {
+      if (this.state.selectedItem !== undefined && this.state.searchTerm === this.state.selectedItem[this.props.displayProperty] && this.props.selectedItem !== undefined && this.state.selectedItem[this.props.displayProperty] !== this.props.selectedItem[this.props.displayProperty]) {
         this.setState({...this.state, ...{displayResults: false, selectedItem: this.props.selectedItem, searchTerm: this.props.selectedItem === undefined ? this.state.searchTerm : this.props.selectedItem[this.props.displayProperty]}});
         return;
       }
@@ -101,6 +101,10 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     }
 
     onSearchTermChanged() {
+      if (!this.controls.input) {
+        return;
+      }
+
       let searchedTerm = this.controls.input.value;
       this.setState({...this.state, ...{searchTerm: this.controls.input.value, isLoading: true}}, () => this.delayedSearch(searchedTerm));
     }

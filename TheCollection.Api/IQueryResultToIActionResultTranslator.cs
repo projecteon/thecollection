@@ -10,6 +10,8 @@ namespace TheCollection.Api {
                     return new BadRequestObjectResult(e.Message);
                 case Application.Services.Queries.OkResult o:
                     return new OkObjectResult(o.Value);
+                case Application.Services.Queries.NotFoundResult o:
+                    return new NotFoundResult();
                 case null:
                     throw new ArgumentNullException(nameof(source));
                 default:

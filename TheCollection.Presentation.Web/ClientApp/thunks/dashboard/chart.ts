@@ -16,6 +16,7 @@ import {
   UPDATE_COUNTBYREFVALUE,
 } from '../../constants/dashboard/chart';
 import { ChangeChartType, ChangeChartPeriod, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, RequestCountByRefValueAction, UpdateCountByPeriodAction, UpdateCountByRefValueAction } from '../../actions/dashboard/chart';
+import { CountByPeriodTypes, CountByRefValueTypes } from '../../reducers/tea/dashboard';
 
 export const updateCountByRefValue = {
   updateCountByRefValue: (apipath: string, top?: number): AppThunkAction<ReceiveCountByRefValueAction | UpdateCountByRefValueAction> => (dispatch, getState) => {
@@ -31,9 +32,9 @@ export const updateCountByRefValue = {
         dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath }));
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath });
+     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath });
    }
 
    dispatch({ type: REQUEST_COUNTBYREFVALUE, apipath: apipath });
@@ -55,9 +56,9 @@ export const updateCountByPeriod = {
         dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath }));
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath });
+     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath });
    }
 
    dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
@@ -74,9 +75,9 @@ export const requestCountByPeriod = {
         dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath }));
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: undefined, apipath: apipath });
+     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath });
    }
 
    dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
@@ -93,9 +94,9 @@ export const requestCountByRefValue = {
         dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath }));
+      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: undefined, apipath: apipath });
+     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath });
    }
 
    dispatch({ type: REQUEST_COUNTBYREFVALUE, apipath: apipath });
@@ -103,13 +104,13 @@ export const requestCountByRefValue = {
 };
 
 export const changeChartType = {
-  changeChartType: (charttype: ChartType, chartId: string): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
+  changeChartType: (charttype: ChartType, chartId: CountByRefValueTypes): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
     dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chartId: chartId });
   },
 };
 
 export const changeChartPeriod = {
-  changeChartPeriod: (startPeriod: moment.Moment, chartId: string): AppThunkAction<ChangeChartPeriod> => (dispatch, getState) => {
+  changeChartPeriod: (startPeriod: moment.Moment, chartId: CountByPeriodTypes): AppThunkAction<ChangeChartPeriod> => (dispatch, getState) => {
     dispatch({ type: CHANGE_CHARTPERIOD, startPeriod: startPeriod, chartId: chartId });
   },
 };

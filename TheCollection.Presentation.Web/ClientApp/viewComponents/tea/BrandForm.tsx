@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Link, withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
 import * as BrandReducer from '../../reducers/tea/brand';
 import Loader from '../../components/Loader';
-import {IBrand} from '../../interfaces/tea/IBrand';
 
 type BrandProps =
     BrandReducer.IBrandState     // ... state we've requested from the Redux store
@@ -16,7 +15,7 @@ type BrandProps =
 class BrandForm extends React.Component<BrandProps, {}> {
 
   constructor(props: BrandProps) {
-    super();
+    super(props);
 
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onAdd = this.onAdd.bind(this);
@@ -90,7 +89,7 @@ class BrandForm extends React.Component<BrandProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState) => state.brand, // selects which state properties are merged into the component's props
+    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.brand, // selects which state properties are merged into the component's props
     BrandReducer.actionCreators,               // selects which action creators are merged into the component's props
 )(BrandForm));
 

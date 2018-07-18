@@ -4,5 +4,6 @@ namespace TheCollection.Application.Services.Contracts {
 
     public interface IApplicationUser : IUser<Domain.RefValue> {
         IEnumerable<IRole> Roles { get; }
+        string DocumentType { get; }
     }
 }

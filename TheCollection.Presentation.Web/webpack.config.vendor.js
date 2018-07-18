@@ -13,7 +13,8 @@ module.exports = (env) => {
         resolve: { extensions: [ '.js' ] },
         module: {
             rules: [
-                { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
+                { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' },
+                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
             ]
         },
         entry: {
@@ -24,6 +25,8 @@ module.exports = (env) => {
                 'c3',
                 'c3/c3.css',
                 'event-source-polyfill',
+                'history',
+                'moment',
                 'popper.js',
                 'react',
                 'react-dom',
@@ -39,30 +42,23 @@ module.exports = (env) => {
             publicPath: '/dist/',
             filename: '[name].js',
             library: '[name]_[hash]',
+            path: path.join(__dirname, 'wwwroot', 'dist'),
         },
         plugins: [
             new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery', 'window.jQuery': 'jquery', Popper: ['popper.js', 'default'] }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': isDevBuild ? '"development"' : '"production"'
-            })
+            }),
+            extractCSS,
+            new webpack.DllPlugin({
+              path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
+              name: '[name]_[hash]'
+          })
         ]
     };
 
-    const clientBundleConfig = merge(sharedConfig,
-      webpackCommon.loadSass(isDevBuild, 'vendor.css'),
-      {
-        output: { path: path.join(__dirname, 'wwwroot', 'dist') },
-        plugins: [
-            // extractCSS,
-            new webpack.DllPlugin({
-                path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
-                name: '[name]_[hash]'
-            })
-        ].concat(isDevBuild ? [] : [
-            new webpack.optimize.UglifyJsPlugin()
-        ])
-    });
+    const clientBundleConfig = isDevBuild ? sharedConfig : merge(sharedConfig, webpackCommon.loadProduction());
 
     return [clientBundleConfig];
 };

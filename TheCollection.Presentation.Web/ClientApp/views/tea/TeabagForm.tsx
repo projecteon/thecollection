@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
@@ -35,7 +35,7 @@ type TeabagProps =
 class TeabagForm extends React.Component<TeabagProps, {}> {
 
   constructor(props: TeabagProps) {
-    super();
+    super(props);
     this.onAddNewBagType = this.onAddNewBagType.bind(this);
     this.onAddNewBrand = this.onAddNewBrand.bind(this);
     this.onAddNewCountry = this.onAddNewCountry.bind(this);
@@ -49,7 +49,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
       if (this.props.teabag !== undefined && this.props.teabag.id !== this.props.params.id) {
         this.props.requestTeabag(this.props.params.id);
       }
-    } else if (this.props.params.id === undefined && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
+    } else if ((this.props.params === undefined || this.props.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
       this.props.requestTeabag();
     }
   }
@@ -59,7 +59,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
       if (nextProps.teabag !== undefined && nextProps.teabag.id !== nextProps.params.id) {
         this.props.requestTeabag(nextProps.params.id);
       }
-    } else if (nextProps.params.id === undefined && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
+    } else if ((this.props.params === undefined || this.props.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
       this.props.requestTeabag();
     }
   }
@@ -117,7 +117,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
       return undefined;
     }
 
-    return  <button className='btn btn-default' style={{cusor: 'pointer'}} onClick={this.onSave}>
+    return  <button className='btn btn-default' style={{cursor: 'pointer'}} onClick={this.onSave}>
               <span className='fa fa-floppy-o' aria-hidden='true'></span> Save
             </button>;
   }
@@ -152,18 +152,18 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
                                           onAddNew={this.props.teabag.bagtype && this.props.teabag.bagtype.canaddnew ? this.onAddNewBagType : undefined}
                                           onSearch={this.onSearchType}
                                           onItemSelected={this.props.changeBagtype}
-                                          onClear={this.props.teabag.iseditable ? this.props.clearBagtype : undefined}
+                                          onClear={this.props.clearBagtype}
                                           renderItem={this.renderBagTypeComboBoxItem}
                                           displayProperty={'name'}
                                           selectedItem={this.props.teabag.bagtype}
-                                        isReadOnly={this.props.teabag.iseditable === false} />
+                                          isReadOnly={this.props.teabag.iseditable === false} />
                   <CountryInputGroupItem  inputid='inputCountry'
                                           responsiveInputComponentWidth='col-sm-12'
                                           label='Country'
                                           onAddNew={this.props.teabag.country && this.props.teabag.country.canaddnew ? this.onAddNewCountry : undefined}
                                           onSearch={this.onSearchCountry}
                                           onItemSelected={this.props.changeCountry}
-                                          onClear={this.props.teabag.iseditable ? this.props.clearCountry : undefined}
+                                          onClear={this.props.clearCountry}
                                           renderItem={this.renderCountryComboBoxItem}
                                           displayProperty={'name'}
                                           selectedItem={this.props.teabag.country}
@@ -187,7 +187,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState) => state.teabag, // selects which state properties are merged into the component's props
+    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.teabag, // selects which state properties are merged into the component's props
     TeabagReducer.actionCreators,               // selects which action creators are merged into the component's props
 )(TeabagForm));
 

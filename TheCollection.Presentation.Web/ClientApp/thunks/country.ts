@@ -44,7 +44,7 @@ export const addCountry = {
         })
         .then(response => response.json() as Promise<ICountry>)
         .then(data => {
-          dispatch({type: CHANGE_COUNTRY, country: data});
+          dispatch({type: CHANGE_COUNTRY, country: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });

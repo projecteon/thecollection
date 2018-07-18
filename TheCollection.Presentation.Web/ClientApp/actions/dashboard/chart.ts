@@ -3,6 +3,7 @@ import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
 import { Moment } from 'moment';
+import { CountByPeriodTypes, CountByRefValueTypes } from '../../reducers/tea/dashboard';
 
 export type UpdateCountByRefValueAction = {
   type: chart.REQUEST_COUNTBYREFVALUE;
@@ -39,11 +40,11 @@ export type RequestCountByPeriodAction = {
 export type ChangeChartType = {
   type: chart.CHANGE_CHARTTYPE;
   charttype: ChartType;
-  chartId: string;
+  chartId: CountByRefValueTypes;
 };
 
 export type ChangeChartPeriod = {
   type: chart.CHANGE_CHARTPERIOD;
   startPeriod: Moment;
-  chartId: string;
+  chartId: CountByPeriodTypes;
 };

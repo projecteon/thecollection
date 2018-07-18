@@ -22,7 +22,7 @@ namespace TheCollection.Infrastructure.Scheduling.Tea {
         IServiceProvider Services { get; }
 
         public Period Schedule => Period.FromMinutes(20);
-        public bool RunOnStartup => true;
+        public bool RunOnStartup => false;
 
         public async Task ExecuteAsync(CancellationToken cancellationToken) {
             using (var scope = Services.CreateScope()) {

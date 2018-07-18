@@ -15,7 +15,7 @@ type ChartProps = {
 
 // tslint:disable-next-line:variable-name
 export class Chart extends React.Component<ChartProps, {}> {
-  private chart: c3.ChartAPI;
+  private chart: c3.ChartAPI | undefined = undefined;
 
   componentDidMount() {
     this.updateChart(this.props);
@@ -29,16 +29,24 @@ export class Chart extends React.Component<ChartProps, {}> {
     this.destroyChart();
   }
 
-  generateChart(mountNode, config) {
+  generateChart(mountNode: string | HTMLElement | d3.Selection<any> | null, config: c3.ChartConfiguration) {
     const newConfig = Object.assign({ bindto: mountNode }, config);
     return c3.generate(newConfig);
   }
 
-  loadNewData(data) {
-    return this.chart.load(data);
+  loadNewData(data: c3.ChartConfiguration) {
+    if (this.chart === undefined) {
+      return;
+    }
+
+    return this.chart.load(data as any);
   }
 
   destroyChart() {
+    if (this.chart === undefined) {
+      return;
+    }
+
     try {
       this.chart.destroy();
       this.chart = undefined;
@@ -48,7 +56,7 @@ export class Chart extends React.Component<ChartProps, {}> {
   }
 
   updateChart(props: ChartProps) {
-    let config = { data: {
+    let config: c3.ChartConfiguration = { data: {
       columns: props.columns as c3.PrimitiveArray[],
       type: props.chartType,
     }};
@@ -66,10 +74,10 @@ export class Chart extends React.Component<ChartProps, {}> {
     }
 
     if (!this.chart) {
-      this.chart = this.generateChart(findDOMNode(this), config);
+      this.chart = this.generateChart(findDOMNode(this) as HTMLElement, config);
     } else {
       config = Object.assign(config, {columns: config.data.columns});
-      config.data = undefined;
+      config.data = {};
     }
 
     if (props.unloadBeforeLoad) {

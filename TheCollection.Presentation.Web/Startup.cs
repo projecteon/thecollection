@@ -32,7 +32,6 @@ namespace TheCollection.Presentation.Web {
     using TheCollection.Presentation.Web.Repositories;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.AspNetCore.Mvc.Routing;
-  using Microsoft.AspNetCore.Http;
 
   public class Startup {
         public Startup(IHostingEnvironment env) {
@@ -56,39 +55,8 @@ namespace TheCollection.Presentation.Web {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             // wire application
-            services.WireDependencies();
-            services.AddIdentity(Configuration);
-                       
-
-            services.Configure<CookiePolicyOptions>(options => {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.ConfigureApplicationCookie(options => {
-                //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
-                options.LoginPath = $"/Account/{nameof(AccountController.Login)}";
-                options.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
-            });
-
-            // Add external authentication middleware below.
-            // To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
-            // https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
-            services.AddAuthentication()
-            .AddGoogle(options => {
-                options.ClientId = Configuration.GetValue<string>("OAuth:Google:ClientId");
-                options.ClientSecret = Configuration.GetValue<string>("OAuth:Google:ClientSecret");
-            })
-            .AddFacebook(options => {
-                options.AppId = Configuration.GetValue<string>("OAuth:Facebook:ClientId");
-                options.AppSecret = Configuration.GetValue<string>("OAuth:Facebook:ClientSecret");
-            })
-            .AddMicrosoftAccount(options => {
-                options.ClientId = Configuration.GetValue<string>("OAuth:Microsoft:ClientId");
-                options.ClientSecret = Configuration.GetValue<string>("OAuth:Microsoft:ClientSecret");
-            });
+            services.WireDependencies(Configuration);
+            services.AddLoginIdentities(Configuration);
 
             services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
             //services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
@@ -124,11 +92,11 @@ namespace TheCollection.Presentation.Web {
 
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
-                //    HotModuleReplacement = true,
-                //    HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
-                //    ReactHotModuleReplacement = true
-                //});
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                    HotModuleReplacement = true,
+                    //HotModuleReplacementEndpoint = "/dist/__webpack_hmr",
+                    ReactHotModuleReplacement = true
+                });
             }
             else {
                 app.UseExceptionHandler("/Home/Error");
@@ -181,12 +149,12 @@ namespace TheCollection.Presentation.Web {
             }
 
             var _user = userManager.FindByEmailAsync("gledesrus@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != Roles.SystemAdministrator)) {
+            if (_user != null && _user.Roles.None(x => x.Name == Roles.SystemAdministrator)) {
                 roleResult = userManager.AddToRoleAsync(_user, Roles.SystemAdministrator).Result;
             }
 
             _user = userManager.FindByEmailAsync("l.wolterink@hotmail.com").Result;
-            if (_user != null && _user.Roles.None(x => x.Name != Roles.TeaManager)) {
+            if (_user != null && _user.Roles.None(x => x.Name == Roles.TeaManager)) {
                 roleResult = userManager.AddToRoleAsync(_user, Roles.TeaManager).Result;
             }
         }

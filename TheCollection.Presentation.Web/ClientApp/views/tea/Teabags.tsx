@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Mousetrap from 'mousetrap';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as TeaBagsReducer from '../../reducers/tea/bags';
@@ -16,14 +16,14 @@ type TeabagsProps =
 
 class Teabags extends React.Component<TeabagsProps, {}> {
   searchKeyboardShortcut = 'enter';
-  searchinputMouseTrap: MousetrapInstance;
+  searchinputMouseTrap: MousetrapInstance | undefined = undefined;
 
   controls: {
-      searchInput?: HTMLInputElement;
+      searchInput?: HTMLInputElement | null;
     } = {};
 
   constructor(props: TeabagsProps) {
-    super();
+    super(props);
 
     this.onKeyboardSearch = this.onKeyboardSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
@@ -32,19 +32,31 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   }
 
   componentDidMount() {
+    if (!this.controls.searchInput) {
+      return;
+    }
+
     this.searchinputMouseTrap = new Mousetrap(this.controls.searchInput);
-    this.searchinputMouseTrap.stopCallback = function(){ return false; };
-    this.searchinputMouseTrap.bind(this.searchKeyboardShortcut, this.onKeyboardSearch);
+    this.searchinputMouseTrap!.stopCallback = function() { return false; };
+    this.searchinputMouseTrap!.bind(this.searchKeyboardShortcut, this.onKeyboardSearch);
   }
 
   componentWillUnmount() {
+    if (!this.searchinputMouseTrap) {
+      return;
+    }
+
     this.searchinputMouseTrap.unbind(this.searchKeyboardShortcut);
     this.searchinputMouseTrap = undefined;
   }
 
-  onSearchTermsChanged() {
+  onSearchTermsChanged(event: React.ChangeEvent<HTMLInputElement>) {
     event.preventDefault();
     event.stopPropagation();
+    if (!this.controls.searchInput) {
+      return;
+    }
+
     this.props.validateSearchTerms(this.controls.searchInput.value);
   }
 
@@ -60,7 +72,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
     this.props.requestTeabags(this.props.searchedTerms);
   }
 
-  onZoomClicked(imageId?: string) {
+  onZoomClicked(imageId: string) {
     this.props.zoomImage(imageId);
   }
 
@@ -74,7 +86,7 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   renderSearchSuccesses() {
     let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
     let tags = brands.map((brand, index) => { return this.renderSuccessTag(brand, index); });
-    return  <div style={{display: 'flex', flexWrap: 'wrap', paddingleft: 5}}>
+    return  <div style={{display: 'flex', flexWrap: 'wrap', paddingLeft: 5}}>
               <span key={-1} className='labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>
                 <span>Total</span>
                 <span className='badge badge-default'>{this.props.resultCount}</span>

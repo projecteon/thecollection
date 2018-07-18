@@ -20,15 +20,15 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
         private readonly TestServer _server;
         private readonly HttpClient _client;
         public BagsControllerTests() {
-            var dir = System.IO.Directory.GetCurrentDirectory();
-            dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.0", @"TheCollection.Presentation.Web");
-            //_server = new TestServer(new WebHostBuilder()
-            //    .UseStartup<Startup>());
-            _server = new TestServer(Microsoft.AspNetCore.WebHost.CreateDefaultBuilder()
-                .UseStartup<Startup>()
-                .UseContentRoot(dir));
+            //var dir = System.IO.Directory.GetCurrentDirectory();
+            //dir = dir.Replace(@"TheCollection.Presentation.Web.Tests.Integration\bin\Debug\netcoreapp2.1", @"TheCollection.Presentation.Web");
+            ////_server = new TestServer(new WebHostBuilder()
+            ////    .UseStartup<Startup>());
+            //_server = new TestServer(Microsoft.AspNetCore.WebHost.CreateDefaultBuilder()
+            //    .UseStartup<Startup>()
+            //    .UseContentRoot(dir));
 
-            _client = _server.CreateClient();
+            //_client = _server.CreateClient();
         }
 
         [Fact]

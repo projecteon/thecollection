@@ -1,7 +1,6 @@
+import produce from 'immer';
 import * as moment from 'moment';
-import { fetch, addTask } from 'domain-task';
-import { Action, Reducer, ActionCreator } from 'redux';
-import { AppThunkAction } from '../../store';
+import { Reducer } from 'redux';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
@@ -47,83 +46,77 @@ export const actionCreators = {...requestCountByPeriod, ...changeChartType, ...c
 
 type DashboardActions = ReceiveCountByRefValueAction | RequestCountByRefValueAction | ReceiveCountByPeriodAction | RequestCountByPeriodAction | ChangeChartType | ChangeChartPeriod | UpdateCountByPeriodAction | UpdateCountByRefValueAction;
 
-export const reducer: Reducer<IDashboardState> = (state: IDashboardState, action: DashboardActions) => {
-  switch (action.type) {
-    case REQUEST_COUNTBYPERIOD:
-      if (action.apipath === BAGSCOUNTBYPERIOD) {
-        let unloadPeriodCount = {...state.countByPeriodCharts, ...unMapChartDatas('added', state.countByPeriodCharts.added)};
-        return {...state, ...{countByPeriodCharts: unloadPeriodCount}};
-      }
+export const reducer: Reducer<IDashboardState, DashboardActions> = (state = unloadedState, action) =>
+  produce(state, draft => {
+    switch (action.type) {
+      case REQUEST_COUNTBYPERIOD:
+        if (action.apipath === BAGSCOUNTBYPERIOD && state.countByPeriodCharts.added) {
+          draft.countByPeriodCharts.added = unMapChartData(state.countByPeriodCharts.added);
+          break;
+        }
 
-      if (action.apipath === TOTALBAGSCOUNTBYPERIOD) {
-        let unloadPeriodCount = {...state.countByPeriodCharts, ...unMapChartDatas('totalcount', state.countByPeriodCharts.totalcount)};
-        return {...state, ...{countByPeriodCharts: unloadPeriodCount}};
-      }
+        if (action.apipath === TOTALBAGSCOUNTBYPERIOD && state.countByPeriodCharts.totalcount) {
+          draft.countByPeriodCharts.totalcount = unMapChartData(state.countByPeriodCharts.totalcount);
+        }
 
-      return state;
-    case RECIEVE_COUNTBYPERIOD:
-      if (action.apipath === BAGSCOUNTBYPERIOD) {
-        let periodCount = {...state.countByPeriodCharts, ...mapChartDatas('added', state.countByPeriodCharts.added, action.data)};
-        return  {...state, ...{countByPeriodCharts: periodCount}, ...{hasLoadedData: true}};
-      }
+        break;
+      case RECIEVE_COUNTBYPERIOD:
+        draft.hasLoadedData = true;
+        if (action.apipath === BAGSCOUNTBYPERIOD) {
+          draft.countByPeriodCharts.added = mapChartData(state.countByPeriodCharts.added || countbyperiods, action.data);
+          break;
+        }
 
-      if (action.apipath === TOTALBAGSCOUNTBYPERIOD) {
-        let periodCount = {...state.countByPeriodCharts, ...mapChartDatas('totalcount', state.countByPeriodCharts.totalcount, action.data)};
-        return  {...state, ...{countByPeriodCharts: periodCount}, ...{hasLoadedData: true}};
-      }
+        if (action.apipath === TOTALBAGSCOUNTBYPERIOD) {
+          draft.countByPeriodCharts.totalcount = mapChartData(state.countByPeriodCharts.totalcount || totalCountbyperiods, action.data);
+        }
 
-      return state;
-    case CHANGE_CHARTTYPE:
-      let newChartType = {...state.countByRefValueCharts[action.chartId], ...{chartType: action.charttype}};
-      let newChartTypes = {...state.countByRefValueCharts, ...{[action.chartId]: newChartType}};
-      return {...state, ...{countByRefValueCharts: newChartTypes}};
-    case CHANGE_CHARTPERIOD:
-      let newStartPeriod = {...state.countByPeriodCharts[action.chartId], ...{startDate: action.startPeriod}};
-      let newStartPeriods = {...state.countByPeriodCharts, ...{[action.chartId]: newStartPeriod}};
-      return {...state, ...{countByPeriodCharts: newStartPeriods}};
-    case RECIEVE_COUNTBYREFVALUE:
-      if (action.apipath === BAGSCOUNTBYBRAND) {
-        let refValueCount = {...state.countByRefValueCharts, ...mapChartDatas('brands', state.countByRefValueCharts.brands, action.data)};
-        return  {...state, ...{countByRefValueCharts: refValueCount}, ...{hasLoadedData: true}};
-      }
+        break;
+      case CHANGE_CHARTTYPE:
+        if (state.countByRefValueCharts[action.chartId] === undefined) { // https://github.com/Microsoft/TypeScript/issues/14951
+          break;
+        }
 
-      if (action.apipath === BAGSCOUNTBYBAGTYPES) {
-        let refValueCount = {...state.countByRefValueCharts, ...mapChartDatas('bagtypes', state.countByRefValueCharts.bagtypes, action.data)};
-        return  {...state, ...{countByRefValueCharts: refValueCount}, ...{hasLoadedData: true}};
-      }
+        draft.countByRefValueCharts[action.chartId]!.chartType = action.charttype;
+        break;
+      case CHANGE_CHARTPERIOD:
+        if (state.countByPeriodCharts[action.chartId] === undefined) {
+          break;
+        }
 
-      return state;
-    case REQUEST_COUNTBYREFVALUE:
-      if (action.apipath === BAGSCOUNTBYBRAND) {
-        let unloadRefValueCount = {...state.countByRefValueCharts, ...unMapChartDatas('brands', state.countByRefValueCharts.brands)};
-        return {...state, ...{countByRefValueCharts: unloadRefValueCount}};
-      }
+        draft.countByPeriodCharts[action.chartId]!.startDate = action.startPeriod;
+        break;
+      case RECIEVE_COUNTBYREFVALUE:
+        draft.hasLoadedData = true;
+        if (action.apipath === BAGSCOUNTBYBRAND) {
+          draft.countByRefValueCharts.brands = mapChartData(state.countByRefValueCharts.brands || countbybrands, action.data);
+          break;
+        }
 
-      if (action.apipath === BAGSCOUNTBYBAGTYPES) {
-        let unloadRefValueCount = {...state.countByRefValueCharts, ...unMapChartDatas('bagtypes', state.countByRefValueCharts.bagtypes)};
-        return {...state, ...{countByRefValueCharts: unloadRefValueCount}};
-      }
+        if (action.apipath === BAGSCOUNTBYBAGTYPES) {
+          draft.countByRefValueCharts.bagtypes = mapChartData(state.countByRefValueCharts.bagtypes || countbybagtypes, action.data);
+        }
 
-      return state;
-    default:
-      const exhaustiveCheck: never = action;
-  }
+        break;
+      case REQUEST_COUNTBYREFVALUE:
+        if (action.apipath === BAGSCOUNTBYBRAND && state.countByRefValueCharts.brands) {
+          draft.countByRefValueCharts.brands = unMapChartData(state.countByRefValueCharts.brands);
+          break;
+        }
 
-  return state || unloadedState;
-};
+        if (action.apipath === BAGSCOUNTBYBAGTYPES && state.countByRefValueCharts.bagtypes) {
+          draft.countByRefValueCharts.bagtypes = unMapChartData(state.countByRefValueCharts.bagtypes);
+        }
+        break;
+      default:
+        const exhaustiveCheck: never = action;
+    }
+  });
 
-function mapChartDatas<T>(chart: CountByRefValueTypes | CountByPeriodTypes, previousState: CountByChart<T>, newData: ICountBy<T>[]) {
-  return {[chart]: mapChartData(previousState, newData)};
-}
-
-function mapChartData<T>(previousState: CountByChart<T>, newData: ICountBy<T>[]) {
+function mapChartData<T>(previousState: CountByChart<T>, newData: ICountBy<T>[]):  CountByChart<T> {
   return {...previousState, ...{data: newData}, ...{isLoading: false}};
 }
 
-function unMapChartDatas<T>(chart: CountByRefValueTypes | CountByPeriodTypes, previousState: CountByChart<T>) {
-  return {[chart]: unMapChartData(previousState)};
-}
-
-function unMapChartData<T>(previousState: CountByChart<T>) {
+function unMapChartData<T>(previousState: CountByChart<T>): CountByChart<T> {
   return {...previousState, ...{data: []}, ...{isLoading: true}};
 }

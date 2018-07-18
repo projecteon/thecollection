@@ -5,7 +5,7 @@ import { FILE_LOCATION } from '../enums/FileLocation';
 export namespace FileUpload {
   'use strict';
 
-  function generateFileUploadXhr(files: File[], success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress: (progress: number) => void) {
+  function generateFileUploadXhr(files: File[], success: (result: IUploadResult[]) => void, error: (result: string) => void, updateProgress?: (progress: number) => void) {
     let xhr = new XMLHttpRequest();
     xhr.onprogress = (ev: ProgressEvent) => {
       if (ev.lengthComputable && xhr.status < 400 && updateProgress !== undefined) {
@@ -19,7 +19,7 @@ export namespace FileUpload {
         if (xhr.responseText && xhr.responseText.length) {
           try {
             success(JSON.parse(xhr.responseText));
-          } catch (error) {}
+          } catch (error) { console.log('generateFileUploadXhr', error); }
         } else {
           success(JSON.parse(xhr.response));
         }
@@ -143,6 +143,7 @@ export namespace FileUpload {
               return callback(file, view.getUint16(offset + (i * 12) + 8, little));
             }
           }
+        // tslint:disable-next-line:no-bitwise
         } else if ((marker & 0xFF00) !== 0xFF00) {
           break;
         } else {
@@ -151,7 +152,7 @@ export namespace FileUpload {
       }
 
       return callback(file, -1);
-    }.bind(this);
+    }; // .bind(this); // compile error this implicit any
 
     reader.onprogress = function(data) {
       if (data.lengthComputable) {
@@ -187,7 +188,7 @@ export namespace FileUpload {
   }
 
   export function getMimeTypes(filetypes: FILE_TYPE[]): string[] {
-    let mimetypes = filetypes.map(function(filetype: FILE_TYPE){ return getMimeType(filetype); });
+    let mimetypes = filetypes.map(function(filetype: FILE_TYPE) { return getMimeType(filetype); });
     return [...new Set(mimetypes)];
   }
 
@@ -209,7 +210,7 @@ export namespace FileUpload {
   }
 
   export function getUniqueFileTypeExtensions(filetypes: FILE_TYPE[]): string[] {
-    return [...new Set(filetypes.map(function(filetype: FILE_TYPE){ return getFileExtension(filetype); }))];
+    return [...new Set(filetypes.map(function(filetype: FILE_TYPE) { return getFileExtension(filetype); }))];
   }
 }
 

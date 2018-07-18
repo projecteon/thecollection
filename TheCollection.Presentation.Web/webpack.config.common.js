@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
 
-exports.loadUrl = function () {
+exports.loadUrlImages = function () {
   return {
     module: {
       rules: [
@@ -16,6 +17,37 @@ exports.loadUrl = function () {
               }
             }
           ]
+        }
+      ]
+    }
+  }
+};
+
+exports.loadUrlFonts = function () {
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.woff$/,
+          use: [{
+            loader: 'url-loader',
+            options: {
+              limit: 65000,
+              mimetype: 'application/font-woff',
+              name: 'public/fonts/[name].[ext]'
+            }
+          }]
+        },
+        {
+          test: /\.woff2$/,
+          use: [{
+            loader: 'url-loader',
+            options: {
+              limit: 65000,
+              mimetype: 'application/font-woff2',
+              name: 'public/fonts/[name].[ext]'
+            }
+          }]
         }
       ]
     }
@@ -93,7 +125,6 @@ exports.loadTypescript = function() {
         {
           test: /\.ts(x?)$/,
           include: /ClientApp/,
-          exclude: 'node_modules',
           use: rules
         }
       ]
@@ -113,7 +144,7 @@ exports.tsLint = function() {
   }
 }
 
-exports.CheckerPlugin = function() {
+exports.loadCheckerPlugin = function() {
   return {
     plugins: [new CheckerPlugin()]
   }
@@ -130,7 +161,7 @@ exports.loadDlls = function(manifestPath) {
   }
 }
 
-exports.loadDevelopment = function() {
+exports.loadDevelopment = function(clientBundleOutputDir) {
   return {
     plugins: [
       new webpack.SourceMapDevToolPlugin({

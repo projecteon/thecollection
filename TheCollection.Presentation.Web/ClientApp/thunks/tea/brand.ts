@@ -44,7 +44,7 @@ export const addBrand = {
         })
         .then(response => response.json() as Promise<IBrand>)
         .then(data => {
-          dispatch({type: CHANGE_BRAND, brand: data});
+          dispatch({type: CHANGE_BRAND, brand: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });

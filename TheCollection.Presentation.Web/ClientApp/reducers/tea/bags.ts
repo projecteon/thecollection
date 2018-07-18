@@ -1,7 +1,5 @@
-import { Action, Reducer, ActionCreator } from 'redux';
-import { fetch, addTask } from 'domain-task';
-import { AppThunkAction } from '../../store';
-import { ISearchResult } from '../../interfaces/ISearchResult';
+import produce from 'immer';
+import { Reducer } from 'redux';
 import { ITeabag } from '../../interfaces/tea/IBag';
 import {
   RECEIVE_TEABAGS,
@@ -31,31 +29,31 @@ export interface ITeabagsState {
 export const actionCreators = {...requestTeabags, ...validateSearchTerms, ...zoomImage};
 
 const unloadedState: ITeabagsState = { isLoading: false, teabags: [], searchError: '', searchedTerms: '' };
-type KnownActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | SearchTermsChanged | ZoomImage;
-export const reducer: Reducer<ITeabagsState> = (state: ITeabagsState, action: KnownActions) => {
-  switch (action.type) {
-    case REQUEST_TEABAGS:
-      return {...state, ...{
-        searchedTerms: action.searchTerms,
-        teabags: [],
-        isLoading: true,
-      }};
-    case RECEIVE_TEABAGS:
-      return {...state, ...{
-          searchedTerms: action.searchTerms,
-          teabags: action.teabags,
-          resultCount: action.resultCount,
-          isLoading: false,
-        }};
-    case SEARCH_TERMS_ERROR:
-      return {...state, ...{searchError: action.searchError}};
-    case SEARCH_TERMS_CHANGED:
-        return {...state, ...{searchedTerms: action.searchTerms}};
-    case ZOOM_IMAGE_TOGGLE:
-      return {...state, ...{zoomImageId: action.imageid}};
-    default:
-      const exhaustiveCheck: never = action;
-  }
-
-  return state || unloadedState;
-};
+type BagsActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsError | SearchTermsChanged | ZoomImage;
+export const reducer: Reducer<ITeabagsState, BagsActions> = (state = unloadedState, action) =>
+  produce(state, draft => {
+    switch (action.type) {
+      case REQUEST_TEABAGS:
+        draft.searchedTerms = action.searchTerms;
+        draft.teabags = [];
+        draft.isLoading = true;
+        break;
+      case RECEIVE_TEABAGS:
+        draft.searchedTerms = action.searchTerms;
+        draft.teabags = action.teabags;
+        draft.resultCount = action.resultCount;
+        draft.isLoading = false;
+        break;
+      case SEARCH_TERMS_ERROR:
+        draft.searchError = action.searchError;
+        break;
+      case SEARCH_TERMS_CHANGED:
+        draft.searchedTerms = action.searchTerms;
+        break;
+      case ZOOM_IMAGE_TOGGLE:
+        draft.zoomImageId = action.imageid;
+        break;
+      default:
+        const exhaustiveCheck: never = action;
+    }
+  });

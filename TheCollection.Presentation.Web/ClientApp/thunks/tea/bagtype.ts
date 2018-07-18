@@ -1,7 +1,7 @@
 import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../../store';
-import { IBagType } from '../../interfaces/tea/IBagtype';
+import { IBagType } from '../../interfaces/tea/IBagType';
 import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
 import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
 
@@ -44,7 +44,7 @@ export const addBagtype = {
         })
         .then(response => response.json() as Promise<IBagType>)
         .then(data => {
-          dispatch({type: CHANGE_BAGTYPE, bagtype: data});
+          dispatch({type: CHANGE_BAGTYPE, bagtype: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });

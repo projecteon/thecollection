@@ -4,6 +4,8 @@ namespace TheCollection.Presentation.Web.Extensions {
     using System.Linq;
     using AspNetCore.Identity.DocumentDb;
     using AspNetCore.Identity.DocumentDb.Tools;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -39,17 +41,23 @@ namespace TheCollection.Presentation.Web.Extensions {
     using TheCollection.Infrastructure.Scheduling;
     using TheCollection.Infrastructure.Scheduling.Tea;
     using TheCollection.Presentation.Web.Constants;
+    using TheCollection.Presentation.Web.Controllers;
     using TheCollection.Presentation.Web.Models;
     using TheCollection.Presentation.Web.Repositories;
 
     public static class IServiceCollectionExtensions {
-        public static IServiceCollection WireDependencies(this IServiceCollection services) {
+        public static IServiceCollection WireDependencies(this IServiceCollection services, IConfigurationRoot configuration) {
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(it =>
-                    it.GetRequiredService<IUrlHelperFactory>()
-                      .GetUrlHelper(it.GetRequiredService<IActionContextAccessor>().ActionContext)
-                );
+                it.GetRequiredService<IUrlHelperFactory>()
+                    .GetUrlHelper(it.GetRequiredService<IActionContextAccessor>().ActionContext)
+            );
+
+            services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
+                configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
+                configuration.GetValue<string>("DocumentDbClient:AuthorizationKey"))
+            );
 
 
             services.AddSingleton<IClock>(SystemClock.Instance);
@@ -60,7 +68,7 @@ namespace TheCollection.Presentation.Web.Extensions {
             services.AddQueries();
             services.AddCommands();
             services.AddNotificationServices();
-            // services.AddSchedulingServices();
+            services.AddSchedulingServices();
             return services;
         }
 
@@ -74,22 +82,22 @@ namespace TheCollection.Presentation.Web.Extensions {
             #endregion (Domain models to view models)
 
             #region View models to domain models
-            services.AddSingleton<ITranslator<Application.Services.ViewModels.RefValue, Domain.RefValue>, RefValueDtoToRefValueTranslator>();
-            services.AddSingleton<ITranslator<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag, Domain.Tea.Bag>, BagViewModelToUpdateBagTranslator>();
-            services.AddSingleton<IAsyncTranslator<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, BagViewModelToCreateBagTranslator>();
-            services.AddSingleton<ITranslator<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, BagTypeDtoToBagTypeTranslator>();
-            services.AddSingleton<ITranslator<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, BrandDtoToBrandTranslator>();
-            services.AddSingleton<ITranslator<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, CountryViewModelToCountryTranslator>();
+            services.AddScoped<ITranslator<Application.Services.ViewModels.RefValue, Domain.RefValue>, RefValueDtoToRefValueTranslator>();
+            services.AddScoped<ITranslator<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag, Domain.Tea.Bag>, BagViewModelToUpdateBagTranslator>();
+            services.AddScoped<IAsyncTranslator<Application.Services.ViewModels.Tea.Bag, Domain.Tea.Bag>, BagViewModelToCreateBagTranslator>();
+            services.AddScoped<ITranslator<Application.Services.ViewModels.Tea.BagType, Domain.Tea.BagType>, BagTypeDtoToBagTypeTranslator>();
+            services.AddScoped<ITranslator<Application.Services.ViewModels.Tea.Brand, Domain.Tea.Brand>, BrandDtoToBrandTranslator>();
+            services.AddScoped<ITranslator<Application.Services.ViewModels.Tea.Country, Domain.Tea.Country>, CountryViewModelToCountryTranslator>();
             #endregion (View models to domain models)
 
-            services.AddSingleton<ITranslator<ICommandResult, IActionResult>, ICommandResultToIActionResultTranslator>();
-            services.AddSingleton<ITranslator<IQueryResult, IActionResult>, IQueryResultToIActionResultTranslator>();
+            services.AddScoped<ITranslator<ICommandResult, IActionResult>, ICommandResultToIActionResultTranslator>();
+            services.AddScoped<ITranslator<IQueryResult, IActionResult>, IQueryResultToIActionResultTranslator>();
             return services;
         }
 
         public static IServiceCollection AddRepositories(this IServiceCollection services) {
             services.AddScoped<IGetRepository<IApplicationUser>, WebUserRepository>();
-            services.AddSingleton<ILinqSearchRepository<IApplicationUser>, WebUserRepository>();
+            services.AddScoped<IGetAllRepository<IApplicationUser>, WebUserRepository>();
 
             services.AddScoped<IActivityAuthorizer, ActivityAuthorizer>();
             services.AddSingleton<ILinqSearchRepository<IActivity>>(serviceProvider => {
@@ -313,11 +321,7 @@ namespace TheCollection.Presentation.Web.Extensions {
             return services;
         }
 
-        public static IServiceCollection AddIdentity(this IServiceCollection services, IConfigurationRoot configuration) {
-            services.AddSingleton<IDocumentClient>(InitializeDocumentClient(
-                configuration.GetValue<Uri>("DocumentDbClient:EndpointUri"),
-                configuration.GetValue<string>("DocumentDbClient:AuthorizationKey"))
-            );
+        public static IServiceCollection AddLoginIdentities(this IServiceCollection services, IConfigurationRoot configuration) {
 
             // Add framework services.
             // consider: https://github.com/imranbaloch/ASPNETIdentityWithOnion
@@ -328,6 +332,36 @@ namespace TheCollection.Presentation.Web.Extensions {
                 options.Database = DocumentDBConstants.DatabaseId;
             })
             .AddDefaultTokenProviders();
+
+            services.Configure<CookiePolicyOptions>(options => {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.ConfigureApplicationCookie(options => {
+                //options.DataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo("C:\\TheCollection\\Identity\\artifacts"));
+                options.LoginPath = $"/Account/{nameof(AccountController.Login)}";
+                options.LogoutPath = $"/Account/{nameof(AccountController.LogOff)}";
+            });
+
+            // Add external authentication middleware below.
+            // To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+            // https://docs.microsoft.com/en-gb/aspnet/core/security/authentication/social/index
+            // https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x
+            services.AddAuthentication()
+            .AddGoogle(options => {
+                options.ClientId = configuration.GetValue<string>("OAuth:Google:ClientId");
+                options.ClientSecret = configuration.GetValue<string>("OAuth:Google:ClientSecret");
+            })
+            .AddFacebook(options => {
+                options.AppId = configuration.GetValue<string>("OAuth:Facebook:ClientId");
+                options.AppSecret = configuration.GetValue<string>("OAuth:Facebook:ClientSecret");
+            })
+            .AddMicrosoftAccount(options => {
+                options.ClientId = configuration.GetValue<string>("OAuth:Microsoft:ClientId");
+                options.ClientSecret = configuration.GetValue<string>("OAuth:Microsoft:ClientSecret");
+            });
 
             return services;
         }

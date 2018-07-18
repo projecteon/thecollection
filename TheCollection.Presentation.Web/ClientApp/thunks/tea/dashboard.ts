@@ -1,12 +1,8 @@
 import { fetch, addTask } from 'domain-task';
-import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { ChartType } from '../../types/Chart';
-import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE} from '../../constants/dashboard/chart';
 import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
-import { ReceiveCountByPeriodAction, RequestCountByPeriodAction, ChangeChartType } from '../../actions/dashboard/chart';
 import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction} from '../../actions/tea/dashboard';
 
 export const requestBagTypeCount = {
@@ -18,9 +14,9 @@ export const requestBagTypeCount = {
           dispatch({ type: RECIEVE_BAGTYPECOUNT, data: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_BAGTYPECOUNT, data: undefined }));
+      .catch(() => dispatch({ type: RECIEVE_BAGTYPECOUNT, data: [] }));
     } catch (err) {
-      dispatch({ type: RECIEVE_BAGTYPECOUNT, data: undefined });
+      dispatch({ type: RECIEVE_BAGTYPECOUNT, data: [] });
     }
 
     dispatch({ type: REQUEST_BAGTYPECOUNT });
@@ -36,9 +32,9 @@ export const requestBrandCount = {
           dispatch({ type: RECIEVE_BRANDCOUNT, data: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
         })
-        .catch(() => dispatch({ type: RECIEVE_BRANDCOUNT, data: undefined }));
+        .catch(() => dispatch({ type: RECIEVE_BRANDCOUNT, data: [] }));
    } catch (err) {
-     dispatch({ type: RECIEVE_BRANDCOUNT, data: undefined });
+     dispatch({ type: RECIEVE_BRANDCOUNT, data: [] });
    }
 
    dispatch({ type: REQUEST_BRANDCOUNT });

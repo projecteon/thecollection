@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Component, ComponentClass} from 'react';
+import {Component, ComponentClass, StatelessComponent} from 'react';
 
 // tslint:disable-next-line:variable-name
 export function PopupHOC<T>(PopupComponent: ComponentClass<T>): ComponentClass<T> {
