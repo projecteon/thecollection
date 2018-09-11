@@ -1,11 +1,14 @@
-import { FIELD_ERROR, MODEL_ERROR } from '../constants/validation';
+export enum ValidationActionTypes {
+  FieldError = 'FieldError',
+  ModelError = 'ModelError',
+}
 
 export type FieldErrorAction = {
-  type: FIELD_ERROR;
+  type: ValidationActionTypes.FieldError;
   error: {field: string, message: string};
 };
 
 export type ModelErrorAction = {
-  type: MODEL_ERROR;
+  type: ValidationActionTypes.ModelError;
   errorMessage: string;
 };

@@ -1,8 +1,7 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { ICountry } from '../interfaces/ICountry';
-import { ADD_COUNTRY, CHANGE_NAME, RECIEVE_COUNTRY, REQUEST_COUNTRY } from '../constants/country';
-import { AddCountryAction, ChangeNameAction, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
+import { AddCountryAction, ChangeNameAction, CountryActionTypes, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
 import { addCountry, changeName, requestCountry } from '../thunks/country';
 
 export interface ICountryState {
@@ -17,19 +16,19 @@ type CountryActions = AddCountryAction | ChangeNameAction | ReceiveCountryAction
 export const reducer: Reducer<ICountryState, CountryActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_COUNTRY:
+      case CountryActionTypes.Request:
         draft.country = {} as ICountry;
         draft.isLoading = true;
         break;
-      case RECIEVE_COUNTRY:
+      case CountryActionTypes.Recieve:
         draft.country = action.country;
         draft.isLoading = false;
         break;
-      case ADD_COUNTRY:
+      case CountryActionTypes.Add:
         draft.country = action.country;
         draft.isLoading = false;
         break;
-      case CHANGE_NAME:
+      case CountryActionTypes.ChangeName:
         draft.isLoading = false;
         if (draft.country === undefined) {
           break;

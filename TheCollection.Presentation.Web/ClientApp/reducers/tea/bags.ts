@@ -2,13 +2,7 @@ import produce from 'immer';
 import { Reducer } from 'redux';
 import { ITeabag } from '../../interfaces/tea/IBag';
 import {
-  RECEIVE_TEABAGS,
-  REQUEST_TEABAGS,
-  SEARCH_TERMS_CHANGED,
-  SEARCH_TERMS_ERROR,
-  ZOOM_IMAGE_TOGGLE,
-} from '../../constants/tea/bag';
-import {
+  BagActionTypes,
   ReceiveTeabagsAction,
   RequestTeabagsAction,
   SearchTermsChanged,
@@ -33,24 +27,24 @@ type BagsActions = RequestTeabagsAction | ReceiveTeabagsAction | SearchTermsErro
 export const reducer: Reducer<ITeabagsState, BagsActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_TEABAGS:
+      case BagActionTypes.RequestBags:
         draft.searchedTerms = action.searchTerms;
         draft.teabags = [];
         draft.isLoading = true;
         break;
-      case RECEIVE_TEABAGS:
+      case BagActionTypes.RecieveBags:
         draft.searchedTerms = action.searchTerms;
         draft.teabags = action.teabags;
         draft.resultCount = action.resultCount;
         draft.isLoading = false;
         break;
-      case SEARCH_TERMS_ERROR:
+      case BagActionTypes.SearchTermsError:
         draft.searchError = action.searchError;
         break;
-      case SEARCH_TERMS_CHANGED:
+      case BagActionTypes.SearchTermsChanged:
         draft.searchedTerms = action.searchTerms;
         break;
-      case ZOOM_IMAGE_TOGGLE:
+      case BagActionTypes.ZoomImageToggle:
         draft.zoomImageId = action.imageid;
         break;
       default:

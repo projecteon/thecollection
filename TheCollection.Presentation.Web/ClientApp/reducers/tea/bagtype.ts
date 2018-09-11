@@ -1,8 +1,7 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { IBagType } from '../../interfaces/tea/IBagType';
-import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
-import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
+import { AddBagtypeAction, BagTypeActionTypes, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
 import { addBagtype, changeName, requestBagtype } from '../../thunks/tea/bagtype';
 
 export interface IBagTypeState {
@@ -17,19 +16,19 @@ type BagtypeActions = AddBagtypeAction | ChangeNameAction | ReceiveBagtypeAction
 export const reducer: Reducer<IBagTypeState, BagtypeActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_BAGTYPE:
+      case BagTypeActionTypes.Request:
         draft.bagtype = {} as IBagType;
         draft.isLoading = true;
         break;
-      case RECIEVE_BAGTYPE:
+      case BagTypeActionTypes.Recieve:
         draft.bagtype = action.bagtype;
         draft.isLoading = false;
         break;
-      case ADD_BAGTYPE:
+      case BagTypeActionTypes.Add:
         draft.bagtype = action.bagtype;
         draft.isLoading = false;
         break;
-      case CHANGE_NAME:
+      case BagTypeActionTypes.ChangeName:
         draft.isLoading = false;
         if (draft.bagtype === undefined) {
           break;

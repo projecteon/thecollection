@@ -1,22 +1,7 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { ITeabag } from '../../interfaces/tea/IBag';
-import {
-    CHANGE_BAGTYPE,
-    CHANGE_BRAND,
-    CHANGE_COUNTRY,
-    CHANGE_FLAVOUR,
-    CHANGE_HALLMARK,
-    CHANGE_SERIALNUMBER,
-    CHANGE_SERIE,
-    CLEAR_BAGTYPE,
-    CLEAR_BRAND,
-    CLEAR_COUNTRY,
-    RECEIVE_TEABAG,
-    REQUEST_TEABAG,
-    SAVE_TEABAG,
-} from '../../constants/tea/bag';
-import { ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTypeAction, ClearBrandAction, ClearCountryAction, ChangeFlavourAction, ChangeHallmarkAction, ChangeSerialNumberAction, ChangeSerieAction, ReceiveTeabagAction, RequestTeabagAction, SaveTeabag } from '../../actions/tea/bag';
+import { BagActionTypes, ChangeBagTypeAction, ChangeBrandAction, ChangeCountryAction, ClearBagTypeAction, ClearBrandAction, ClearCountryAction, ChangeFlavourAction, ChangeHallmarkAction, ChangeSerialNumberAction, ChangeSerieAction, ReceiveTeabagAction, RequestTeabagAction, SaveTeabag } from '../../actions/tea/bag';
 import { changeBagtype, changeBrand, changeCountry, clearBagtype, clearBrand, clearCountry, changeFlavour, changeHallmark, changeSerialNumber, changeSerie, requestTeabag, saveTeabag } from '../../thunks/tea/bag';
 
 export interface ITeabagState {
@@ -33,45 +18,45 @@ type KnownActions = ChangeBagTypeAction | ChangeBrandAction | ChangeCountryActio
 export const reducer: Reducer<ITeabagState, KnownActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_TEABAG:
+      case BagActionTypes.RequestBag:
         draft.teabag = emptyTeabag;
         draft.isLoading = true;
         break;
-      case RECEIVE_TEABAG:
+      case BagActionTypes.RecieveBag:
         draft.teabag = action.teabag;
         draft.isLoading = false;
         break;
-      case CHANGE_BRAND:
+      case BagActionTypes.ChangeBrand:
         draft.teabag.brand = action.brand;
         break;
-      case CLEAR_BRAND:
+      case BagActionTypes.ClearBrand:
         draft.teabag.brand = emptyRef;
         break;
-      case CHANGE_BAGTYPE:
+      case BagActionTypes.ChangeBagType:
         draft.teabag.bagtype = action.bagtype;
         break;
-      case CLEAR_BAGTYPE:
+      case BagActionTypes.ClearBagType:
         draft.teabag.bagtype = emptyRef;
         break;
-      case CHANGE_COUNTRY:
+      case BagActionTypes.ChangeCountry:
         draft.teabag.country = action.country;
         break;
-      case CLEAR_COUNTRY:
+      case BagActionTypes.ClearCountry:
         draft.teabag.country = emptyRef;
         break;
-      case CHANGE_FLAVOUR:
+      case BagActionTypes.ChangeFlavor:
         draft.teabag.flavour = action.flavour;
         break;
-      case CHANGE_HALLMARK:
+      case BagActionTypes.ChangeHallmark:
         draft.teabag.hallmark = action.hallmark;
         break;
-      case CHANGE_SERIALNUMBER:
+      case BagActionTypes.ChangeSerialNumber:
         draft.teabag.serialNumber = action.serialnumber;
         break;
-      case CHANGE_SERIE:
+      case BagActionTypes.ChangeSerie:
         draft.teabag.serie = action.serie;
         break;
-      case SAVE_TEABAG:
+      case BagActionTypes.Save:
         draft.isLoading = true;
         break;
       default:

@@ -2,16 +2,14 @@ import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../../store';
 import { IBagType } from '../../interfaces/tea/IBagType';
-import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
-import { AddBagtypeAction, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
+import { BagTypeActionTypes, ChangeNameAction, ReceiveBagtypeAction, RequestBagtypeAction } from '../../actions/tea/bagtype';
 
-import { CHANGE_BAGTYPE } from '../../constants/tea/bag';
-import { ChangeBagTypeAction } from '../../actions/tea/bag';
+import { BagActionTypes, ChangeBagTypeAction } from '../../actions/tea/bag';
 
 export const requestBagtype = {
    requestBagtype: (bagtypeid?: string): AppThunkAction<ReceiveBagtypeAction | RequestBagtypeAction> => (dispatch, getState) => {
     if (bagtypeid === undefined) {
-      dispatch({ type: RECIEVE_BAGTYPE, bagtype: {} as IBagType });
+      dispatch({ type: BagTypeActionTypes.Recieve, bagtype: {} as IBagType });
       return;
     }
 
@@ -19,14 +17,14 @@ export const requestBagtype = {
       let fetchTask = fetch(`/api/Tea/BagTypes/${bagtypeid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBagType>)
         .then(data => {
-          dispatch({ type: RECIEVE_BAGTYPE, bagtype: data });
+          dispatch({ type: BagTypeActionTypes.Recieve, bagtype: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: RECIEVE_BAGTYPE, bagtype: {} as IBagType });
+      dispatch({ type: BagTypeActionTypes.Recieve, bagtype: {} as IBagType });
     }
 
-    dispatch({ type: REQUEST_BAGTYPE, bagtypeid: bagtypeid });
+    dispatch({ type: BagTypeActionTypes.Request, bagtypeid: bagtypeid });
   },
  };
 
@@ -44,7 +42,7 @@ export const addBagtype = {
         })
         .then(response => response.json() as Promise<IBagType>)
         .then(data => {
-          dispatch({type: CHANGE_BAGTYPE, bagtype: {...data, ...{canaddnew: true}}});
+          dispatch({type: BagActionTypes.ChangeBagType, bagtype: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });
@@ -56,6 +54,6 @@ export const addBagtype = {
 
 export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
-    dispatch({type: CHANGE_NAME, name: name});
+    dispatch({type: BagTypeActionTypes.ChangeName, name: name});
   },
  };

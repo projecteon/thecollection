@@ -1,25 +1,14 @@
 import * as moment from 'moment';
 import { fetch, addTask } from 'domain-task';
-import { routerActions, RouterAction } from 'react-router-redux';
 import {IRefValue} from '../../interfaces/IRefValue';
 import {ICountBy} from '../../interfaces/ICountBy';
 import { AppThunkAction } from '../../store';
 import { ChartType } from '../../types/Chart';
-import {
-  CHANGE_CHARTPERIOD,
-  CHANGE_CHARTTYPE,
-  RECIEVE_COUNTBYREFVALUE,
-  RECIEVE_COUNTBYPERIOD,
-  REQUEST_COUNTBYPERIOD,
-  REQUEST_COUNTBYREFVALUE,
-  UPDATE_COUNTBYPERIOD,
-  UPDATE_COUNTBYREFVALUE,
-} from '../../constants/dashboard/chart';
-import { ChangeChartType, ChangeChartPeriod, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, RequestCountByRefValueAction, UpdateCountByPeriodAction, UpdateCountByRefValueAction } from '../../actions/dashboard/chart';
+import { ChangeChartType, ChangeChartPeriod, ChartActionTypes, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, RequestCountByRefValueAction } from '../../actions/dashboard/chart';
 import { CountByPeriodTypes, CountByRefValueTypes } from '../../reducers/tea/dashboard';
 
 export const updateCountByRefValue = {
-  updateCountByRefValue: (apipath: string, top?: number): AppThunkAction<ReceiveCountByRefValueAction | UpdateCountByRefValueAction> => (dispatch, getState) => {
+  updateCountByRefValue: (apipath: string, top?: number): AppThunkAction<ReceiveCountByRefValueAction | RequestCountByRefValueAction> => (dispatch, getState) => {
    try {
     let path = top === undefined ? apipath : apipath + top;
     let fetchTask = fetch(path, {
@@ -29,20 +18,20 @@ export const updateCountByRefValue = {
       })
       .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
       .then(data => {
-        dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: data, apipath: apipath });
+        dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath }));
+      .catch(() => dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath });
+     dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: [], apipath: apipath });
    }
 
-   dispatch({ type: REQUEST_COUNTBYREFVALUE, apipath: apipath });
+   dispatch({ type: ChartActionTypes.RequestCountByRefValue, apipath: apipath });
  },
 };
 
 export const updateCountByPeriod = {
-  updateCountByPeriod: (apipath: string, top?: number): AppThunkAction<ReceiveCountByPeriodAction | UpdateCountByPeriodAction> => (dispatch, getState) => {
+  updateCountByPeriod: (apipath: string, top?: number): AppThunkAction<ReceiveCountByPeriodAction | RequestCountByPeriodAction> => (dispatch, getState) => {
    try {
     let path = top === undefined ? apipath : apipath + top;
     let fetchTask = fetch(path, {
@@ -53,15 +42,15 @@ export const updateCountByPeriod = {
       .then(response => response.json() as Promise<ICountBy<string>[]>)
       .then(data => data.map(x => { return {count: x.count, value: moment(x.value)}; }))
       .then(data => {
-        dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
+        dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath }));
+      .catch(() => dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath });
+     dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: [], apipath: apipath });
    }
 
-   dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
+   dispatch({ type: ChartActionTypes.RequestCountByCountPeriod, apipath: apipath });
  },
 };
 
@@ -72,15 +61,15 @@ export const requestCountByPeriod = {
       .then(response => response.json() as Promise<ICountBy<string>[]>)
       .then(data => data.map(x => { return {count: x.count, value: moment(x.value)}; }))
       .then(data => {
-        dispatch({ type: RECIEVE_COUNTBYPERIOD, data: data, apipath: apipath });
+        dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath }));
+      .catch(() => dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYPERIOD, data: [], apipath: apipath });
+     dispatch({ type: ChartActionTypes.RecieveCountByCountPeriod, data: [], apipath: apipath });
    }
 
-   dispatch({ type: REQUEST_COUNTBYPERIOD, apipath: apipath });
+   dispatch({ type: ChartActionTypes.RequestCountByCountPeriod, apipath: apipath });
  },
 };
 
@@ -91,26 +80,26 @@ export const requestCountByRefValue = {
     let fetchTask = fetch(path, { credentials: 'same-origin' })
       .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
       .then(data => {
-        dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: data, apipath: apipath });
+        dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: data, apipath: apipath });
         addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath }));
+      .catch(() => dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: [], apipath: apipath }));
    } catch (err) {
-     dispatch({ type: RECIEVE_COUNTBYREFVALUE, data: [], apipath: apipath });
+     dispatch({ type: ChartActionTypes.RecieveCountByRefValue, data: [], apipath: apipath });
    }
 
-   dispatch({ type: REQUEST_COUNTBYREFVALUE, apipath: apipath });
+   dispatch({ type: ChartActionTypes.RequestCountByRefValue, apipath: apipath });
  },
 };
 
 export const changeChartType = {
   changeChartType: (charttype: ChartType, chartId: CountByRefValueTypes): AppThunkAction<ChangeChartType> => (dispatch, getState) => {
-    dispatch({ type: CHANGE_CHARTTYPE, charttype: charttype, chartId: chartId });
+    dispatch({ type: ChartActionTypes.ChangeChartType, charttype: charttype, chartId: chartId });
   },
 };
 
 export const changeChartPeriod = {
   changeChartPeriod: (startPeriod: moment.Moment, chartId: CountByPeriodTypes): AppThunkAction<ChangeChartPeriod> => (dispatch, getState) => {
-    dispatch({ type: CHANGE_CHARTPERIOD, startPeriod: startPeriod, chartId: chartId });
+    dispatch({ type: ChartActionTypes.ChangeChartPeriod, startPeriod: startPeriod, chartId: chartId });
   },
 };

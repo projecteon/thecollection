@@ -1,8 +1,7 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { IBrand } from '../../interfaces/tea/IBrand';
-import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../../constants/tea/brand';
-import { AddBrandAction, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
+import { AddBrandAction, BrandActionTypes, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
 import { addBrand, changeName, requestBrand } from '../../thunks/tea/brand';
 
 export interface IBrandState {
@@ -17,19 +16,19 @@ type BrandActions = AddBrandAction | ChangeNameAction | ReceiveBrandAction | Req
 export const reducer: Reducer<IBrandState, BrandActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_BRAND:
+      case BrandActionTypes.Request:
         draft.brand = {} as IBrand;
         draft.isLoading = true;
         break;
-      case RECIEVE_BRAND:
+      case BrandActionTypes.Recieve:
         draft.brand = action.brand;
         draft.isLoading = false;
         break;
-      case ADD_BRAND:
+      case BrandActionTypes.Add:
         draft.brand = action.brand;
         draft.isLoading = false;
         break;
-      case CHANGE_NAME:
+      case BrandActionTypes.ChangeName:
         draft.isLoading = false;
         if (draft.brand === undefined) {
           break;

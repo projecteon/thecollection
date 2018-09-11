@@ -1,22 +1,27 @@
-import * as dashboard from '../../constants/tea/dashboard';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { ChartType } from '../../types/Chart';
+
+export enum DashboardActionTypes {
+  RecieveBagTypeCount = '[Dashboard] RecieveBagTypeCount',
+  RequestBagTypeCount = '[Dashboard] RequestBagTypeCount',
+  RecieveBrandCount = '[Dashboard] RecieveBrandCount',
+  RequestBrandCount = '[Dashboard] RequestBrandCount',
+}
 
 export type ReceiveBagTypeCountAction = {
-  type: dashboard.RECIEVE_BAGTYPECOUNT;
+  type: DashboardActionTypes.RecieveBagTypeCount;
   data: ICountBy<IRefValue>[];
 };
 
 export type RequestBagTypeCountAction = {
-  type: dashboard.REQUEST_BAGTYPECOUNT;
+  type: DashboardActionTypes.RequestBagTypeCount;
 };
 
 export type ReceiveBrandCountAction = {
-  type: dashboard.RECIEVE_BRANDCOUNT;
+  type: DashboardActionTypes.RecieveBrandCount;
   data: ICountBy<IRefValue>[];
 };
 
 export type RequestBrandCountAction = {
-  type: dashboard.REQUEST_BRANDCOUNT;
+  type: DashboardActionTypes.RequestBrandCount;
 };

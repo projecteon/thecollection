@@ -4,19 +4,13 @@ import { Reducer } from 'redux';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ChartType } from '../../types/Chart';
-import {RECIEVE_COUNTBYPERIOD, REQUEST_COUNTBYPERIOD, CHANGE_CHARTTYPE, CHANGE_CHARTPERIOD, RECIEVE_COUNTBYREFVALUE, REQUEST_COUNTBYREFVALUE, UPDATE_COUNTBYPERIOD, UPDATE_COUNTBYREFVALUE} from '../../constants/dashboard/chart';
 import {
   BAGSCOUNTBYBAGTYPES,
   BAGSCOUNTBYBRAND,
   BAGSCOUNTBYPERIOD,
-  RECIEVE_BAGTYPECOUNT,
-  RECIEVE_BRANDCOUNT,
-  REQUEST_BAGTYPECOUNT,
-  REQUEST_BRANDCOUNT,
   TOTALBAGSCOUNTBYPERIOD,
 } from '../../constants/tea/dashboard';
-import { ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, ChangeChartType, ChangeChartPeriod, UpdateCountByPeriodAction, UpdateCountByRefValueAction, RequestCountByRefValueAction } from '../../actions/dashboard/chart';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction } from '../../actions/tea/dashboard';
+import { ChartActionTypes, ReceiveCountByRefValueAction, ReceiveCountByPeriodAction, RequestCountByPeriodAction, ChangeChartType, ChangeChartPeriod, RequestCountByRefValueAction } from '../../actions/dashboard/chart';
 import { changeChartType, changeChartPeriod, requestCountByPeriod, requestCountByRefValue, updateCountByRefValue, updateCountByPeriod } from '../../thunks/dashboard/chart';
 
 export type CountByRefValueTypes = 'brands' | 'bagtypes';
@@ -44,12 +38,12 @@ const unloadedState: IDashboardState = { countByRefValueCharts: {bagtypes: count
 
 export const actionCreators = {...requestCountByPeriod, ...changeChartType, ...changeChartPeriod, ...updateCountByRefValue, ...updateCountByPeriod, ...requestCountByRefValue};
 
-type DashboardActions = ReceiveCountByRefValueAction | RequestCountByRefValueAction | ReceiveCountByPeriodAction | RequestCountByPeriodAction | ChangeChartType | ChangeChartPeriod | UpdateCountByPeriodAction | UpdateCountByRefValueAction;
+type DashboardActions = ReceiveCountByRefValueAction | RequestCountByRefValueAction | ReceiveCountByPeriodAction | RequestCountByPeriodAction | ChangeChartType | ChangeChartPeriod;
 
 export const reducer: Reducer<IDashboardState, DashboardActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case REQUEST_COUNTBYPERIOD:
+      case ChartActionTypes.RequestCountByCountPeriod:
         if (action.apipath === BAGSCOUNTBYPERIOD && state.countByPeriodCharts.added) {
           draft.countByPeriodCharts.added = unMapChartData(state.countByPeriodCharts.added);
           break;
@@ -60,7 +54,7 @@ export const reducer: Reducer<IDashboardState, DashboardActions> = (state = unlo
         }
 
         break;
-      case RECIEVE_COUNTBYPERIOD:
+      case ChartActionTypes.RecieveCountByCountPeriod:
         draft.hasLoadedData = true;
         if (action.apipath === BAGSCOUNTBYPERIOD) {
           draft.countByPeriodCharts.added = mapChartData(state.countByPeriodCharts.added || countbyperiods, action.data);
@@ -72,21 +66,21 @@ export const reducer: Reducer<IDashboardState, DashboardActions> = (state = unlo
         }
 
         break;
-      case CHANGE_CHARTTYPE:
+      case ChartActionTypes.ChangeChartType:
         if (state.countByRefValueCharts[action.chartId] === undefined) { // https://github.com/Microsoft/TypeScript/issues/14951
           break;
         }
 
         draft.countByRefValueCharts[action.chartId]!.chartType = action.charttype;
         break;
-      case CHANGE_CHARTPERIOD:
+      case ChartActionTypes.ChangeChartPeriod:
         if (state.countByPeriodCharts[action.chartId] === undefined) {
           break;
         }
 
         draft.countByPeriodCharts[action.chartId]!.startDate = action.startPeriod;
         break;
-      case RECIEVE_COUNTBYREFVALUE:
+      case ChartActionTypes.RecieveCountByRefValue:
         draft.hasLoadedData = true;
         if (action.apipath === BAGSCOUNTBYBRAND) {
           draft.countByRefValueCharts.brands = mapChartData(state.countByRefValueCharts.brands || countbybrands, action.data);
@@ -98,7 +92,7 @@ export const reducer: Reducer<IDashboardState, DashboardActions> = (state = unlo
         }
 
         break;
-      case REQUEST_COUNTBYREFVALUE:
+      case ChartActionTypes.RequestCountByRefValue:
         if (action.apipath === BAGSCOUNTBYBRAND && state.countByRefValueCharts.brands) {
           draft.countByRefValueCharts.brands = unMapChartData(state.countByRefValueCharts.brands);
           break;

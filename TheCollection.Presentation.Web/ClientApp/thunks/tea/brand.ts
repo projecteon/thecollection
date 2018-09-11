@@ -2,16 +2,14 @@ import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../../store';
 import { IBrand } from '../../interfaces/tea/IBrand';
-import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../../constants/tea/brand';
-import { AddBrandAction, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
+import { BrandActionTypes, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
 
-import { CHANGE_BRAND } from '../../constants/tea/bag';
-import { ChangeBrandAction } from '../../actions/tea/bag';
+import { BagActionTypes, ChangeBrandAction } from '../../actions/tea/bag';
 
 export const requestBrand = {
    requestBrand: (brandid?: string): AppThunkAction<ReceiveBrandAction | RequestBrandAction> => (dispatch, getState) => {
     if (brandid === undefined) {
-      dispatch({ type: RECIEVE_BRAND, brand: {} as IBrand });
+      dispatch({ type: BrandActionTypes.Recieve, brand: {} as IBrand });
       return;
     }
 
@@ -19,14 +17,14 @@ export const requestBrand = {
       let fetchTask = fetch(`/api/Tea/Brands/${brandid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<IBrand>)
         .then(data => {
-          dispatch({ type: RECIEVE_BRAND, brand: data });
+          dispatch({ type: BrandActionTypes.Recieve, brand: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: RECIEVE_BRAND, brand: {} as IBrand });
+      dispatch({ type: BrandActionTypes.Recieve, brand: {} as IBrand });
     }
 
-    dispatch({ type: REQUEST_BRAND, brandid: brandid });
+    dispatch({ type: BrandActionTypes.Request, brandid: brandid });
   },
  };
 
@@ -44,7 +42,7 @@ export const addBrand = {
         })
         .then(response => response.json() as Promise<IBrand>)
         .then(data => {
-          dispatch({type: CHANGE_BRAND, brand: {...data, ...{canaddnew: true}}});
+          dispatch({type: BagActionTypes.ChangeBrand, brand: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });
@@ -56,6 +54,6 @@ export const addBrand = {
 
 export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
-    dispatch({type: CHANGE_NAME, name: name});
+    dispatch({type: BrandActionTypes.ChangeName, name: name});
   },
  };

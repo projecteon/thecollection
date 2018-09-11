@@ -2,16 +2,14 @@ import { fetch, addTask } from 'domain-task';
 import { routerActions, RouterAction } from 'react-router-redux';
 import { AppThunkAction } from '../store';
 import { ICountry } from '../interfaces/ICountry';
-import { ADD_COUNTRY, CHANGE_NAME, RECIEVE_COUNTRY, REQUEST_COUNTRY } from '../constants/country';
-import { AddCountryAction, ChangeNameAction, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
+import { ChangeNameAction, CountryActionTypes, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
 
-import { CHANGE_COUNTRY } from '../constants/tea/bag';
-import { ChangeCountryAction } from '../actions/tea/bag';
+import { BagActionTypes, ChangeCountryAction } from '../actions/tea/bag';
 
 export const requestCountry = {
    requestCountry: (countryid?: string): AppThunkAction<ReceiveCountryAction | RequestCountryAction> => (dispatch, getState) => {
     if (countryid === undefined) {
-      dispatch({ type: RECIEVE_COUNTRY, country: {} as ICountry });
+      dispatch({ type: CountryActionTypes.Recieve, country: {} as ICountry });
       return;
     }
 
@@ -19,14 +17,14 @@ export const requestCountry = {
       let fetchTask = fetch(`/api/Tea/Countries/${countryid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountry>)
         .then(data => {
-          dispatch({ type: RECIEVE_COUNTRY, country: data });
+          dispatch({ type: CountryActionTypes.Recieve, country: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: RECIEVE_COUNTRY, country: {} as ICountry });
+      dispatch({ type: CountryActionTypes.Recieve, country: {} as ICountry });
     }
 
-    dispatch({ type: REQUEST_COUNTRY, countryid: countryid });
+    dispatch({ type: CountryActionTypes.Request, countryid: countryid });
   },
  };
 
@@ -44,7 +42,7 @@ export const addCountry = {
         })
         .then(response => response.json() as Promise<ICountry>)
         .then(data => {
-          dispatch({type: CHANGE_COUNTRY, country: {...data, ...{canaddnew: true}}});
+          dispatch({type: BagActionTypes.ChangeCountry, country: {...data, ...{canaddnew: true}}});
           dispatch(routerActions.goBack());
           addTask(addBrandTask); // ensure server-side prerendering waits for this to complete
       });
@@ -56,6 +54,6 @@ export const addCountry = {
 
 export const changeName = {
   changeName: (name: string): AppThunkAction<ChangeNameAction> => (dispatch, getState) => {
-    dispatch({type: CHANGE_NAME, name: name});
+    dispatch({type: CountryActionTypes.ChangeName, name: name});
   },
  };

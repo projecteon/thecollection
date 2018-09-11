@@ -3,109 +3,108 @@ import { AppThunkAction } from '../../store';
 import { ITeabag } from '../../interfaces/tea/IBag';
 import { IRefValue } from '../../interfaces/IRefValue';
 import { ISearchResult } from '../../interfaces/ISearchResult';
-import * as Constants from '../../constants/tea/bag';
 import * as Actions from '../../actions/tea/bag';
 
 export const requestTeabag = {
   requestTeabag: (teabagid?: string): AppThunkAction<Actions.ReceiveTeabagAction | Actions.RequestTeabagAction> => (dispatch, getState) => {
     if (teabagid === undefined) {
-      dispatch({ type: Constants.RECEIVE_TEABAG, teabag: {} as ITeabag });
+      dispatch({ type: Actions.BagActionTypes.RecieveBag, teabag: {} as ITeabag });
       return;
     }
 
-    dispatch({ type: Constants.REQUEST_TEABAG, teabagid: teabagid });
+    dispatch({ type: Actions.BagActionTypes.RequestBag, teabagid: teabagid });
 
     try {
       let fetchTask = fetch(`/api/Tea/Bags/${teabagid}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ITeabag>)
         .then(data => {
-          dispatch({ type: Constants.RECEIVE_TEABAG, teabag: data });
+          dispatch({ type: Actions.BagActionTypes.RecieveBag, teabag: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: Constants.RECEIVE_TEABAG, teabag: {} as ITeabag });
+      dispatch({ type: Actions.BagActionTypes.RecieveBag, teabag: {} as ITeabag });
     }
   },
 };
 
 export const changeBrand = {
   changeBrand: (brand: IRefValue): AppThunkAction<Actions.ChangeBrandAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_BRAND, brand: brand});
+    dispatch({type: Actions.BagActionTypes.ChangeBrand, brand: brand});
   },
 };
 
 export const clearBrand = {
  clearBrand: (): AppThunkAction<Actions.ClearBrandAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CLEAR_BRAND});
+    dispatch({type: Actions.BagActionTypes.ClearBrand});
   },
 };
 
 export const changeBagtype = {
   changeBagtype: (bagtype: IRefValue): AppThunkAction<Actions.ChangeBagTypeAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_BAGTYPE, bagtype: bagtype});
+    dispatch({type: Actions.BagActionTypes.ChangeBagType, bagtype: bagtype});
   },
 };
 
 export const clearBagtype = {
   clearBagtype: (): AppThunkAction<Actions.ClearBagTypeAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CLEAR_BAGTYPE});
+    dispatch({type: Actions.BagActionTypes.ClearBagType});
   },
 };
 
 export const changeCountry = {
   changeCountry: (country: IRefValue): AppThunkAction<Actions.ChangeCountryAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_COUNTRY, country: country});
+    dispatch({type: Actions.BagActionTypes.ChangeCountry, country: country});
   },
 };
 
 export const clearCountry = {
   clearCountry: (): AppThunkAction<Actions.ClearCountryAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CLEAR_COUNTRY});
+    dispatch({type: Actions.BagActionTypes.ClearCountry});
   },
 };
 
 export const changeSerie = {
   changeSerie: (serie: string): AppThunkAction<Actions.ChangeSerieAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_SERIE, serie: serie});
+    dispatch({type: Actions.BagActionTypes.ChangeSerie, serie: serie});
   },
 };
 
 export const changeFlavour = {
   changeFlavour: (flavour: string): AppThunkAction<Actions.ChangeFlavourAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_FLAVOUR, flavour: flavour});
+    dispatch({type: Actions.BagActionTypes.ChangeFlavor, flavour: flavour});
   },
 };
 
 export const changeHallmark = {
   changeHallmark: (hallmark: string): AppThunkAction<Actions.ChangeHallmarkAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_HALLMARK, hallmark: hallmark});
+    dispatch({type: Actions.BagActionTypes.ChangeHallmark, hallmark: hallmark});
   },
 };
 
 export const changeSerialNumber = {
   changeSerialNumber: (serialnumber: string): AppThunkAction<Actions.ChangeSerialNumberAction> => (dispatch, getState) => {
-    dispatch({type: Constants.CHANGE_SERIALNUMBER, serialnumber: serialnumber});
+    dispatch({type: Actions.BagActionTypes.ChangeSerialNumber, serialnumber: serialnumber});
   },
 };
 
 export const requestTeabags = {
   requestTeabags: (searchTerms: string): AppThunkAction<Actions.RequestTeabagsAction | Actions.ReceiveTeabagsAction | Actions.SearchTermsError> => (dispatch, getState) => {
     if (searchTerms.trim().length < 3) {
-      dispatch({ type: Constants.SEARCH_TERMS_ERROR, searchError: 'Requires at least 3 characters to search' });
+      dispatch({ type: Actions.BagActionTypes.SearchTermsError, searchError: 'Requires at least 3 characters to search' });
       return;
     }
 
-    dispatch({ type: Constants.REQUEST_TEABAGS, searchTerms: searchTerms });
+    dispatch({ type: Actions.BagActionTypes.RequestBags, searchTerms: searchTerms });
     let uri = searchTerms !== undefined && searchTerms.length > 0 ? `/api/Tea/Bags/?searchterm=${encodeURIComponent(searchTerms)}` : `/api/Bags/`;
     try {
       let fetchTask = fetch(uri, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ISearchResult<ITeabag>>)
         .then(data => {
-          dispatch({ type: Constants.RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: data.data, resultCount: data.count });
+          dispatch({ type: Actions.BagActionTypes.RecieveBags, searchTerms: searchTerms, teabags: data.data, resultCount: data.count });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       });
     } catch (err) {
-      dispatch({ type: Constants.RECEIVE_TEABAGS, searchTerms: searchTerms, teabags: [], resultCount: 0 });
+      dispatch({ type: Actions.BagActionTypes.RecieveBags, searchTerms: searchTerms, teabags: [], resultCount: 0 });
     }
   },
 };
@@ -113,16 +112,16 @@ export const requestTeabags = {
 export const validateSearchTerms = {
   validateSearchTerms: (searchTerms: string): AppThunkAction<Actions.SearchTermsError | Actions.SearchTermsChanged> => (dispatch, getState) => {
     if (getState().teabags.searchError !== '' && searchTerms.trim().length > 2) {
-      dispatch({ type: Constants.SEARCH_TERMS_ERROR, searchError: '' });
+      dispatch({ type: Actions.BagActionTypes.SearchTermsError, searchError: '' });
     } else {
-      dispatch({ type: Constants.SEARCH_TERMS_CHANGED, searchTerms: searchTerms });
+      dispatch({ type: Actions.BagActionTypes.SearchTermsChanged, searchTerms: searchTerms });
     }
   },
 };
 
 export const zoomImage = {
   zoomImage: (imageid: string): AppThunkAction<Actions.ZoomImage> => (dispatch, getState) => {
-    dispatch({ type: Constants.ZOOM_IMAGE_TOGGLE, imageid: imageid });
+    dispatch({ type: Actions.BagActionTypes.ZoomImageToggle, imageid: imageid });
   },
 };
 
@@ -141,13 +140,13 @@ export const saveTeabag = {
       body: JSON.stringify(teabag),
     })
     .then(response => {
-      dispatch({ type: Constants.RECEIVE_TEABAG, teabag: {} as ITeabag});
+      dispatch({ type: Actions.BagActionTypes.RecieveBag, teabag: {} as ITeabag});
       addTask(addTeabag); // ensure server-side prerendering waits for this to complete
     });
     } catch (err) {
       console.log(err);
     }
 
-    dispatch({ type: Constants.SAVE_TEABAG});
+    dispatch({ type: Actions.BagActionTypes.Save});
   },
 };

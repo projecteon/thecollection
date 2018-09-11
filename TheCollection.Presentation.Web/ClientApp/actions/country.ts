@@ -1,22 +1,28 @@
 import { ICountry } from '../interfaces/ICountry';
-import { ADD_COUNTRY, CHANGE_NAME, RECIEVE_COUNTRY, REQUEST_COUNTRY } from '../constants/country';
+
+export enum CountryActionTypes {
+  Add = '[Country] Add',
+  ChangeName = '[Country] ChangeName',
+  Recieve = '[Country] Recieve',
+  Request = '[Country] Request',
+}
 
 export type ReceiveCountryAction = {
-  type: RECIEVE_COUNTRY;
+  type: CountryActionTypes.Recieve;
   country: ICountry;
 };
 
 export type RequestCountryAction = {
-  type: REQUEST_COUNTRY;
+  type: CountryActionTypes.Request;
   countryid: string;
 };
 
 export type AddCountryAction = {
-  type: ADD_COUNTRY;
+  type: CountryActionTypes.Add;
   country: ICountry;
 };
 
 export type ChangeNameAction = {
-  type: CHANGE_NAME;
+  type: CountryActionTypes.ChangeName;
   name: string;
 };

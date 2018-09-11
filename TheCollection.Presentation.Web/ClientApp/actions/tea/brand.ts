@@ -1,22 +1,28 @@
 import { IBrand } from '../../interfaces/tea/IBrand';
-import { ADD_BRAND, CHANGE_NAME, RECIEVE_BRAND, REQUEST_BRAND } from '../../constants/tea/brand';
+
+export enum BrandActionTypes {
+  Add = '[Brand] Add',
+  ChangeName = '[Brand] ChangeName',
+  Recieve = '[Brand] Recieve',
+  Request = '[Brand] Request',
+}
 
 export type ReceiveBrandAction = {
-  type: RECIEVE_BRAND;
+  type: BrandActionTypes.Recieve;
   brand: IBrand;
 };
 
 export type RequestBrandAction = {
-  type: REQUEST_BRAND;
+  type: BrandActionTypes.Request;
   brandid: string;
 };
 
 export type AddBrandAction = {
-  type: ADD_BRAND;
+  type: BrandActionTypes.Add;
   brand: IBrand;
 };
 
 export type ChangeNameAction = {
-  type: CHANGE_NAME;
+  type: BrandActionTypes.ChangeName;
   name: string;
 };

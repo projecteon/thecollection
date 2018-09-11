@@ -2,8 +2,7 @@ import { fetch, addTask } from 'domain-task';
 import { AppThunkAction } from '../../store';
 import { ICountBy } from '../../interfaces/ICountBy';
 import { IRefValue } from '../../interfaces/IRefValue';
-import { RECIEVE_BAGTYPECOUNT, REQUEST_BAGTYPECOUNT, RECIEVE_BRANDCOUNT, REQUEST_BRANDCOUNT } from '../../constants/tea/dashboard';
-import { ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction} from '../../actions/tea/dashboard';
+import { DashboardActionTypes, ReceiveBagTypeCountAction, RequestBagTypeCountAction, ReceiveBrandCountAction, RequestBrandCountAction} from '../../actions/tea/dashboard';
 
 export const requestBagTypeCount = {
    requestBagTypeCount: (): AppThunkAction<ReceiveBagTypeCountAction | RequestBagTypeCountAction> => (dispatch, getState) => {
@@ -11,15 +10,15 @@ export const requestBagTypeCount = {
       let fetchTask = fetch(`/api/Tea/Dashboards/BagTypes/`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
-          dispatch({ type: RECIEVE_BAGTYPECOUNT, data: data });
+          dispatch({ type: DashboardActionTypes.RecieveBagTypeCount, data: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
       })
-      .catch(() => dispatch({ type: RECIEVE_BAGTYPECOUNT, data: [] }));
+      .catch(() => dispatch({ type: DashboardActionTypes.RecieveBagTypeCount, data: [] }));
     } catch (err) {
-      dispatch({ type: RECIEVE_BAGTYPECOUNT, data: [] });
+      dispatch({ type: DashboardActionTypes.RecieveBagTypeCount, data: [] });
     }
 
-    dispatch({ type: REQUEST_BAGTYPECOUNT });
+    dispatch({ type: DashboardActionTypes.RequestBagTypeCount });
   },
  };
 
@@ -29,14 +28,14 @@ export const requestBrandCount = {
       let fetchTask = fetch(`/api/Tea/Dashboards/Brands/${top ? top : ''}`, { credentials: 'same-origin' })
         .then(response => response.json() as Promise<ICountBy<IRefValue>[]>)
         .then(data => {
-          dispatch({ type: RECIEVE_BRANDCOUNT, data: data });
+          dispatch({ type: DashboardActionTypes.RecieveBrandCount, data: data });
           addTask(fetchTask); // ensure server-side prerendering waits for this to complete
         })
-        .catch(() => dispatch({ type: RECIEVE_BRANDCOUNT, data: [] }));
+        .catch(() => dispatch({ type: DashboardActionTypes.RecieveBrandCount, data: [] }));
    } catch (err) {
-     dispatch({ type: RECIEVE_BRANDCOUNT, data: [] });
+     dispatch({ type: DashboardActionTypes.RecieveBrandCount, data: [] });
    }
 
-   dispatch({ type: REQUEST_BRANDCOUNT });
+   dispatch({ type: DashboardActionTypes.RequestBrandCount });
  },
 };

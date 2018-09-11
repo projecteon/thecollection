@@ -1,22 +1,28 @@
 import { IBagType } from '../../interfaces/tea/IBagType';
-import { ADD_BAGTYPE, CHANGE_NAME, RECIEVE_BAGTYPE, REQUEST_BAGTYPE } from '../../constants/tea/bagtype';
+
+export enum BagTypeActionTypes {
+  Add = '[BagType] Add',
+  ChangeName = '[BagType] ChangeName',
+  Recieve = '[BagType] Recieve',
+  Request = '[BagType] Request',
+}
 
 export type ReceiveBagtypeAction = {
-  type: RECIEVE_BAGTYPE;
+  type: BagTypeActionTypes.Recieve;
   bagtype: IBagType;
 };
 
 export type RequestBagtypeAction = {
-  type: REQUEST_BAGTYPE;
+  type: BagTypeActionTypes.Request;
   bagtypeid: string;
 };
 
 export type AddBagtypeAction = {
-  type: ADD_BAGTYPE;
+  type: BagTypeActionTypes.Add;
   bagtype: IBagType;
 };
 
 export type ChangeNameAction = {
-  type: CHANGE_NAME;
+  type: BagTypeActionTypes.ChangeName;
   name: string;
 };
