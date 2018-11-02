@@ -1,17 +1,22 @@
 import { createStore, applyMiddleware, compose, combineReducers, StoreEnhancer, Store, StoreEnhancerStoreCreator, ReducersMapObject } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
+import createSagaMiddleware from 'redux-saga';
 import * as StoreModule from './store';
 import { IApplicationState, reducers } from './store';
+import sagas from './sagas';
 import { History } from 'history';
+
+const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(history: History, initialState?: IApplicationState) {
   // build middleware. These are functions that can process the actions before they reach the store.
   const windowIfDefined = typeof window === 'undefined' ? undefined : window as any;
+  const middlewares = [routerMiddleware(history), thunk, sagaMiddleware];
   // if devTools is installed, connect to it
   const devToolsExtension = windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__ as () => StoreEnhancer<any>;
   const createStoreWithMiddleware = compose<StoreEnhancerStoreCreator<IApplicationState>>(
-      applyMiddleware(thunk, routerMiddleware(history)),
+      applyMiddleware(...middlewares),
       devToolsExtension ? devToolsExtension() : <S>(next: StoreEnhancerStoreCreator<S>) => next,
   )(createStore);
 
@@ -28,6 +33,7 @@ export default function configureStore(history: History, initialState?: IApplica
     });
   }
 
+  sagaMiddleware.run(sagas);
   return store;
 }
 

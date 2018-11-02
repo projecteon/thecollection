@@ -1,43 +1,34 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { ICountry } from '../interfaces/ICountry';
-import { AddCountryAction, ChangeNameAction, CountryActionTypes, ReceiveCountryAction, RequestCountryAction } from '../actions/country';
-import { addCountry, changeName, requestCountry } from '../thunks/country';
+import { CountryActionTypes, addAction, valueChangedAction, recieveAction } from '../actions/country';
+import { ActionsUnion } from '../util/Redux';
 
 export interface ICountryState {
   country: ICountry;
-  isLoading: boolean;
 }
 
-export const actionCreators = {...addCountry, ...changeName, ...requestCountry};
+export const actionCreators = {addAction, valueChangedAction, recieveAction};
 
-const unloadedState: ICountryState = { isLoading: false, country: {} as ICountry };
-type CountryActions = AddCountryAction | ChangeNameAction | ReceiveCountryAction | RequestCountryAction;
+const unloadedState: ICountryState = { country: {} as ICountry };
+type CountryActions = ActionsUnion<typeof actionCreators>;
 export const reducer: Reducer<ICountryState, CountryActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case CountryActionTypes.Request:
-        draft.country = {} as ICountry;
-        draft.isLoading = true;
-        break;
       case CountryActionTypes.Recieve:
-        draft.country = action.country;
-        draft.isLoading = false;
+        draft.country = action.payload;
         break;
       case CountryActionTypes.Add:
-        draft.country = action.country;
-        draft.isLoading = false;
+        draft.country = action.payload;
         break;
       case CountryActionTypes.ChangeName:
-        draft.isLoading = false;
         if (draft.country === undefined) {
           break;
         }
 
-        draft.country.name = action.name;
+        draft.country[action.payload.property] = action.payload.value;
         break;
       default:
-        const exhaustiveCheck: never = action;
     }
   });
 

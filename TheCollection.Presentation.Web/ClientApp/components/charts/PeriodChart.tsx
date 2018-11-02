@@ -78,7 +78,6 @@ export const PeriodChart: React.StatelessComponent<PeriodChartProps> = props => 
 
   const createColumns = () => {
     let columns = [createTimeAxis()].concat(createLineData());
-    console.log(props);
     return columns;
   };
 

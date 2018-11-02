@@ -77,7 +77,7 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
         return;
       }
 
-      this.setState({...this.state, ...{displayResults: false, searchTerm: ''}});
+      this.setState({...this.state, ...{displayResults: false}});
     }
 
     onClear() {
@@ -91,12 +91,13 @@ export function ComboBox<T>(): ComponentClass<IComboBoxProps<T>> {
     onSearch(searchedTerm: string) {
       if (this.state.searchedTerm !== searchedTerm || searchedTerm.length === 0) {
         this.props.onSearch(searchedTerm)
-            .then(data => {this.setState({...this.state, ...{ isLoading: false, results: data, displayResults: true, searchedTerm: searchedTerm }});
+            .then(data => {this.setState({...this.state, ...{ isLoading: false, results: data || [], displayResults: true, searchedTerm: searchedTerm }});
         });
       }
     }
 
     onItemSelected(item: T) {
+      this.setState({...this.state, ...{searchTerm: item[this.props.displayProperty]}});
       this.props.onItemSelected(item);
     }
 

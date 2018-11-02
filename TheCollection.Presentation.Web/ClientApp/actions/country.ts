@@ -1,4 +1,5 @@
 import { ICountry } from '../interfaces/ICountry';
+import { createAction } from '../util/Redux';
 
 export enum CountryActionTypes {
   Add = '[Country] Add',
@@ -7,22 +8,8 @@ export enum CountryActionTypes {
   Request = '[Country] Request',
 }
 
-export type ReceiveCountryAction = {
-  type: CountryActionTypes.Recieve;
-  country: ICountry;
-};
+export const requestAction = (id?: string) => createAction(CountryActionTypes.Request, {id});
+export const recieveAction = (country: ICountry) => createAction(CountryActionTypes.Recieve, country);
+export const addAction = (country: ICountry) => createAction(CountryActionTypes.Add, country);
+export const valueChangedAction = <K extends keyof ICountry>(property: K, value: ICountry[K]) => createAction(CountryActionTypes.ChangeName, {property, value});
 
-export type RequestCountryAction = {
-  type: CountryActionTypes.Request;
-  countryid: string;
-};
-
-export type AddCountryAction = {
-  type: CountryActionTypes.Add;
-  country: ICountry;
-};
-
-export type ChangeNameAction = {
-  type: CountryActionTypes.ChangeName;
-  name: string;
-};

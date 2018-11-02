@@ -20,17 +20,11 @@ export const routes = <Layout>
     <Route exact path='/' component={ Home } />
     <Route exact path='/tea/dashboard' component={ TeaDashboard } />
     <Route exact path='/tea/teabags' component={ Teabags } />
-    <Route exact path='/tea/teabagform' component={ TeabagForm }>
-        <Route exact path='/tea/teabagform/:id' component={ TeabagForm } />
-    </Route>
-    <Route exact path='/tea/brandform' component={ BrandForm }>
-        <Route exact path='/tea/brandform/:id' component={ BrandForm } />
-    </Route>
-    <Route exact path='/tea/bagtypeform' component={ BagtypeForm }>
-        <Route exact path='/tea/bagtypeform/:id' component={ BagtypeForm } />
-    </Route>
-    <Route exact path='/countryform' component={ CountryForm }>
-        <Route exact path='/countryform/:id' component={ CountryForm } />
-    </Route>
+    <Route exact path='/tea/teabagform/' component={ TeabagForm } />
+    <Route exact path='/tea/teabagform/:id' component={ TeabagForm } />
+    <Route exact path='/tea/brandform/' component={ BrandForm } />
+    <Route exact path='/tea/brandform/:id' component={ BrandForm } />
+    <Route exact path='/tea/bagtypeform/:id' component={ BagtypeForm } />
+    <Route exact path='/countryform/:id' component={ CountryForm } />
     {/* <Route path='Account/LogOff'><Redirect to='/Account/LogOff'/></Route> */}
 </Layout>;

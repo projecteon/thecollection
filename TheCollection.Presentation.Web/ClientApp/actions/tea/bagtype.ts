@@ -1,4 +1,5 @@
 import { IBagType } from '../../interfaces/tea/IBagType';
+import { createAction } from '../../util/Redux';
 
 export enum BagTypeActionTypes {
   Add = '[BagType] Add',
@@ -7,22 +8,7 @@ export enum BagTypeActionTypes {
   Request = '[BagType] Request',
 }
 
-export type ReceiveBagtypeAction = {
-  type: BagTypeActionTypes.Recieve;
-  bagtype: IBagType;
-};
-
-export type RequestBagtypeAction = {
-  type: BagTypeActionTypes.Request;
-  bagtypeid: string;
-};
-
-export type AddBagtypeAction = {
-  type: BagTypeActionTypes.Add;
-  bagtype: IBagType;
-};
-
-export type ChangeNameAction = {
-  type: BagTypeActionTypes.ChangeName;
-  name: string;
-};
+export const requestAction = (id: string) => createAction(BagTypeActionTypes.Request, id);
+export const recieveAction = (bagType: IBagType) => createAction(BagTypeActionTypes.Recieve, bagType);
+export const addAction = (bagType: IBagType) => createAction(BagTypeActionTypes.Add, bagType);
+export const valueChangedAction = <K extends keyof IBagType>(property: K, value: IBagType[K]) => createAction(BagTypeActionTypes.ChangeName, {property, value});

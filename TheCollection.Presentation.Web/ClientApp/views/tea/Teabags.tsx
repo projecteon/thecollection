@@ -1,18 +1,27 @@
 import * as React from 'react';
 import * as Mousetrap from 'mousetrap';
-import { NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { IApplicationState }  from '../../store';
-import * as TeaBagsReducer from '../../reducers/tea/bags';
 import { ImageZoom } from '../../components/ImageZoom';
 import TeabagCard from '../../components/TeabagCard';
 import { ITeabag } from '../../interfaces/tea/IBag';
+import { search, searchTermChanged, zoomImageToggle } from '../../actions/tea/search';
 
 import './Teabags.scss';
 
-type TeabagsProps =
-    TeaBagsReducer.ITeabagsState            // ... state we've requested from the Redux store
-    & typeof TeaBagsReducer.actionCreators; // ... plus action creators we've requested
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    onSearch: () => dispatch(search()),
+    onSearchTermChanged: (searchTerm: string) => dispatch(searchTermChanged(searchTerm)),
+    onZoomImageToggle: (imageId: string) => dispatch(zoomImageToggle(imageId)),
+  };
+};
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.searchteabag, ...state.ui};
+}
+
+type TeabagsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class Teabags extends React.Component<TeabagsProps, {}> {
   searchKeyboardShortcut = 'enter';
@@ -57,34 +66,34 @@ class Teabags extends React.Component<TeabagsProps, {}> {
       return;
     }
 
-    this.props.validateSearchTerms(this.controls.searchInput.value);
+    this.props.onSearchTermChanged(this.controls.searchInput.value);
   }
 
   onKeyboardSearch(event: ExtendedKeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags(this.props.searchedTerms);
+    this.props.onSearch();
   }
 
   onSearch(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.requestTeabags(this.props.searchedTerms);
+    this.props.onSearch();
   }
 
   onZoomClicked(imageId: string) {
-    this.props.zoomImage(imageId);
+    this.props.onZoomImageToggle(imageId);
   }
 
   renderSuccessTag(brand: string, index: number) {
     return  <span key={index} className='labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>
               <span>{brand}</span>
-              <span className='badge badge-default'>{this.props.teabags.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span>
+              <span className='badge badge-default'>{this.props.result.filter(teagbag => { return teagbag.brand.name === brand; }).length}</span>
             </span>;
   }
 
   renderSearchSuccesses() {
-    let brands = this.props.teabags.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
+    let brands = this.props.result.map(teabag => teabag.brand.name).filter((value, index, self) => self.indexOf(value) === index);
     let tags = brands.map((brand, index) => { return this.renderSuccessTag(brand, index); });
     return  <div style={{display: 'flex', flexWrap: 'wrap', paddingLeft: 5}}>
               <span key={-1} className='labelBadge justify-content-between align-items-center' style={{whiteSpace: 'nowrap'}}>
@@ -126,21 +135,20 @@ class Teabags extends React.Component<TeabagsProps, {}> {
   render() {
     let contents = this.props.isLoading
       ? undefined
-      : this.renderTeabags(this.props.teabags);
+      : this.renderTeabags(this.props.result);
 
     return  <div style={{position: 'relative'}}>
               {this.props.zoomImageId !== undefined ? <ImageZoom imageid={this.props.zoomImageId} onClick={this.onZoomClicked.bind(this, undefined)} /> : undefined}
               {this.renderSearchBar()}
-              {this.props.teabags.length === 0 ? undefined : this.renderSearchSuccesses()}
-              <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.teabags.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
+              {this.props.result.length === 0 ? undefined : this.renderSearchSuccesses()}
+              <div style={{display: 'flex', flexWrap: 'wrap', marginTop: this.props.result.length === 0 || this.props.searchError !== undefined ? 10 : 10}}>
                 {contents}
               </div>
             </div>;
   }
 }
 
-
 export default connect(
-    (state: IApplicationState) => state.teabags,
-    TeaBagsReducer.actionCreators,
+  mapStateToProps,
+  mapDispatchToProps,
 )(Teabags);

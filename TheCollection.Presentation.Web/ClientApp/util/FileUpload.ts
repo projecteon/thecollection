@@ -93,7 +93,7 @@ export namespace FileUpload {
 
   export function convertToFile(canvas: HTMLCanvasElement, filename: string): File {
     let imageBlob: Blob = dataURItoBlob(canvas.toDataURL('image/jpeg', 0.75));
-    let fileExtension = {name: filename, lastModifiedDate: new Date()};
+    let fileExtension = {name: filename, lastModified: (new Date()).getUTCDate()};
     return Object.assign(imageBlob, fileExtension) as File;
   }
 

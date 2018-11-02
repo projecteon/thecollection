@@ -1,16 +1,25 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../store';
-import * as CountryReducer from '../reducers/country';
 import Loader from '../components/Loader';
+import { addAction, requestAction, valueChangedAction } from '../actions/country';
+import { ICountry } from '../interfaces/ICountry';
 
-type CountryProps =
-    CountryReducer.ICountryState     // ... state we've requested from the Redux store
-    & typeof CountryReducer.actionCreators   // ... plus action creators we've requested
-    & { params?: { id?: string } }        // ... plus incoming routing parameters
-    & { history: History; };              // ... plus naviation through react router
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    onRequestCountry: (id?: string) => dispatch(requestAction(id)),
+    onAdd: (country: ICountry) => dispatch(addAction(country)),
+    onValueChanged: <K extends keyof ICountry>(property: K, value: ICountry[K]) => dispatch(valueChangedAction(property, value)),
+  };
+}
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.country, ...state.ui};
+}
+
+type CountryProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps<{id: string, history: History}>;
 
 class CountryForm extends React.Component<CountryProps, {}> {
 
@@ -23,25 +32,19 @@ class CountryForm extends React.Component<CountryProps, {}> {
   }
 
   componentWillMount() {
-    if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      this.props.requestCountry(this.props.params.id);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: CountryProps) {
-    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.country.id !== this.props.params.id) {
-      this.props.requestCountry(this.props.params.id);
+    if (this.props.match.params && this.props.match.params.id && this.props.match.params.id.length > 0) {
+      this.props.onRequestCountry(this.props.match.params.id);
     }
   }
 
   onNameChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeName(event.currentTarget.value);
+    this.props.onValueChanged('name', event.currentTarget.value);
   }
 
   onAdd(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.addCountry(this.props.country);
+    this.props.onAdd(this.props.country);
     // this.props.history.goBack();
   }
 
@@ -89,7 +92,7 @@ class CountryForm extends React.Component<CountryProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.country, // selects which state properties are merged into the component's props
-    CountryReducer.actionCreators,                // selects which action creators are merged into the component's props
+  mapStateToProps, // selects which state properties are merged into the component's props
+  mapDispatchToProps,                // selects which action creators are merged into the component's props
 )(CountryForm));
 

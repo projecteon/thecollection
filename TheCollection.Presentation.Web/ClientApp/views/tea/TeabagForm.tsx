@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
-import * as TeabagReducer from '../../reducers/tea/bag';
-import * as BrandReducer from '../../reducers/tea/brand';
 
 import {ComboBox} from '../../components/ComboBox/ComboBox';
 import Loader from '../../components/Loader';
@@ -16,9 +14,10 @@ import {Image} from '../../components/Image';
 import {IBrand} from '../../interfaces/tea/IBrand';
 import {ICountry} from '../../interfaces/ICountry';
 import {IBagType} from '../../interfaces/tea/IBagType';
-
-const CountryComboBox = ComboBox<ICountry>(); // tslint:disable-line:variable-name
-const TypeComboBox = ComboBox<IBagType>(); // tslint:disable-line:variable-name
+import { ITeabag, PropNames } from '../../interfaces/tea/IBag';
+import { requestAction, saveAction, valueChangedAction, clearRefValueAction, clearStringValueAction } from '../../actions/tea/bag';
+import { RefValuePropertyNames, StringValuePropertyNames } from '../../types';
+import { ISearchResult } from '../../interfaces/ISearchResult';
 
 const InputFormGroupItem = FormGroupItem(TextInput); // tslint:disable-line:variable-name
 const TextareaFormGroupItem = FormGroupItem(Textarea); // tslint:disable-line:variable-name
@@ -26,11 +25,21 @@ const BrandInputGroupItem = FormGroupItem(ComboBox<IBrand>()); // tslint:disable
 const CountryInputGroupItem = FormGroupItem(ComboBox<ICountry>()); // tslint:disable-line:variable-name
 const BagtypeInputGroupItem = FormGroupItem(ComboBox<IBagType>()); // tslint:disable-line:variable-name
 
-type TeabagProps =
-    TeabagReducer.ITeabagState            // ... state we've requested from the Redux store
-    & typeof TeabagReducer.actionCreators // ... plus action creators we've requested
-    & { params?: { id?: string } }        // ... plus incoming routing parameters
-    & { history: History; };              // ... plus naviation through react router
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    onClearRefValue: (property: RefValuePropertyNames<ITeabag>) => dispatch(clearRefValueAction(property)),
+    onClearStringValue: (property: StringValuePropertyNames<ITeabag>) => dispatch(clearStringValueAction(property)),
+    onRequestTeabag: (id?: string) => dispatch(requestAction(id)),
+    onSave: (teabag: ITeabag) => dispatch(saveAction(teabag)),
+    onValueChanged: <K extends keyof ITeabag>(property: K, value: ITeabag[K]) => dispatch(valueChangedAction(property, value)),
+  };
+}
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.teabag, ...state.ui};
+}
+
+type TeabagProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps<{id: string, history: History}>;
 
 class TeabagForm extends React.Component<TeabagProps, {}> {
 
@@ -42,25 +51,30 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
     this.onSearchCountry = this.onSearchCountry.bind(this);
     this.onSearchType = this.onSearchType.bind(this);
     this.onSave = this.onSave.bind(this);
+
+    this.onBagTypeChanged = this.onBagTypeChanged.bind(this);
+    this.onBrandChanged = this.onBrandChanged.bind(this);
+    this.onCountryChanged = this.onCountryChanged.bind(this);
   }
 
   componentWillMount() {
-    if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      if (this.props.teabag !== undefined && this.props.teabag.id !== this.props.params.id) {
-        this.props.requestTeabag(this.props.params.id);
+    if (this.props.match.params && this.props.match.params.id && this.props.match.params.id.length > 0) {
+      if (this.props.teabag !== undefined && this.props.teabag.id !== this.props.match.params.id) {
+        console.log(this.props.match.params.id);
+        this.props.onRequestTeabag(this.props.match.params.id);
       }
-    } else if ((this.props.params === undefined || this.props.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
-      this.props.requestTeabag();
+    } else if ((this.props.match.params === undefined || this.props.match.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
+      this.props.onRequestTeabag();
     }
   }
 
   componentWillReceiveProps(nextProps: TeabagProps) {
-    if (nextProps.isLoading === false && nextProps.params && nextProps.params.id && nextProps.params.id.length > 0) {
-      if (nextProps.teabag !== undefined && nextProps.teabag.id !== nextProps.params.id) {
-        this.props.requestTeabag(nextProps.params.id);
+    if (nextProps.isLoading === false && nextProps.match.params && nextProps.match.params.id && nextProps.match.params.id.length > 0) {
+      if (nextProps.teabag !== undefined && nextProps.teabag.id !== nextProps.match.params.id) {
+        this.props.onRequestTeabag(nextProps.match.params.id);
       }
-    } else if ((this.props.params === undefined || this.props.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
-      this.props.requestTeabag();
+    } else if ((this.props.match.params === undefined || this.props.match.params.id === undefined) && this.props.teabag.id !== undefined && this.props.teabag.id.length > 0) {
+      this.props.onRequestTeabag();
     }
   }
 
@@ -71,7 +85,8 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   onSearchBrand(searchTerm: string) {
     let uri = `/api/Tea/Brands/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
-            .then(response => response.json() as Promise<IBrand[]>);
+            .then(response => response.json() as Promise<ISearchResult<IBrand>>)
+            .then(data => Promise.resolve(data.data));
   }
 
   onAddNewCountry() {
@@ -81,7 +96,8 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   onSearchCountry(searchTerm: string) {
     let uri = `/api/Tea/Countries/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
-            .then(response => response.json() as Promise<ICountry[]>);
+            .then(response => response.json() as Promise<ISearchResult<ICountry>>)
+            .then(data => Promise.resolve(data.data));
   }
 
   onAddNewBagType() {
@@ -91,13 +107,26 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
   onSearchType(searchTerm: string) {
     let uri = `/api/Tea/BagTypes/?searchterm=${encodeURIComponent(searchTerm)}`;
     return fetch(uri, { credentials: 'same-origin' })
-            .then(response => response.json() as Promise<IBagType[]>);
+            .then(response => response.json() as Promise<ISearchResult<IBagType>>)
+            .then(data => Promise.resolve(data.data));
   }
 
   onSave(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
     event.preventDefault();
-    this.props.saveTeabag();
+    this.props.onSave(this.props.teabag);
+  }
+
+  onBagTypeChanged(bagType: IBagType) {
+    this.props.onValueChanged(PropNames.bagType, {...bagType, ...{canaddnew: this.props.teabag.bagType.canaddnew}});
+  }
+
+  onBrandChanged(brand: IBrand) {
+    this.props.onValueChanged(PropNames.brand, {...brand, ...{canaddnew: this.props.teabag.brand.canaddnew}});
+  }
+
+  onCountryChanged(country: ICountry) {
+    this.props.onValueChanged(PropNames.country, {...country, ...{canaddnew: this.props.teabag.country.canaddnew}});
   }
 
   renderBrandComboBoxItem(item: IBrand) {
@@ -136,34 +165,34 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
                                         label='Brand'
                                         onAddNew={this.props.teabag.brand && this.props.teabag.brand.canaddnew ? this.onAddNewBrand : undefined}
                                         onSearch={this.onSearchBrand}
-                                        onItemSelected={this.props.changeBrand}
-                                        onClear={this.props.clearBrand}
+                                        onItemSelected={this.onBrandChanged}
+                                        onClear={() => this.props.onClearRefValue(PropNames.brand)}
                                         renderItem={this.renderBrandComboBoxItem}
                                         displayProperty={'name'}
                                         selectedItem={this.props.teabag.brand}
                                         isReadOnly={this.props.teabag.iseditable === false} />
-                  <InputFormGroupItem inputid='inputFlavour' responsiveInputComponentWidth='col-sm-12' label='Flavour' placeholder='Flavour' value={this.props.teabag.flavour} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeFlavour}/>
-                  <InputFormGroupItem inputid='inputSeries' responsiveInputComponentWidth='col-sm-12' label='Series' placeholder='Series' value={this.props.teabag.serie} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeSerie}/>
-                  <InputFormGroupItem inputid='inputSerialnumber' responsiveInputComponentWidth='col-sm-6' label='Serialnumber' placeholder='Serialnumber' value={this.props.teabag.serialNumber} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeSerialNumber}/>
-                  <TextareaFormGroupItem inputid='inputHallmark' responsiveInputComponentWidth='col-sm-12' label='Hallmark' placeholder='Hallmark' value={this.props.teabag.hallmark} isReadOnly={this.props.teabag.iseditable === false} onChange={this.props.changeHallmark}/>
+                  <InputFormGroupItem inputid='inputFlavour' responsiveInputComponentWidth='col-sm-12' label='Flavour' placeholder='Flavour' value={this.props.teabag.flavour} isReadOnly={this.props.teabag.iseditable === false} onChange={(newValue: string) => this.props.onValueChanged(PropNames.flavour, newValue)}/>
+                  <InputFormGroupItem inputid='inputSeries' responsiveInputComponentWidth='col-sm-12' label='Series' placeholder='Series' value={this.props.teabag.serie} isReadOnly={this.props.teabag.iseditable === false} onChange={(newValue: string) => this.props.onValueChanged(PropNames.serie, newValue)}/>
+                  <InputFormGroupItem inputid='inputSerialnumber' responsiveInputComponentWidth='col-sm-6' label='Serialnumber' placeholder='Serialnumber' value={this.props.teabag.serialNumber} isReadOnly={this.props.teabag.iseditable === false} onChange={(newValue: string) => this.props.onValueChanged(PropNames.serialNumber, newValue)}/>
+                  <TextareaFormGroupItem inputid='inputHallmark' responsiveInputComponentWidth='col-sm-12' label='Hallmark' placeholder='Hallmark' value={this.props.teabag.hallmark} isReadOnly={this.props.teabag.iseditable === false} onChange={(newValue: string) => this.props.onValueChanged(PropNames.hallmark, newValue)}/>
                   <BagtypeInputGroupItem  inputid='inputBagType'
                                           responsiveInputComponentWidth='col-sm-12'
                                           label='Type'
-                                          onAddNew={this.props.teabag.bagtype && this.props.teabag.bagtype.canaddnew ? this.onAddNewBagType : undefined}
+                                          onAddNew={this.props.teabag.bagType && this.props.teabag.bagType.canaddnew ? this.onAddNewBagType : undefined}
                                           onSearch={this.onSearchType}
-                                          onItemSelected={this.props.changeBagtype}
-                                          onClear={this.props.clearBagtype}
+                                          onItemSelected={this.onBagTypeChanged}
+                                          onClear={() => this.props.onClearRefValue(PropNames.bagType)}
                                           renderItem={this.renderBagTypeComboBoxItem}
                                           displayProperty={'name'}
-                                          selectedItem={this.props.teabag.bagtype}
+                                          selectedItem={this.props.teabag.bagType}
                                           isReadOnly={this.props.teabag.iseditable === false} />
                   <CountryInputGroupItem  inputid='inputCountry'
                                           responsiveInputComponentWidth='col-sm-12'
                                           label='Country'
                                           onAddNew={this.props.teabag.country && this.props.teabag.country.canaddnew ? this.onAddNewCountry : undefined}
                                           onSearch={this.onSearchCountry}
-                                          onItemSelected={this.props.changeCountry}
-                                          onClear={this.props.clearCountry}
+                                          onItemSelected={this.onCountryChanged}
+                                          onClear={() => this.props.onClearRefValue(PropNames.country)}
                                           renderItem={this.renderCountryComboBoxItem}
                                           displayProperty={'name'}
                                           selectedItem={this.props.teabag.country}
@@ -187,7 +216,7 @@ class TeabagForm extends React.Component<TeabagProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.teabag, // selects which state properties are merged into the component's props
-    TeabagReducer.actionCreators,               // selects which action creators are merged into the component's props
+  mapStateToProps,
+  mapDispatchToProps,               // selects which action creators are merged into the component's props
 )(TeabagForm));
 

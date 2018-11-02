@@ -1,16 +1,25 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
-import * as BrandReducer from '../../reducers/tea/brand';
 import Loader from '../../components/Loader';
+import { IBrand } from '../../interfaces/tea/IBrand';
+import { addAction, requestAction, valueChangedAction } from '../../actions/tea/brand';
 
-type BrandProps =
-    BrandReducer.IBrandState     // ... state we've requested from the Redux store
-    & typeof BrandReducer.actionCreators   // ... plus action creators we've requested
-    & { params?: { id?: string } }        // ... plus incoming routing parameters
-    & { history: History; };              // ... plus naviation through react router
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    onRequestBrand: (id: string) => dispatch(requestAction(id)),
+    onAdd: (brand: IBrand) => dispatch(addAction(brand)),
+    onValueChanged: <K extends keyof IBrand>(property: K, value: IBrand[K]) => dispatch(valueChangedAction(property, value)),
+  };
+}
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.brand, ...state.ui};
+}
+
+type BrandProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps<{id: string, history: History}>;
 
 class BrandForm extends React.Component<BrandProps, {}> {
 
@@ -23,32 +32,26 @@ class BrandForm extends React.Component<BrandProps, {}> {
   }
 
   componentWillMount() {
-    if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      this.props.requestBrand(this.props.params.id);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: BrandProps) {
-    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.brand.id !== this.props.params.id) {
-      this.props.requestBrand(this.props.params.id);
+    if (this.props.match.params && this.props.match.params.id && this.props.match.params.id.length > 0) {
+      this.props.onRequestBrand(this.props.match.params.id);
     }
   }
 
   onNameChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeName(event.currentTarget.value);
+    this.props.onValueChanged('name', event.currentTarget.value);
   }
 
   onAdd(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.addBrand(this.props.brand);
+    this.props.onAdd(this.props.brand);
     // this.props.history.goBack();
   }
 
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    // this.props.addBrand(this.props.brand);
+    this.props.onAdd(this.props.brand);
     // this.props.history.goBack();
   }
 
@@ -89,7 +92,7 @@ class BrandForm extends React.Component<BrandProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.brand, // selects which state properties are merged into the component's props
-    BrandReducer.actionCreators,               // selects which action creators are merged into the component's props
+  mapStateToProps, // selects which state properties are merged into the component's props
+  mapDispatchToProps,               // selects which action creators are merged into the component's props
 )(BrandForm));
 

@@ -1,27 +1,30 @@
 import { combineReducers } from 'redux';
-import * as TeaBags from '../reducers/tea/bags';
+import * as SearchTeaBags from '../reducers/tea/search';
 import * as Teabag from '../reducers/tea/bag';
 import * as Brand from '../reducers/tea/brand';
 import * as Bagtype from '../reducers/tea/bagtype';
 import * as Country from '../reducers/country';
 import * as TeaDashboard from '../reducers/tea/dashboard';
+import * as UI from '../reducers/ui';
 
 export interface IApplicationState {
-    teabags: TeaBags.ITeabagsState;
-    teabag: Teabag.ITeabagState;
-    brand: Brand.IBrandState;
-    bagtype: Bagtype.IBagTypeState;
-    country: Country.ICountryState;
-    teadashboard: TeaDashboard.IDashboardState;
+  searchteabag: SearchTeaBags.ISearchState;
+  teabag: Teabag.ITeabagState;
+  brand: Brand.IBrandState;
+  bagtype: Bagtype.IBagTypeState;
+  country: Country.ICountryState;
+  teadashboard: TeaDashboard.IDashboardState;
+  ui: UI.IUIState;
 }
 
 export const reducers = {
-    teabags: TeaBags.reducer,
-    teabag: Teabag.reducer,
-    brand: Brand.reducer,
-    bagtype: Bagtype.reducer,
-    country: Country.reducer,
-    teadashboard: TeaDashboard.reducer,
+  searchteabag: SearchTeaBags.reducer,
+  teabag: Teabag.reducer,
+  brand: Brand.reducer,
+  bagtype: Bagtype.reducer,
+  country: Country.reducer,
+  teadashboard: TeaDashboard.reducer,
+  ui: UI.reducer,
 };
 
 // this type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

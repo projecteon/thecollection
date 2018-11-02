@@ -11,11 +11,12 @@ type FormGroupItemProps = {
 export function FormGroupItem<T>(InputComponent: ComponentClass<T> | StatelessComponent<T>): ComponentClass<T & FormGroupItemProps> {
   return class extends Component<T & FormGroupItemProps, {}> {
     render() {
+      const { inputid, label, responsiveInputComponentWidth, ...props } = this.props as FormGroupItemProps;
       return (
         <div className='form-group'>
-          <label htmlFor={this.props.inputid} className='col-sm-2 control-label'>{this.props.label}</label>
-          <div className={this.props.responsiveInputComponentWidth}>
-            <InputComponent {...this.props}/>
+          <label htmlFor={inputid} className='col-sm-2 control-label'>{label}</label>
+          <div className={responsiveInputComponentWidth}>
+            <InputComponent {...props}/>
           </div>
         </div>);
     }

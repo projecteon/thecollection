@@ -1,7 +1,6 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import * as c3 from 'c3';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { IApplicationState }  from '../../store';
 import * as DashboardReducer from '../../reducers/tea/dashboard';
 import { BAGSCOUNTBYPERIOD, TOTALBAGSCOUNTBYPERIOD, BAGSCOUNTBYBRAND, BAGSCOUNTBYBAGTYPES } from '../../constants/tea/dashboard';
@@ -13,8 +12,10 @@ import { DashboardPeriodBlockHOC } from '../../components/dashboard/DashboardPer
 import { PeriodChart } from '../../components/charts/PeriodChart';
 import { BarChart } from '../../components/charts/BarChart';
 import { PieChart } from '../../components/charts/PieChart';
-import Loader from '../../components/Loader';
 import { ChartType } from '../../types/Chart';
+import { Moment } from 'moment';
+import { CountByPeriodTypes, CountByRefValueTypes } from '../../reducers/tea/dashboard';
+import { requestCountByRefValueAction, requestCountByPeriodAction, changeChartPeriodAction, changeChartTypeAction } from '../../actions/dashboard/chart';
 
 import './Dashboard.scss';
 
@@ -25,11 +26,23 @@ const BarChartBlock = DashboardBlockHOC(BarChart);
 // tslint:disable-next-line:variable-name
 const PeriodChartBlock = DashboardPeriodBlockHOC(PeriodChart);
 
-type DashboardProps =
-  DashboardReducer.IDashboardState            // ... state we've requested from the Redux store
-  & typeof DashboardReducer.actionCreators; // ... plus action creators we've requested
 
-class Dashboard extends React.Component<DashboardProps, {}> {
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    onRequestCountByValueRef: (apipath: string, top?: number) => dispatch(requestCountByRefValueAction(apipath, top)),
+    onRequestCountByPeriod: (apipath: string, top?: number) => dispatch(requestCountByPeriodAction(apipath, top)),
+    onChangeChartPeriod: (startPeriod: Moment, chartId: CountByPeriodTypes) => dispatch(changeChartPeriodAction(startPeriod, chartId)),
+    onChangeChartType: (charttype: ChartType, chartId: CountByRefValueTypes) => dispatch(changeChartTypeAction(charttype, chartId)),
+  };
+}
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.teadashboard, ...state.ui};
+}
+
+type DashboardProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+
+class Dashboard extends React.PureComponent<DashboardProps, {}> {
   constructor(props: DashboardProps) {
     super(props);
 
@@ -46,44 +59,44 @@ class Dashboard extends React.Component<DashboardProps, {}> {
       return;
     }
 
-    this.props.requestCountByRefValue(BAGSCOUNTBYBRAND);
-    this.props.requestCountByPeriod(BAGSCOUNTBYPERIOD);
-    this.props.requestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
-    this.props.requestCountByRefValue(BAGSCOUNTBYBAGTYPES);
+    this.props.onRequestCountByValueRef(BAGSCOUNTBYBRAND);
+    this.props.onRequestCountByPeriod(BAGSCOUNTBYPERIOD);
+    this.props.onRequestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+    this.props.onRequestCountByValueRef(BAGSCOUNTBYBAGTYPES);
   }
 
   onChartChanged(toChartType: ChartType, chartId: DashboardReducer.CountByRefValueTypes) {
-    this.props.changeChartType(toChartType, chartId);
+    this.props.onChangeChartType(toChartType, chartId);
   }
 
   onPerviousPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(-1, 'y'), chartId);
+    this.props.onChangeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(-1, 'y'), chartId);
   }
   onNextPeriod(chartId: DashboardReducer.CountByPeriodTypes) {
-    this.props.changeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(1, 'y'), chartId);
+    this.props.onChangeChartPeriod(this.props.countByPeriodCharts[chartId]!.startDate!.clone().add(1, 'y'), chartId);
   }
 
   onExpandChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
-      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length + 10);
+      this.props.onRequestCountByValueRef(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length + 10);
     }
   }
 
   onCompressChart(chartId: DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'brands') {
-      this.props.requestCountByRefValue(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length - 10);
+      this.props.onRequestCountByValueRef(BAGSCOUNTBYBRAND, this.props.countByRefValueCharts.brands!.data.length - 10);
     }
   }
 
   onRefreshChart(chartId: DashboardReducer.CountByPeriodTypes | DashboardReducer.CountByRefValueTypes) {
     if (chartId === 'added') {
-      this.props.updateCountByPeriod(BAGSCOUNTBYPERIOD);
+      this.props.onRequestCountByPeriod(BAGSCOUNTBYPERIOD);
     } else if (chartId === 'totalcount') {
-      this.props.updateCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
+      this.props.onRequestCountByPeriod(TOTALBAGSCOUNTBYPERIOD);
     } else if (chartId === 'brands') {
-      this.props.updateCountByRefValue(BAGSCOUNTBYBRAND);
+      this.props.onRequestCountByValueRef(BAGSCOUNTBYBRAND);
     } else if (chartId === 'bagtypes') {
-      this.props.updateCountByRefValue(BAGSCOUNTBYBAGTYPES);
+      this.props.onRequestCountByValueRef(BAGSCOUNTBYBAGTYPES);
     }
   }
 
@@ -180,6 +193,6 @@ class Dashboard extends React.Component<DashboardProps, {}> {
 }
 
 export default connect(
-    (state: IApplicationState) => state.teadashboard,
-    DashboardReducer.actionCreators,
+  mapStateToProps,
+  mapDispatchToProps,
 )(Dashboard);

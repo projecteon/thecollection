@@ -1,4 +1,5 @@
 import { IBrand } from '../../interfaces/tea/IBrand';
+import { createAction } from '../../util/Redux';
 
 export enum BrandActionTypes {
   Add = '[Brand] Add',
@@ -7,22 +8,7 @@ export enum BrandActionTypes {
   Request = '[Brand] Request',
 }
 
-export type ReceiveBrandAction = {
-  type: BrandActionTypes.Recieve;
-  brand: IBrand;
-};
-
-export type RequestBrandAction = {
-  type: BrandActionTypes.Request;
-  brandid: string;
-};
-
-export type AddBrandAction = {
-  type: BrandActionTypes.Add;
-  brand: IBrand;
-};
-
-export type ChangeNameAction = {
-  type: BrandActionTypes.ChangeName;
-  name: string;
-};
+export const requestAction = (id: string) => createAction(BrandActionTypes.Request, id);
+export const recieveAction = (brand: IBrand) => createAction(BrandActionTypes.Recieve, brand);
+export const addAction = (brand: IBrand) => createAction(BrandActionTypes.Add, brand);
+export const valueChangedAction = <K extends keyof IBrand>(property: K, value: IBrand[K]) => createAction(BrandActionTypes.ChangeName, {property, value});

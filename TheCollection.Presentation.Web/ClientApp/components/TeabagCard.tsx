@@ -19,7 +19,7 @@ const TeabagCard: React.StatelessComponent<TeabagCardProps> = props => {
                 <div style={{color: '#959595'}}><small>{props.teabag.serie}</small></div>
                 <div style={{color: '#959595'}}><small>{props.teabag.hallmark}</small></div>
                 <div style={{color: '#959595'}}><small>{props.teabag.serialNumber}</small></div>
-                <div style={{color: '#959595'}}><small>{props.teabag.bagtype ? props.teabag.bagtype.name : ''}</small></div>
+                <div style={{color: '#959595'}}><small>{props.teabag.bagType ? props.teabag.bagType.name : ''}</small></div>
                 <div style={{color: '#959595'}}><small>{props.teabag.country ? props.teabag.country.name : ''}</small></div>
                 <p className='edit'>
                   <NavLink to={ `/tea/teabagform/${props.teabag.id}` } activeClassName='active' className='text-info'>

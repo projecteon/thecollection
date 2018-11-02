@@ -1,40 +1,32 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
 import { IBrand } from '../../interfaces/tea/IBrand';
-import { AddBrandAction, BrandActionTypes, ChangeNameAction, ReceiveBrandAction, RequestBrandAction } from '../../actions/tea/brand';
-import { addBrand, changeName, requestBrand } from '../../thunks/tea/brand';
+import { addAction, BrandActionTypes, valueChangedAction, recieveAction } from '../../actions/tea/brand';
+import { ActionsUnion } from '../../util/Redux';
 
 export interface IBrandState {
   brand: IBrand;
-  isLoading: boolean;
 }
 
-export const actionCreators = {...addBrand, ...changeName, ...requestBrand};
+export const actionCreators = {addAction, valueChangedAction, recieveAction};
 
-const unloadedState: IBrandState = { isLoading: false, brand: {} as IBrand };
-type BrandActions = AddBrandAction | ChangeNameAction | ReceiveBrandAction | RequestBrandAction;
+const unloadedState: IBrandState = { brand: {} as IBrand };
+export type BrandActions = ActionsUnion<typeof actionCreators>;
 export const reducer: Reducer<IBrandState, BrandActions> = (state = unloadedState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case BrandActionTypes.Request:
-        draft.brand = {} as IBrand;
-        draft.isLoading = true;
-        break;
       case BrandActionTypes.Recieve:
-        draft.brand = action.brand;
-        draft.isLoading = false;
+        draft.brand = action.payload;
         break;
       case BrandActionTypes.Add:
-        draft.brand = action.brand;
-        draft.isLoading = false;
+        draft.brand = action.payload;
         break;
       case BrandActionTypes.ChangeName:
-        draft.isLoading = false;
         if (draft.brand === undefined) {
           break;
         }
 
-        draft.brand.name = action.name;
+        draft.brand[action.payload.property] = action.payload.value;
         break;
       default:
         const exhaustiveCheck: never = action;

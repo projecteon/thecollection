@@ -1,16 +1,25 @@
 import * as React from 'react';
 import {  withRouter, RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { History } from 'history';
 import { IApplicationState }  from '../../store';
-import * as BagtypeReducer from '../../reducers/tea/bagtype';
 import Loader from '../../components/Loader';
+import { IBagType } from '../../interfaces/tea/IBagType';
+import { addAction, valueChangedAction, requestAction } from '../../actions/tea/bagtype';
 
-type BagtypeProps =
-    BagtypeReducer.IBagTypeState     // ... state we've requested from the Redux store
-    & typeof BagtypeReducer.actionCreators   // ... plus action creators we've requested
-    & { params?: { id?: string } }        // ... plus incoming routing parameters
-    & { history: History; };              // ... plus naviation through react router
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    onRequestBagType: (id: string) => dispatch(requestAction(id)),
+    onAdd: (bagType: IBagType) => dispatch(addAction(bagType)),
+    onValueChanged: <K extends keyof IBagType>(property: K, value: IBagType[K]) => dispatch(valueChangedAction(property, value)),
+  };
+}
+
+function mapStateToProps(state: IApplicationState) {
+  return {...state.bagtype, ...state.ui};
+}
+
+type BagtypeProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps<{id: string, history: History}>;
 
 class BagtypeForm extends React.Component<BagtypeProps, {}> {
 
@@ -23,32 +32,26 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
   }
 
   componentWillMount() {
-    if (this.props.params && this.props.params.id && this.props.params.id.length > 0) {
-      this.props.requestBagtype(this.props.params.id);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: BagtypeProps) {
-    if (this.props.isLoading === false && this.props.params && this.props.params.id && this.props.params.id.length > 0 && this.props.bagtype.id !== this.props.params.id) {
-      this.props.requestBagtype(this.props.params.id);
+    if (this.props.match.params && this.props.match.params.id && this.props.match.params.id.length > 0) {
+      this.props.onRequestBagType(this.props.match.params.id);
     }
   }
 
   onNameChanged(event: React.FormEvent<HTMLInputElement>) {
-    this.props.changeName(event.currentTarget.value);
+    this.props.onValueChanged('name', event.currentTarget.value);
   }
 
   onAdd(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    this.props.addBagtype(this.props.bagtype);
+    this.props.onAdd(this.props.bagtype);
     // this.props.history.goBack();
   }
 
   onUpdate(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    // this.props.addBagtype(this.props.bagtype);
+    this.props.onAdd(this.props.bagtype);
     // this.props.history.goBack();
   }
 
@@ -89,7 +92,7 @@ class BagtypeForm extends React.Component<BagtypeProps, {}> {
 }
 
 export default withRouter(connect(
-    (state: IApplicationState, routerProps: RouteComponentProps<{id: string}>) => state.bagtype, // selects which state properties are merged into the component's props
-    BagtypeReducer.actionCreators,               // selects which action creators are merged into the component's props
+  mapStateToProps,    // selects which state properties are merged into the component's props
+  mapDispatchToProps, // selects which action creators are merged into the component's props
 )(BagtypeForm));
 

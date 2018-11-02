@@ -14,7 +14,7 @@ type ChartProps = {
 };
 
 // tslint:disable-next-line:variable-name
-export class Chart extends React.Component<ChartProps, {}> {
+export class Chart extends React.PureComponent<ChartProps, {}> {
   private chart: c3.ChartAPI | undefined = undefined;
 
   componentDidMount() {
@@ -32,7 +32,7 @@ export class Chart extends React.Component<ChartProps, {}> {
   generateChart(mountNode: string | HTMLElement | d3.Selection<any> | null, config: c3.ChartConfiguration) {
     const newConfig = Object.assign({ bindto: mountNode }, config);
     return c3.generate(newConfig);
-  }
+  } // https://github.com/c3js/c3/issues/975
 
   loadNewData(data: c3.ChartConfiguration) {
     if (this.chart === undefined) {
@@ -76,8 +76,7 @@ export class Chart extends React.Component<ChartProps, {}> {
     if (!this.chart) {
       this.chart = this.generateChart(findDOMNode(this) as HTMLElement, config);
     } else {
-      config = Object.assign(config, {columns: config.data.columns});
-      config.data = {};
+      config = Object.assign(config, {columns: config.data.columns, data: undefined});
     }
 
     if (props.unloadBeforeLoad) {

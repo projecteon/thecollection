@@ -1,17 +1,27 @@
 import { IRefValue } from '../IRefValue';
-import { IBrand } from './IBrand';
-import { ICountry } from '../ICountry';
-import { IBagType } from './IBagType';
+
+export enum PropNames {
+  id = 'id',
+  brand = 'brand',
+  serie = 'serie',
+  flavour = 'flavour',
+  hallmark = 'hallmark',
+  bagType = 'bagType',
+  country = 'country',
+  serialNumber = 'serialNumber',
+  imageId = 'imageId',
+  iseditable = 'iseditable',
+}
 
 export interface ITeabag {
-  id: string;
-  brand: IRefValue;
-  serie: string;
-  flavour: string;
-  hallmark: string;
-  bagtype: IRefValue;
-  country: IRefValue;
-  serialNumber: string;
-  imageId: string;
-  iseditable: boolean;
+  [PropNames.id]: string;
+  [PropNames.brand]: IRefValue;
+  [PropNames.serie]: string;
+  [PropNames.flavour]: string;
+  [PropNames.hallmark]: string;
+  [PropNames.bagType]: IRefValue;
+  [PropNames.country]: IRefValue;
+  [PropNames.serialNumber]: string;
+  [PropNames.imageId]: string;
+  [PropNames.iseditable]: boolean;
 }
