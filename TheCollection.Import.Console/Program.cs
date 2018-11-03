@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using System.Threading.Tasks;
+using TheCollection.Domain.Core.Contracts.Repository;
 
 namespace TheCollection.Import.Console
 {
@@ -24,7 +25,12 @@ namespace TheCollection.Import.Console
             var name = ConfigurationManager.AppSettings["StorageAccount:Name"];
             var key = ConfigurationManager.AppSettings["StorageAccount:Key"];
             var scheme = ConfigurationManager.AppSettings["StorageAccount:Scheme"];
-            var endPoints = $"BlobEndpoint=http://127.0.0.1:10000/{name};TableEndpoint=http://127.0.0.1:10000/{name};QueueEndpoint=http://127.0.0.1:10000/{name};";
+            var endPoints = ConfigurationManager.AppSettings["StorageAccount:Endpoints"];
+            if (string.IsNullOrWhiteSpace(endPoints)) {
+                endPoints = $"BlobEndpoint=http://127.0.0.1:10000/{name};TableEndpoint=http://127.0.0.1:10000/{name};QueueEndpoint=http://127.0.0.1:10000/{name};";
+            }
+            
+
             if (args.Length > 1)
             {
                 if (args[0].Contains("DocumentDbClient:EndpointUri") && args[1].Contains("DocumentDbClient:AuthorizationKey"))
@@ -56,12 +62,12 @@ namespace TheCollection.Import.Console
             );
 
             var imageUploadConnectionString = $"DefaultEndpointsProtocol={scheme};AccountName={name};AccountKey={key};{endPoints}";
-            //var imageUploadConnectionString2 = "UseDevelopmentStorage=true";
+            //var imageUploadConnectionString = "UseDevelopmentStorage=true";
 
-            //var imageUploadService = new ImageAzureBlobService(imageUploadConnectionString);
+            var imageUploadService = new ImageAzureBlobRepository(imageUploadConnectionString);
             //var azureStorageClient = new AzureStorageClient(imageUploadConnectionString);
 
-            await ImportTeabags(documentDbClient);
+            await ImportTeabags(documentDbClient, imageUploadService);
             //ImportImagesAndUpdateTeabags(documentDbClient, imageUploadService);
             //CopyMissingFilesToTempUploadDir(azureStorageClient);
 
@@ -97,14 +103,13 @@ namespace TheCollection.Import.Console
         }
 
 
-        private static async Task ImportTeabags(DocumentClient documentDbClient)
+        private static async Task ImportTeabags(DocumentClient documentDbClient, IImageRepository imageUploadService)
         {
             var (meerkens, thees) = await ImportFromAccess();
             var theesToImport = thees.OrderBy(thee => thee.MainID).ToList();
             var meerkensToImport = meerkens.ToList();
 
-            var brands = await DocumentDbImport.ImportBrandsAsync(documentDbClient, meerkensToImport);
-            var bags = await DocumentDbImport.ImportBagsAsync(documentDbClient, theesToImport, brands);
+            var bags = await DocumentDbImport.ImportBagsAsync(documentDbClient, imageUploadService, theesToImport, meerkensToImport);
         }
 
         private static async Task ImportImagesAndUpdateTeabags(DocumentClient documentDbClient, ImageAzureBlobRepository imageUploadService)
