@@ -6,7 +6,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
     using TheCollection.Domain.Tea;
     using Xunit;
 
-    [Trait("Bag", "Tags are created")]
+    [Trait(nameof(Bag), "Tags are created")]
     public class BagTagsTests {
         private Bag Bag { get; }
         private RefValue BagTypeRef { get; }
@@ -15,9 +15,9 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
         private Searchable SearchableBag { get; }
 
         public BagTagsTests() {
-            BagTypeRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Paper" };
-            BrandRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Twinning" };
-            CountryRef = new RefValue { Id = System.Guid.NewGuid().ToString(), Name = "Norway" };
+            BagTypeRef = new RefValue(System.Guid.NewGuid().ToString(), "Paper");
+            BrandRef = new RefValue(System.Guid.NewGuid().ToString(), "Twinning");
+            CountryRef = new RefValue(System.Guid.NewGuid().ToString(), "Norway");
             Bag = new Bag {
                 Id = System.Guid.NewGuid().ToString(),
                 MainID = 999,
@@ -30,7 +30,7 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
                 Country = CountryRef,
                 InsertDate = new LocalDate(1985, 08, 22),
                 ImageId = "imageid",
-                UserId = Guid.NewGuid().ToString()
+                OwnerId = Guid.NewGuid().ToString()
             };
             SearchableBag = new Searchable(Bag);
         }
@@ -80,8 +80,8 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
 
         [Fact(DisplayName = "Tag does not contain user id")]
         public void NotContainsUserId() {
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId));
-            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.UserId.ToLower()));
+            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.OwnerId));
+            Assert.Null(SearchableBag.Tags.FirstOrDefault(tag => tag == Bag.OwnerId.ToLower()));
         }
 
         [Fact(DisplayName = "Tag does not contain stopwords except for words with accents parsed to stop words")]

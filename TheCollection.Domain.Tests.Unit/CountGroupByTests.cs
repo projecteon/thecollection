@@ -5,7 +5,7 @@ namespace TheCollection.Domain.Tests.Unit {
     using TheCollection.Domain.Tests.Unit.Helpers;
     using Xunit;
 
-    [Trait("CountGroupByTests", "CountGroupBy tests")]
+    [Trait(nameof(CountGroupBy<string, string, Helpers.StringComparer>), "CountGroupBy tests")]
     public class CountGroupByTests {
         [Fact(DisplayName = "When queryable argument is null, ArgumentNullException is thrown")]
         public void WhenQueryableArgumentIsNullExceptionIsThrown() {

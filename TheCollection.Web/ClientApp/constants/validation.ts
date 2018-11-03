@@ -1,5 +1,0 @@
-export type FIELD_ERROR = 'FIELD_ERROR';
-export const FIELD_ERROR: FIELD_ERROR = 'FIELD_ERROR';
-
-export type MODEL_ERROR = 'MODEL_ERROR';
-export const MODEL_ERROR: MODEL_ERROR = 'MODEL_ERROR';

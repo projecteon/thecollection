@@ -1,6 +1,5 @@
 namespace TheCollection.Domain.Tea {
     using System;
-    using System.ComponentModel.DataAnnotations;
     using Constant;
     using Constant.JsonConverter;
     using Newtonsoft.Json;
@@ -14,20 +13,5 @@ namespace TheCollection.Domain.Tea {
 
         protected DashBoardTypes(Guid key) : base(key) {
         }
-    }
-
-    public class Dashboard<T> {
-        [Key]
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
-        [JsonProperty(PropertyName = "userid")]
-        public string UserId { get; set; }
-
-        [JsonProperty(PropertyName = "dashboardtype")]
-        public DashBoardTypes DashboardType { get; set; }
-
-        [JsonProperty(PropertyName = "data")]
-        public T Data { get; set; }
     }
 }

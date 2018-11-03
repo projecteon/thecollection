@@ -3,13 +3,13 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
     using TheCollection.Domain.Tea;
     using Xunit;
 
-    [Trait("Country", "Tags are created")]
+    [Trait(nameof(Country), "Tags are created")]
     public class CountryTagsTests {
         private Country Country { get; }
         private Searchable SearchableCountry { get; }
 
         public CountryTagsTests() {
-            Country = new Country { Id = System.Guid.NewGuid().ToString(), Name = "Norway" };
+            Country = new Country(System.Guid.NewGuid().ToString(), "Norway");
             SearchableCountry = new Searchable(Country);
         }
 

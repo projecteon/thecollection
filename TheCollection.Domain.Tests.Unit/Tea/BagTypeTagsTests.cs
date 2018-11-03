@@ -3,13 +3,13 @@ namespace TheCollection.Domain.Tests.Unit.Tea {
     using TheCollection.Domain.Tea;
     using Xunit;
 
-    [Trait("BagType", "Tags are created")]
+    [Trait(nameof(BagType), "Tags are created")]
     public class BagTypeTagsTests {
         private BagType BagType { get; }
         private Searchable SearchableBagType { get; }
 
         public BagTypeTagsTests() {
-            BagType = new BagType { Id = System.Guid.NewGuid().ToString(), Name = "Paper" };
+            BagType = new BagType(System.Guid.NewGuid().ToString(), "Paper");
             SearchableBagType = new Searchable(BagType);
         }
 

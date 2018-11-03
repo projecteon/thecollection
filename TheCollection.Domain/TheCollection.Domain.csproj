@@ -8,9 +8,13 @@
     <PackageReference Include="Constant" Version="2.0.2" />
     <PackageReference Include="Constant.JsonConverter" Version="1.0.0" />
     <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NodaTime" Version="2.2.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="NodaTime" Version="2.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TheCollection.Domain.Core\TheCollection.Domain.Core.csproj" />
   </ItemGroup>
 
 </Project>

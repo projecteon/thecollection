@@ -1,0 +1,130 @@
+
+.main-nav {
+  background-color: #4b610b;
+
+  .navbar {
+    &.navbar-inverse {
+      border: none;
+
+      .navbar-brand {
+        color: #ffffff;
+        line-height: inherit;
+
+        img {
+          margin: 0 10px;
+        }
+      }
+
+      .navbar-nav > li > a,
+      .navbar-nav > li .btn-link {
+        color: #86b404;
+
+        &:hover {
+          color: #ffffff;
+          text-decoration: none;
+        }
+      }
+
+      .navbar-toggler,
+      .navbar-toggler:focus,
+      .navbar-toggler:active {
+        border: none;
+        outline: none;
+        color: #688A08;
+      }
+
+      /* Highlighting rules for nav menu items */
+      .navbar-nav > li > a.active,
+      .navbar-nav > li > a.active:hover,
+      .navbar-nav > li > a.active:focus,
+      .navbar-nav > li .btn-link.active,
+      .navbar-nav > li .btn-link.active:hover,
+      .navbar-nav > li .btn-link.active:focus {
+        background-color: #86b404;
+        color: white;
+        text-decoration: none;
+      }
+    }
+
+    li a {
+      padding: 10px 16px;
+      border-radius: 4px;
+      display: inline-block;
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+  .main-nav {
+    width: 100vw;
+
+    .navbar-toggler {
+      position: absolute;
+      top: 14px;
+      right: 3px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  /* On small screens, convert the nav menu to a vertical sidebar */
+  .main-nav {
+    min-height: calc(100vh - 2px);
+    height: 100%;
+
+    .navbar {
+      border-radius: 0px;
+      border-width: 0px;
+      height: 100%;
+      padding: 0;
+
+      a {
+        /* If a menu item's text is too long, truncate it */
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      li {
+        font-size: 15px;
+        margin: 0 6px;
+      }
+
+      .navbar-brand {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .navbar-toggler {
+        display: none;
+      }
+
+      .navbar-collapse {
+        display: block;
+        position: absolute;
+        top: 38px;
+        left: 0;
+        width: 100%;
+      }
+    }
+
+    .navbar-collapse {
+      border-top: 1px solid #86b404;
+      padding: 10px 0 0 0;
+
+      .nav {
+        width: 100%;
+      }
+    }
+
+    .navbar-inverse .navbar-nav > li .btn-link {
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

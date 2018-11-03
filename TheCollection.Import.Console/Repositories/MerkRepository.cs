@@ -5,7 +5,7 @@ namespace TheCollection.Import.Console.Repositories {
     using System.Data.OleDb;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using TheCollection.Domain.Contracts.Repository;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
 
