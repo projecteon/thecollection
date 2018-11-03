@@ -146,12 +146,6 @@
     <Content Include="importfiles\Thee Database.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="importfiles\teabags.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="importfiles\teabrands.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TheCollection.Application.Services\TheCollection.Application.Services.csproj">
