@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
-    <PackageReference Include="NodaTime" Version="2.3.0" />
+    <PackageReference Include="NodaTime" Version="2.4.2" />
   </ItemGroup>
 
 </Project>
