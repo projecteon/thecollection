@@ -79,13 +79,14 @@
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
 
     <!-- Ensure Yarn is installed -->
-    <Exec Command="yarn -v" ContinueOnError="true">
+    <!-- <Exec Command="yarn -v" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
-    <Error Condition="'$(ErrorCode)' != '0'" Text="Yarn is required to build and run this project. To continue, please install Yarn from https://yarnpkg.com/en/docs/install, and then restart your command prompt or IDE." />
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Yarn is required to build and run this project. To continue, please install Yarn from https://yarnpkg.com/en/docs/install, and then restart your command prompt or IDE." /> -->
 
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec Command="yarn" />
+    <!-- <Exec Command="yarn" /> -->
+    <Exec Command="npm install" />
     <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
     <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
 
