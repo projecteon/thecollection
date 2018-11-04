@@ -1,9 +1,11 @@
 namespace TheCollection.Import.Console.Repositories {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.OleDb;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using TheCollection.Business;
+    using TheCollection.Domain.Core.Contracts.Repository;
     using TheCollection.Import.Console.Extensions;
     using TheCollection.Import.Console.Models;
 
@@ -14,7 +16,7 @@ namespace TheCollection.Import.Console.Repositories {
 
         public string DbPath { get; }
 
-        public async Task<IEnumerable<Merk>> SearchItemsAsync(System.Linq.Expressions.Expression<System.Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
+        public async Task<IEnumerable<Merk>> SearchItemsAsync(Expression<Func<Merk, bool>> predicate = null, int pageSize = 0, int page = 0) {
             return await Task.Run(() => { return GetMeerken(DbPath); });
         }
 

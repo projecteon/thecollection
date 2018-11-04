@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "target": "es6",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "skipDefaultLibCheck": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "lib": ["es6", "es7", "dom"],
+    "types": [ "webpack-env" ],
+    "typeRoots": [
+      "node_modules/@types",
+      "manual_typings"
+    ],
+    "paths": {
+      // Fix "Duplicate identifier" errors caused by multiple dependencies fetching their own copies of type definitions.
+      // We tell TypeScript which type definitions module to treat as the canonical one (instead of combining all of them).
+      "history": ["./node_modules/@types/history/index"],
+      "redux": ["./node_modules/@types/redux/index"],
+      "react": ["./node_modules/@types/react/index"],
+      "react-router": ["./node_modules/@types/react-router/index"],
+      "lodash/*": ["./node_modules/@types/lodash/*"],
+      "lodash-es/*": ["./node_modules/@types/lodash-es/*"] // https://medium.com/@martin_hotell/tree-shake-lodash-with-webpack-jest-and-typescript-2734fa13b5cd
+    }
+  },
+  "exclude": [
+      "bin",
+      "node_modules"
+  ]
+}

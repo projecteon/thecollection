@@ -30,7 +30,7 @@ namespace TheCollection.Data.DocumentDB.Extensions {
                     await client.CreateDocumentCollectionAsync(
                         UriFactory.CreateDatabaseUri(databaseId),
                         new DocumentCollection { Id = collectionId },
-                        new RequestOptions { OfferThroughput = 7000 });
+                        new RequestOptions { OfferThroughput = 400 });
                 }
                 else {
                     throw;
