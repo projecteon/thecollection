@@ -73,6 +73,8 @@ namespace TheCollection.Import.Console
 
             System.Console.WriteLine("Conversions end");
             System.Console.ReadLine();
+
+            // https://github.com/Azure/azure-cosmosdb-bulkexecutor-dotnet-getting-started
         }
 
         static async Task CopyMissingFilesToTempUploadDir(AzureStorageClient azureClient)
