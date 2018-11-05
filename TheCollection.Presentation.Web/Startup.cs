@@ -53,12 +53,12 @@ namespace TheCollection.Presentation.Web {
             services.WireDependencies(Configuration);
             services.AddLoginIdentities(Configuration);
 
-            services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
-            //services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
-            //                                                                    Configuration.GetValue<string>("StorageAccount:Name"),
-            //                                                                    Configuration.GetValue<string>("StorageAccount:Key"),
-            //                                                                    Configuration.GetValue<string>("StorageAccount:Endpoints"))
-            //);
+            //services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
+            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
+                                                                                Configuration.GetValue<string>("StorageAccount:Name"),
+                                                                                Configuration.GetValue<string>("StorageAccount:Key"),
+                                                                                Configuration.GetValue<string>("StorageAccount:Endpoints"))
+            );
 
             // Add framework services.
             services.AddMvc(
