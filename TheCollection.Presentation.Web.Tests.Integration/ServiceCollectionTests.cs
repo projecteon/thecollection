@@ -127,7 +127,10 @@ namespace TheCollection.Presentation.Web.Tests.Integration {
             ServiceCollection = new ServiceCollection();
             ServiceCollection.AddSingleton(typeof(Microsoft.Extensions.Logging.ILogger<>), typeof(XunitLogger<>));
 
-            var target = new Startup(configuration);
+            var fakeEnvironment = A.Fake<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
+            A.CallTo(() => fakeEnvironment.EnvironmentName).Returns(Microsoft.AspNetCore.Hosting.EnvironmentName.Development);
+
+            var target = new Startup(configuration, fakeEnvironment);
             target.ConfigureServices(ServiceCollection);
 
             // Override configuration in startup untill I can find good fakes/mocks

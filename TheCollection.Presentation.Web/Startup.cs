@@ -34,9 +34,9 @@ namespace TheCollection.Presentation.Web {
     using Microsoft.AspNetCore.Mvc.Routing;
 
   public class Startup {
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration, IHostingEnvironment env) {
             Configuration = configuration;
-
+            Environment = env;
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters = { new StringEnumConverter() },
@@ -46,6 +46,7 @@ namespace TheCollection.Presentation.Web {
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
@@ -53,12 +54,16 @@ namespace TheCollection.Presentation.Web {
             services.WireDependencies(Configuration);
             services.AddLoginIdentities(Configuration);
 
-            //services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
-            services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Name"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Key"),
-                                                                                Configuration.GetValue<string>("StorageAccount:Endpoints"))
-            );
+            if (Environment.IsDevelopment()) {
+                services.AddSingleton<IImageRepository, ImageFilesystemRepository>();
+            }
+            else {
+                services.AddSingleton<IImageRepository>(x => new ImageAzureBlobRepository(Configuration.GetValue<string>("StorageAccount:Scheme"),
+                                                                                    Configuration.GetValue<string>("StorageAccount:Name"),
+                                                                                    Configuration.GetValue<string>("StorageAccount:Key"),
+                                                                                    Configuration.GetValue<string>("StorageAccount:Endpoints"))
+                );
+            }
 
             // Add framework services.
             services.AddMvc(
