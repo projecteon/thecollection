@@ -31,7 +31,7 @@ export class ImageZoom extends React.Component<IImageZoomProps, IImageZoomState>
   renderImage() {
     return  <div className='image' onClick={this.props.onClick}>
               <p className='overlay'><i className='text-danger fa fa-times'/></p>
-              <img src={`/images/${this.props.imageid}/Image.png`} style={{maxWidth: '90vw', maxHeight: '95vh', cursor: 'ponter'}}/>
+              <img src={`/images/${this.props.imageid}/Image.png`} style={{maxWidth: '90vw', maxHeight: '95vh', cursor: 'pointer'}}/>
             </div>;
   }
 
